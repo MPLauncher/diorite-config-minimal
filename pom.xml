@@ -4,7 +4,7 @@
 
     <groupId>org.diorite</groupId>
     <artifactId>diorite-config-minimal</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
 
     <distributionManagement>
         <repository>
