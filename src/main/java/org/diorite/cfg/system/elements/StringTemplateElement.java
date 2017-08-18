@@ -24,13 +24,12 @@
 
 package org.diorite.cfg.system.elements;
 
-import java.io.IOException;
-
 import org.apache.commons.lang3.StringUtils;
-
 import org.diorite.cfg.annotations.CfgStringStyle.StringStyle;
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.cfg.system.FieldOptions;
+
+import java.io.IOException;
 
 /**
  * Template handler for all string-based objects.
@@ -44,7 +43,7 @@ public class StringTemplateElement extends TemplateElement<String>
     /**
      * Chars that can't start key/value without quotes
      */
-    public static final char[] CANT_BE_FIRST = {'`', '!', '@', '#', '\'', '\"', '%', '&', '*', '|', '{', '[', ']', '}', ',', '>'};
+    public static final char[] CANT_BE_FIRST = {'`', '!', '@', '#', '\'', '\"', '%', '&', '*', '|', '{', '[', ']', '}', ',', '>', ' '};
 
     /**
      * Instance of template to direct-use.
