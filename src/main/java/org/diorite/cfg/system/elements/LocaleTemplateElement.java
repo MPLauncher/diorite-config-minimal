@@ -24,18 +24,17 @@
 
 package org.diorite.cfg.system.elements;
 
+import org.diorite.cfg.system.CfgEntryData;
+
 import java.io.IOException;
 import java.util.Locale;
-
-import org.diorite.cfg.system.CfgEntryData;
 
 /**
  * Template handler for all locale objects.
  *
  * @see java.util.Locale
  */
-public class LocaleTemplateElement extends TemplateElement<Locale>
-{
+public class LocaleTemplateElement extends TemplateElement<Locale> {
     /**
      * Instance of template to direct-use.
      */
@@ -44,58 +43,47 @@ public class LocaleTemplateElement extends TemplateElement<Locale>
     /**
      * Construct new default template handler.
      */
-    public LocaleTemplateElement()
-    {
+    public LocaleTemplateElement() {
         super(Locale.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return Locale.class.isAssignableFrom(c) || String.class.isAssignableFrom(c);
     }
 
     @Override
-    protected Locale convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof String)
-        {
+    protected Locale convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof String) {
             return this.toLocale((String) obj);
         }
         throw this.getException(obj);
     }
 
-    private Locale toLocale(final String str)
-    {
+    private Locale toLocale(final String str) {
         Locale loc = Locale.forLanguageTag(str);
-        if (loc.getDisplayName().isEmpty())
-        {
+        if (loc.getDisplayName().isEmpty()) {
             loc = new Locale(str);
         }
         return loc;
     }
 
     @Override
-    protected Locale convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof Locale)
-        {
+    protected Locale convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof Locale) {
             return (Locale) obj;
         }
-        if (obj instanceof String)
-        {
+        if (obj instanceof String) {
             return this.toLocale((String) obj);
         }
         throw this.getException(obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final Locale element = (elementRaw instanceof Locale) ? ((Locale) elementRaw) : this.validateType(elementRaw);
         String str = element.toLanguageTag();
-        if (str.equals("und"))
-        {
+        if (str.equals("und")) {
             str = element.getDisplayName();
         }
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(str), level, elementPlace);

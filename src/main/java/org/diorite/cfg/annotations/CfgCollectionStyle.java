@@ -38,8 +38,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CfgCollectionStyle
-{
+public @interface CfgCollectionStyle {
     /**
      * @return {@link org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle} for this field.
      */
@@ -48,8 +47,7 @@ public @interface CfgCollectionStyle
     /**
      * enum with all possible styles.
      */
-    enum CollectionStyle
-    {
+    enum CollectionStyle {
         /**
          * Default style, template will automagically choose best option.
          * (it must scan all elements, so it will be slower)

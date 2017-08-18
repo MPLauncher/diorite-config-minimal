@@ -31,15 +31,13 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Creates noise using unbiased octaves
  * From Bukkit project https://github.com/Bukkit/Bukkit
  */
-public abstract class OctaveGenerator
-{
+public abstract class OctaveGenerator {
     protected final NoiseGenerator[] octaves;
     protected double xScale = 1;
     protected double yScale = 1;
     protected double zScale = 1;
 
-    protected OctaveGenerator(final NoiseGenerator[] octaves)
-    {
+    protected OctaveGenerator(final NoiseGenerator[] octaves) {
         this.octaves = octaves;
     }
 
@@ -51,8 +49,7 @@ public abstract class OctaveGenerator
      *
      * @param scale New value to scale each coordinate by
      */
-    public void setScale(final double scale)
-    {
+    public void setScale(final double scale) {
         this.xScale = scale;
         this.yScale = scale;
         this.zScale = scale;
@@ -63,8 +60,7 @@ public abstract class OctaveGenerator
      *
      * @return X scale
      */
-    public double getXScale()
-    {
+    public double getXScale() {
         return this.xScale;
     }
 
@@ -73,8 +69,7 @@ public abstract class OctaveGenerator
      *
      * @param scale New X scale
      */
-    public void setXScale(final double scale)
-    {
+    public void setXScale(final double scale) {
         this.xScale = scale;
     }
 
@@ -83,8 +78,7 @@ public abstract class OctaveGenerator
      *
      * @return Y scale
      */
-    public double getYScale()
-    {
+    public double getYScale() {
         return this.yScale;
     }
 
@@ -93,8 +87,7 @@ public abstract class OctaveGenerator
      *
      * @param scale New Y scale
      */
-    public void setYScale(final double scale)
-    {
+    public void setYScale(final double scale) {
         this.yScale = scale;
     }
 
@@ -103,8 +96,7 @@ public abstract class OctaveGenerator
      *
      * @return Z scale
      */
-    public double getZScale()
-    {
+    public double getZScale() {
         return this.zScale;
     }
 
@@ -113,8 +105,7 @@ public abstract class OctaveGenerator
      *
      * @param scale New Z scale
      */
-    public void setZScale(final double scale)
-    {
+    public void setZScale(final double scale) {
         this.zScale = scale;
     }
 
@@ -123,8 +114,7 @@ public abstract class OctaveGenerator
      *
      * @return Clone of the individual octaves
      */
-    public NoiseGenerator[] getOctaves()
-    {
+    public NoiseGenerator[] getOctaves() {
         return this.octaves.clone();
     }
 
@@ -135,11 +125,9 @@ public abstract class OctaveGenerator
      * @param x         X-coordinate
      * @param frequency How much to alter the frequency by each octave
      * @param amplitude How much to alter the amplitude by each octave
-     *
      * @return Resulting noise
      */
-    public double noise(final double x, final double frequency, final double amplitude)
-    {
+    public double noise(final double x, final double frequency, final double amplitude) {
         return this.noise(x, 0, 0, frequency, amplitude);
     }
 
@@ -151,11 +139,9 @@ public abstract class OctaveGenerator
      * @param frequency  How much to alter the frequency by each octave
      * @param amplitude  How much to alter the amplitude by each octave
      * @param normalized If true, normalize the value to [-1, 1]
-     *
      * @return Resulting noise
      */
-    public double noise(final double x, final double frequency, final double amplitude, final boolean normalized)
-    {
+    public double noise(final double x, final double frequency, final double amplitude, final boolean normalized) {
         return this.noise(x, 0, 0, frequency, amplitude, normalized);
     }
 
@@ -167,11 +153,9 @@ public abstract class OctaveGenerator
      * @param y         Y-coordinate
      * @param frequency How much to alter the frequency by each octave
      * @param amplitude How much to alter the amplitude by each octave
-     *
      * @return Resulting noise
      */
-    public double noise(final double x, final double y, final double frequency, final double amplitude)
-    {
+    public double noise(final double x, final double y, final double frequency, final double amplitude) {
         return this.noise(x, y, 0, frequency, amplitude);
     }
 
@@ -184,11 +168,9 @@ public abstract class OctaveGenerator
      * @param frequency  How much to alter the frequency by each octave
      * @param amplitude  How much to alter the amplitude by each octave
      * @param normalized If true, normalize the value to [-1, 1]
-     *
      * @return Resulting noise
      */
-    public double noise(final double x, final double y, final double frequency, final double amplitude, final boolean normalized)
-    {
+    public double noise(final double x, final double y, final double frequency, final double amplitude, final boolean normalized) {
         return this.noise(x, y, 0, frequency, amplitude, normalized);
     }
 
@@ -201,11 +183,9 @@ public abstract class OctaveGenerator
      * @param z         Z-coordinate
      * @param frequency How much to alter the frequency by each octave
      * @param amplitude How much to alter the amplitude by each octave
-     *
      * @return Resulting noise
      */
-    public double noise(final double x, final double y, final double z, final double frequency, final double amplitude)
-    {
+    public double noise(final double x, final double y, final double z, final double frequency, final double amplitude) {
         return this.noise(x, y, z, frequency, amplitude, false);
     }
 
@@ -219,11 +199,9 @@ public abstract class OctaveGenerator
      * @param frequency  How much to alter the frequency by each octave
      * @param amplitude  How much to alter the amplitude by each octave
      * @param normalized If true, normalize the value to [-1, 1]
-     *
      * @return Resulting noise
      */
-    public double noise(double x, double y, double z, final double frequency, final double amplitude, final boolean normalized)
-    {
+    public double noise(double x, double y, double z, final double frequency, final double amplitude, final boolean normalized) {
         double result = 0;
         double amp = 1;
         double freq = 1;
@@ -233,16 +211,14 @@ public abstract class OctaveGenerator
         y *= this.yScale;
         z *= this.zScale;
 
-        for (final NoiseGenerator octave : this.octaves)
-        {
+        for (final NoiseGenerator octave : this.octaves) {
             result += octave.noise(x * freq, y * freq, z * freq) * amp;
             max += amp;
             freq *= frequency;
             amp *= amplitude;
         }
 
-        if (normalized)
-        {
+        if (normalized) {
             result /= max;
         }
 
@@ -250,8 +226,7 @@ public abstract class OctaveGenerator
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("octaves", this.octaves).append("xScale", this.xScale).append("yScale", this.yScale).append("zScale", this.zScale).toString();
     }
 }

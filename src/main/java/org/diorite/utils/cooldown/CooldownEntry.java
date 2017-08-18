@@ -29,8 +29,7 @@ package org.diorite.utils.cooldown;
  *
  * @param <K> type of key.
  */
-public interface CooldownEntry<K>
-{
+public interface CooldownEntry<K> {
     /**
      * Returns key of this cooldown entry.
      *
@@ -59,8 +58,7 @@ public interface CooldownEntry<K>
      *
      * @return delta time of cooldown - rest of cooldown time if it already started.
      */
-    default long delta()
-    {
+    default long delta() {
         return this.delta(System.currentTimeMillis());
     }
 
@@ -70,11 +68,9 @@ public interface CooldownEntry<K>
      * This method will remove entry from manager if it is expired.
      *
      * @param currentTime time in milliseconds that will be used as current one.
-     *
      * @return delta time of cooldown - rest of cooldown time if it already started.
      */
-    default long delta(final long currentTime)
-    {
+    default long delta(final long currentTime) {
         final long sum = this.getStartTime() + this.getCooldownTime();
         return sum - currentTime;
     }
@@ -85,8 +81,7 @@ public interface CooldownEntry<K>
      *
      * @return true if this cooldown already started.
      */
-    default boolean hasAlreadyStarted()
-    {
+    default boolean hasAlreadyStarted() {
         return this.hasAlreadyStarted(System.currentTimeMillis());
     }
 
@@ -95,11 +90,9 @@ public interface CooldownEntry<K>
      * This method will remove entry from manager if it is expired.
      *
      * @param currentTime time in milliseconds that will be used as current one.
-     *
      * @return true if this cooldown already started.
      */
-    default boolean hasAlreadyStarted(final long currentTime)
-    {
+    default boolean hasAlreadyStarted(final long currentTime) {
         return this.delta(currentTime) <= this.getCooldownTime();
     }
 
@@ -109,8 +102,7 @@ public interface CooldownEntry<K>
      *
      * @return true if cooldown time already expired.
      */
-    default boolean hasExpired()
-    {
+    default boolean hasExpired() {
         return this.hasExpired(System.currentTimeMillis());
     }
 
@@ -119,11 +111,9 @@ public interface CooldownEntry<K>
      * This method will remove entry from manager if it is expired.
      *
      * @param currentTime time in milliseconds that will be used as current one.
-     *
      * @return true if cooldown time already expired.
      */
-    default boolean hasExpired(final long currentTime)
-    {
+    default boolean hasExpired(final long currentTime) {
         return this.delta(currentTime) <= 0;
     }
 
@@ -133,8 +123,7 @@ public interface CooldownEntry<K>
      *
      * @return delta time of cooldown - rest of cooldown time if it already started.
      */
-    default long deltaLazy()
-    {
+    default long deltaLazy() {
         return this.deltaLazy(System.currentTimeMillis());
     }
 
@@ -143,11 +132,9 @@ public interface CooldownEntry<K>
      * If cooldown isn't started yet, returned value may be higher than cooldown time.
      *
      * @param currentTime time in milliseconds that will be used as current one.
-     *
      * @return delta time of cooldown - rest of cooldown time if it already started.
      */
-    default long deltaLazy(final long currentTime)
-    {
+    default long deltaLazy(final long currentTime) {
         final long sum = this.getStartTime() + this.getCooldownTime();
         return sum - currentTime;
     }
@@ -157,8 +144,7 @@ public interface CooldownEntry<K>
      *
      * @return true if this cooldown already started.
      */
-    default boolean hasAlreadyStartedLazy()
-    {
+    default boolean hasAlreadyStartedLazy() {
         return this.hasAlreadyStartedLazy(System.currentTimeMillis());
     }
 
@@ -166,11 +152,9 @@ public interface CooldownEntry<K>
      * Returns true if this cooldown already started.
      *
      * @param currentTime time in milliseconds that will be used as current one.
-     *
      * @return true if this cooldown already started.
      */
-    default boolean hasAlreadyStartedLazy(final long currentTime)
-    {
+    default boolean hasAlreadyStartedLazy(final long currentTime) {
         return this.deltaLazy(currentTime) <= this.getCooldownTime();
     }
 
@@ -179,8 +163,7 @@ public interface CooldownEntry<K>
      *
      * @return true if cooldown time already expired.
      */
-    default boolean hasExpiredLazy()
-    {
+    default boolean hasExpiredLazy() {
         return this.hasExpiredLazy(System.currentTimeMillis());
     }
 
@@ -188,11 +171,9 @@ public interface CooldownEntry<K>
      * Returns true if cooldown time already expired.
      *
      * @param currentTime time in milliseconds that will be used as current one.
-     *
      * @return true if cooldown time already expired.
      */
-    default boolean hasExpiredLazy(final long currentTime)
-    {
+    default boolean hasExpiredLazy(final long currentTime) {
         return this.deltaLazy(currentTime) <= 0;
     }
 }

@@ -30,8 +30,7 @@ import org.diorite.utils.function.supplier.CharSupplier;
  * Simple {@link CharSupplier}-like class, but use "eval" as method name for simpler reflection usage.
  */
 @FunctionalInterface
-public interface CharEvaluator extends CharSupplier
-{
+public interface CharEvaluator extends CharSupplier {
     /**
      * Gets a result.
      *
@@ -40,8 +39,7 @@ public interface CharEvaluator extends CharSupplier
     char eval();
 
     @Override
-    default char getAsChar()
-    {
+    default char getAsChar() {
         return this.eval();
     }
 }

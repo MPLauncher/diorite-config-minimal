@@ -24,18 +24,17 @@
 
 package org.diorite.cfg.system.elements;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.cfg.system.Template;
 import org.diorite.cfg.system.TemplateCreator;
+
+import java.io.IOException;
 
 /**
  * Last template handler, trying get template for unknown object, or change it to string.
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class DefaultTemplateElement extends TemplateElement<Object>
-{
+public class DefaultTemplateElement extends TemplateElement<Object> {
     /**
      * Instance of template to direct-use.
      */
@@ -44,40 +43,32 @@ public class DefaultTemplateElement extends TemplateElement<Object>
     /**
      * Construct new default template handler.
      */
-    public DefaultTemplateElement()
-    {
+    public DefaultTemplateElement() {
         super(Object.class);
     }
 
     @Override
-    protected Object convertObject0(final Object def)
-    {
+    protected Object convertObject0(final Object def) {
         return def;
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> clazz)
-    {
+    protected boolean canBeConverted0(final Class<?> clazz) {
         return true;
     }
 
     @Override
-    protected Object convertDefault0(final Object obj, final Class<?> fieldType)
-    {
+    protected Object convertDefault0(final Object obj, final Class<?> fieldType) {
         return obj;
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object element, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object element, final int level, final ElementPlace elementPlace) throws IOException {
         final Template template = TemplateCreator.getTemplate(element.getClass(), false);
-        if (template != null)
-        {
+        if (template != null) {
             writer.append('\n');
             template.dump(writer, element, level + 1, false, elementPlace);
-        }
-        else
-        {
+        } else {
             StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element), level, elementPlace);
         }
     }

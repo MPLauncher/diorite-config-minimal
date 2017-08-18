@@ -31,11 +31,10 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
 /**
  * Atomic array with byte elements.
  */
-public class AtomicByteArray implements Serializable
-{
+public class AtomicByteArray implements Serializable {
     private static final long serialVersionUID = 0;
     private final AtomicIntegerArray array;
-    private final int                length;
+    private final int length;
 
     /**
      * Creates a new AtomicByteArray of the given length, with all
@@ -43,8 +42,7 @@ public class AtomicByteArray implements Serializable
      *
      * @param length the length of the array
      */
-    public AtomicByteArray(final int length)
-    {
+    public AtomicByteArray(final int length) {
         this.length = length;
         this.array = new AtomicIntegerArray((length + 3) / 4);
     }
@@ -55,19 +53,16 @@ public class AtomicByteArray implements Serializable
      * @param i        the index
      * @param newValue the new value
      */
-    public void set(final int i, final byte newValue)
-    {
+    public void set(final int i, final byte newValue) {
         final int idx = i >>> 2;
         final int shift = (i & 3) << 3;
         final int mask = 0xFF << shift;
         final int val2 = (newValue & 0xff) << shift;
 
-        while (true)
-        {
+        while (true) {
             final int num = this.array.get(idx);
-            final int num2 = (num & ~ mask) | val2;
-            if ((num == num2) || this.array.compareAndSet(idx, num, num2))
-            {
+            final int num2 = (num & ~mask) | val2;
+            if ((num == num2) || this.array.compareAndSet(idx, num, num2)) {
                 return;
             }
         }
@@ -80,31 +75,26 @@ public class AtomicByteArray implements Serializable
      * @param i      the index
      * @param expect the expected value
      * @param update the new value
-     *
      * @return true if successful. False return indicates that
      * the actual value was not equal to the expected value.
      */
-    public boolean compareAndSet(final int i, final byte expect, final byte update)
-    {
+    public boolean compareAndSet(final int i, final byte expect, final byte update) {
         final int idx = i >>> 2;
         final int shift = (i & 3) << 3;
         final int mask = 0xFF << shift;
         final int expected2 = (expect & 0xff) << shift;
         final int val2 = (update & 0xff) << shift;
 
-        while (true)
-        {
+        while (true) {
             final int num = this.array.get(idx);
             // Check that the read byte is what we expected
-            if ((num & mask) != expected2)
-            {
+            if ((num & mask) != expected2) {
                 return false;
             }
 
             // If we complete successfully, all is good
-            final int num2 = (num & ~ mask) | val2;
-            if ((num == num2) || this.array.compareAndSet(idx, num, num2))
-            {
+            final int num2 = (num & ~mask) | val2;
+            if ((num == num2) || this.array.compareAndSet(idx, num, num2)) {
                 return true;
             }
         }
@@ -115,11 +105,9 @@ public class AtomicByteArray implements Serializable
      * Atomically increments by one the element at index {@code i}.
      *
      * @param i the index
-     *
      * @return the previous value
      */
-    public final byte getAndIncrement(final int i)
-    {
+    public final byte getAndIncrement(final int i) {
         return this.getAndAdd(i, 1);
     }
 
@@ -127,12 +115,10 @@ public class AtomicByteArray implements Serializable
      * Atomically decrements by one the element at index {@code i}.
      *
      * @param i the index
-     *
      * @return the previous value
      */
-    public final byte getAndDecrement(final int i)
-    {
-        return this.getAndAdd(i, - 1);
+    public final byte getAndDecrement(final int i) {
+        return this.getAndAdd(i, -1);
     }
 
     /**
@@ -140,17 +126,13 @@ public class AtomicByteArray implements Serializable
      *
      * @param i     the index
      * @param delta the value to add
-     *
      * @return the previous value
      */
-    public final byte getAndAdd(final int i, final int delta)
-    {
-        while (true)
-        {
+    public final byte getAndAdd(final int i, final int delta) {
+        while (true) {
             final byte current = this.get(i);
             final byte next = (byte) (current + delta);
-            if (this.compareAndSet(i, current, next))
-            {
+            if (this.compareAndSet(i, current, next)) {
                 return current;
             }
         }
@@ -160,11 +142,9 @@ public class AtomicByteArray implements Serializable
      * Atomically increments by one the element at index {@code i}.
      *
      * @param i the index
-     *
      * @return the updated value
      */
-    public final byte incrementAndGet(final int i)
-    {
+    public final byte incrementAndGet(final int i) {
         return this.addAndGet(i, 1);
     }
 
@@ -172,12 +152,10 @@ public class AtomicByteArray implements Serializable
      * Atomically decrements by one the element at index {@code i}.
      *
      * @param i the index
-     *
      * @return the updated value
      */
-    public final byte decrementAndGet(final int i)
-    {
-        return this.addAndGet(i, - 1);
+    public final byte decrementAndGet(final int i) {
+        return this.addAndGet(i, -1);
     }
 
     /**
@@ -185,17 +163,13 @@ public class AtomicByteArray implements Serializable
      *
      * @param i     the index
      * @param delta the value to add
-     *
      * @return the updated value
      */
-    public final byte addAndGet(final int i, final int delta)
-    {
-        while (true)
-        {
+    public final byte addAndGet(final int i, final int delta) {
+        while (true) {
             final byte current = this.get(i);
             final byte next = (byte) (current + delta);
-            if (this.compareAndSet(i, current, next))
-            {
+            if (this.compareAndSet(i, current, next)) {
                 return next;
             }
         }
@@ -207,17 +181,13 @@ public class AtomicByteArray implements Serializable
      * If an array is provided and it is the correct length, then that array will be used as the destination array.
      *
      * @param array the provided array
-     *
      * @return an array containing the values in the array
      */
-    public byte[] getArray(byte[] array)
-    {
-        if ((array == null) || (array.length != this.length))
-        {
+    public byte[] getArray(byte[] array) {
+        if ((array == null) || (array.length != this.length)) {
             array = new byte[this.length];
         }
-        for (int i = 0; i < this.length; i++)
-        {
+        for (int i = 0; i < this.length; i++) {
             array[i] = this.get(i);
         }
         return array;
@@ -230,8 +200,7 @@ public class AtomicByteArray implements Serializable
      *
      * @return the array
      */
-    public byte[] getArray()
-    {
+    public byte[] getArray() {
         return this.getArray(null);
     }
 
@@ -243,8 +212,7 @@ public class AtomicByteArray implements Serializable
      * @return the String
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return Arrays.toString(this.getArray());
     }
 
@@ -252,11 +220,9 @@ public class AtomicByteArray implements Serializable
      * Gets the current value at position {@code i}.
      *
      * @param i the index
-     *
      * @return the current value
      */
-    public byte get(final int i)
-    {
+    public byte get(final int i) {
         return (byte) (this.array.get(i >>> 2) >> ((i & 3) << 3));
     }
 
@@ -265,8 +231,7 @@ public class AtomicByteArray implements Serializable
      *
      * @return the length of the array
      */
-    public int length()
-    {
+    public int length() {
         return this.length;
     }
 }

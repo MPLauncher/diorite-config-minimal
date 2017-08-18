@@ -41,8 +41,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
-public @interface CfgDelegateDefault
-{
+public @interface CfgDelegateDefault {
     /**
      * String should be a path to default value, like package.Class#getDefaultValue
      * Mehod must be static and no-args, you can skip class with method is in this same

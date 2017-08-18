@@ -24,11 +24,11 @@
 
 package org.diorite.cfg.system.elements;
 
-import java.io.IOException;
-import java.util.Collection;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.utils.collections.arrays.ObjectArrayIterator;
+
+import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Template handler for all object arrays objects.
@@ -37,8 +37,7 @@ import org.diorite.utils.collections.arrays.ObjectArrayIterator;
  * @see IterableTemplateElement
  */
 @SuppressWarnings("rawtypes")
-public class ObjectArrayTemplateElement extends SimpleArrayTemplateElement<Object[]>
-{
+public class ObjectArrayTemplateElement extends SimpleArrayTemplateElement<Object[]> {
     /**
      * Instance of template to direct-use.
      */
@@ -47,30 +46,25 @@ public class ObjectArrayTemplateElement extends SimpleArrayTemplateElement<Objec
     /**
      * Construct new object array template handler.
      */
-    public ObjectArrayTemplateElement()
-    {
+    public ObjectArrayTemplateElement() {
         super(Object[].class);
     }
 
     @Override
-    protected Object[] convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof Collection)
-        {
+    protected Object[] convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof Collection) {
             return ((Collection) obj).toArray();
         }
         throw this.getException(obj);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return Collection.class.isAssignableFrom(c);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         IterableTemplateElement.INSTANCE.appendValue(writer, field, source, new ObjectArrayIterator((elementRaw instanceof Object[]) ? ((Object[]) elementRaw) : this.validateType(elementRaw)), level, elementPlace);
     }
 }

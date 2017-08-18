@@ -29,15 +29,13 @@ import it.unimi.dsi.fastutil.Hash.Strategy;
 /**
  * Case insensitive hashing strategy.
  */
-public class CaseInsensitiveHashingStrategy implements Strategy<String>
-{
+public class CaseInsensitiveHashingStrategy implements Strategy<String> {
     private static final long serialVersionUID = 0;
 
     /**
      * Protected constructor, use {@link #INSTANCE} to get instance.
      */
-    protected CaseInsensitiveHashingStrategy()
-    {
+    protected CaseInsensitiveHashingStrategy() {
     }
 
     /**
@@ -46,14 +44,12 @@ public class CaseInsensitiveHashingStrategy implements Strategy<String>
     public static final CaseInsensitiveHashingStrategy INSTANCE = new CaseInsensitiveHashingStrategy();
 
     @Override
-    public int hashCode(final String s)
-    {
+    public int hashCode(final String s) {
         return s.toLowerCase().hashCode();
     }
 
     @Override
-    public boolean equals(final String s1, final String s2)
-    {
+    public boolean equals(final String s1, final String s2) {
         return (s1.equals(s2)) || (((s2 != null)) && (s1.toLowerCase().equals(s2.toLowerCase())));
     }
 }

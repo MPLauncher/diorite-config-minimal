@@ -24,20 +24,14 @@
 
 package org.diorite.cfg.system;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import org.apache.commons.lang3.StringUtils;
+import org.diorite.cfg.system.elements.TemplateElement.ElementPlace;
+import org.diorite.utils.reflections.ReflectElement;
+
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.diorite.cfg.system.elements.TemplateElement.ElementPlace;
-import org.diorite.utils.reflections.ReflectElement;
 
 /**
  * Object representation of class yaml template, used to generate
@@ -45,8 +39,7 @@ import org.diorite.utils.reflections.ReflectElement;
  *
  * @param <T> type of object.
  */
-public interface Template<T>
-{
+public interface Template<T> {
     /**
      * @return name of template.
      */
@@ -87,7 +80,6 @@ public interface Template<T>
      *
      * @param str         string with object data in yaml.
      * @param classLoader other class loader to use when creating objects.
-     *
      * @return object created from yaml data and template.
      */
     T load(String str, ClassLoader classLoader);
@@ -97,7 +89,6 @@ public interface Template<T>
      *
      * @param reader      {@link Reader} with object data in yaml.
      * @param classLoader other class loader to use when creating objects.
-     *
      * @return object created from yaml data and template.
      */
     T load(Reader reader, ClassLoader classLoader);
@@ -107,7 +98,6 @@ public interface Template<T>
      *
      * @param is          {@link InputStream} with object data in yaml.
      * @param classLoader other class loader to use when creating objects.
-     *
      * @return object created from yaml data and template.
      */
     T load(InputStream is, ClassLoader classLoader);
@@ -116,11 +106,9 @@ public interface Template<T>
      * Load object from string using this template.
      *
      * @param str string with object data in yaml.
-     *
      * @return object created from yaml data and template.
      */
-    default T load(final String str)
-    {
+    default T load(final String str) {
         return this.load(str, this.getDefaultClassLoader());
     }
 
@@ -128,11 +116,9 @@ public interface Template<T>
      * Load object from {@link Reader} using this template.
      *
      * @param reader {@link Reader} with object data in yaml.
-     *
      * @return object created from yaml data and template.
      */
-    default T load(final Reader reader)
-    {
+    default T load(final Reader reader) {
         return this.load(reader, this.getDefaultClassLoader());
     }
 
@@ -140,11 +126,9 @@ public interface Template<T>
      * Load object from {@link InputStream} using this template.
      *
      * @param is {@link InputStream} with object data in yaml.
-     *
      * @return object created from yaml data and template.
      */
-    default T load(final InputStream is)
-    {
+    default T load(final InputStream is) {
         return this.load(is, this.getDefaultClassLoader());
     }
 
@@ -154,15 +138,11 @@ public interface Template<T>
      * @param file        {@link File} with object data in yaml.
      * @param charset     encoding of file.
      * @param classLoader other class loader to use when creating objects.
-     *
      * @return object created from yaml data and template.
-     *
      * @throws IOException if file can't be found or it can't be opened.
      */
-    default T load(final File file, final Charset charset, final ClassLoader classLoader) throws IOException
-    {
-        try (final InputStreamReader in = new InputStreamReader(new FileInputStream(file), charset))
-        {
+    default T load(final File file, final Charset charset, final ClassLoader classLoader) throws IOException {
+        try (final InputStreamReader in = new InputStreamReader(new FileInputStream(file), charset)) {
             return this.load(in, classLoader);
         }
     }
@@ -172,13 +152,10 @@ public interface Template<T>
      *
      * @param file    {@link File} with object data in yaml.
      * @param charset encoding of file.
-     *
      * @return object created from yaml data and template.
-     *
      * @throws IOException if file can't be found or it can't be opened.
      */
-    default T load(final File file, final Charset charset) throws IOException
-    {
+    default T load(final File file, final Charset charset) throws IOException {
         return this.load(file, charset, this.getDefaultClassLoader());
     }
 
@@ -186,14 +163,11 @@ public interface Template<T>
      * Load object from {@link File} using this template. (UTF-8)
      *
      * @param file {@link File} with object data in yaml.
-     *
      * @return object created from yaml data and template.
-     *
      * @throws IOException if file can't be found or it can't be opened.
      * @see #load(File, Charset)
      */
-    default T load(final File file) throws IOException
-    {
+    default T load(final File file) throws IOException {
         return this.load(file, StandardCharsets.UTF_8);
     }
 
@@ -207,9 +181,7 @@ public interface Template<T>
      * @param elementPlace       element place, used in many templates to check current style and choose valid format.
      * @param forceDefaultValues if true, all values will be set to default ones.
      * @param <E>                exact type of appendable, used to return this same type as given.
-     *
      * @return this same appendalbe as given, after adding string yaml representation of given object.
-     *
      * @throws IOException from {@link Appendable}
      */
     <E extends Appendable> E dump(E writer, T object, int level, boolean writeComments, ElementPlace elementPlace, boolean forceDefaultValues) throws IOException;
@@ -223,13 +195,10 @@ public interface Template<T>
      * @param writeComments if comments should be added to node.
      * @param elementPlace  element place, used in many templates to check current style and choose valid format.
      * @param <E>           exact type of appendable, used to return this same type as given.
-     *
      * @return this same appendalbe as given, after adding string yaml representation of given object.
-     *
      * @throws IOException from {@link Appendable}
      */
-    default <E extends Appendable> E dump(final E writer, final T object, final int level, final boolean writeComments, final ElementPlace elementPlace) throws IOException
-    {
+    default <E extends Appendable> E dump(final E writer, final T object, final int level, final boolean writeComments, final ElementPlace elementPlace) throws IOException {
         return this.dump(writer, object, level, writeComments, elementPlace, false);
     }
 
@@ -241,13 +210,10 @@ public interface Template<T>
      * @param level         current indent level.
      * @param writeComments if comments should be added to node.
      * @param <E>           exact type of appendable, used to return this same type as given.
-     *
      * @return this same appendalbe as given, after adding string yaml representation of given object.
-     *
      * @throws IOException from {@link Appendable}\
      */
-    default <E extends Appendable> E dump(final E writer, final T object, final int level, final boolean writeComments) throws IOException
-    {
+    default <E extends Appendable> E dump(final E writer, final T object, final int level, final boolean writeComments) throws IOException {
         return this.dump(writer, object, level, writeComments, ElementPlace.NORMAL);
     }
 
@@ -258,13 +224,10 @@ public interface Template<T>
      * @param object object to dump. (will be represented as YAML string in writer)
      * @param level  current indent level.
      * @param <E>    exact type of appendable, used to return this same type as given.
-     *
      * @return this same appendalbe as given, after adding string yaml representation of given object.
-     *
      * @throws IOException from {@link Appendable}\
      */
-    default <E extends Appendable> E dump(final E writer, final T object, final int level) throws IOException
-    {
+    default <E extends Appendable> E dump(final E writer, final T object, final int level) throws IOException {
         return this.dump(writer, object, level, true, ElementPlace.NORMAL);
     }
 
@@ -275,13 +238,10 @@ public interface Template<T>
      * @param object             object to dump. (will be represented as YAML string in writer)
      * @param forceDefaultValues if true, all values will be set to default ones.
      * @param <E>                exact type of appendable, used to return this same type as given.
-     *
      * @return this same appendalbe as given, after adding string yaml representation of given object.
-     *
      * @throws IOException from {@link Appendable}\
      */
-    default <E extends Appendable> E dump(final E writer, final T object, final boolean forceDefaultValues) throws IOException
-    {
+    default <E extends Appendable> E dump(final E writer, final T object, final boolean forceDefaultValues) throws IOException {
         return this.dump(writer, object, 0, true, ElementPlace.NORMAL, forceDefaultValues);
     }
 
@@ -291,13 +251,10 @@ public interface Template<T>
      * @param writer {@link Appendable} to use, all data will be added here.
      * @param object object to dump. (will be represented as YAML string in writer)
      * @param <E>    exact type of appendable, used to return this same type as given.
-     *
      * @return this same appendalbe as given, after adding string yaml representation of given object.
-     *
      * @throws IOException from {@link Appendable}\
      */
-    default <E extends Appendable> E dump(final E writer, final T object) throws IOException
-    {
+    default <E extends Appendable> E dump(final E writer, final T object) throws IOException {
         return this.dump(writer, object, 0, true, ElementPlace.NORMAL, false);
     }
 
@@ -308,7 +265,6 @@ public interface Template<T>
      * @param object             object to dump. (will be represented as YAML string in file)
      * @param charset            encoding of file. * @param forceDefaultValues if true, all values will be set to default ones.
      * @param forceDefaultValues if true, all values will be set to default ones.
-     *
      * @throws IOException if file can't be created/edited.
      */
     void dump(File file, T object, Charset charset, boolean forceDefaultValues) throws IOException;
@@ -319,11 +275,9 @@ public interface Template<T>
      * @param file    file to use, it will be created if needed.
      * @param object  object to dump. (will be represented as YAML string in file)
      * @param charset encoding of file. * @param forceDefaultValues if true, all values will be set to default ones.
-     *
      * @throws IOException if file can't be created/edited.
      */
-    default void dump(final File file, final T object, final Charset charset) throws IOException
-    {
+    default void dump(final File file, final T object, final Charset charset) throws IOException {
         this.dump(file, object, charset, false);
     }
 
@@ -333,11 +287,9 @@ public interface Template<T>
      * @param file               file to use, it will be created if needed.
      * @param object             object to dump. (will be represented as YAML string in file)
      * @param forceDefaultValues if true, all values will be set to default ones.
-     *
      * @throws IOException if file can't be created/edited.
      */
-    default void dump(final File file, final T object, final boolean forceDefaultValues) throws IOException
-    {
+    default void dump(final File file, final T object, final boolean forceDefaultValues) throws IOException {
         this.dump(file, object, StandardCharsets.UTF_8, forceDefaultValues);
     }
 
@@ -346,11 +298,9 @@ public interface Template<T>
      *
      * @param file   file to use, it will be created if needed.
      * @param object object to dump. (will be represented as YAML string in file)
-     *
      * @throws IOException if file can't be created/edited.
      */
-    default void dump(final File file, final T object) throws IOException
-    {
+    default void dump(final File file, final T object) throws IOException {
         this.dump(file, object, StandardCharsets.UTF_8, false);
     }
 
@@ -359,7 +309,6 @@ public interface Template<T>
      *
      * @param object             object to dump. (will be represented as YAML string in writer)
      * @param forceDefaultValues if true, all values will be set to default ones.
-     *
      * @return string yaml representation of given object.
      */
     String dumpAsString(T object, boolean forceDefaultValues);
@@ -368,11 +317,9 @@ public interface Template<T>
      * dump object to YAML string.
      *
      * @param object object to dump. (will be represented as YAML string in writer)
-     *
      * @return string yaml representation of given object.
      */
-    default String dumpAsString(final T object)
-    {
+    default String dumpAsString(final T object) {
         return this.dumpAsString(object, false);
     }
 
@@ -380,7 +327,6 @@ public interface Template<T>
      * Fill object with default values
      *
      * @param obj object to fill.
-     *
      * @return this same - given - object.
      */
     T fillDefaults(T obj);
@@ -390,17 +336,13 @@ public interface Template<T>
      *
      * @param writer {@link Appendable} to use, all data will be added here.
      * @param level  current indent level.
-     *
      * @throws IOException from {@link Appendable}
      */
-    static void spaces(final Appendable writer, final int level) throws IOException
-    {
-        if (level <= 0)
-        {
+    static void spaces(final Appendable writer, final int level) throws IOException {
+        if (level <= 0) {
             return;
         }
-        for (int i = 0; i < level; i++)
-        {
+        for (int i = 0; i < level; i++) {
             writer.append("  ");
         }
     }
@@ -412,31 +354,23 @@ public interface Template<T>
      * @param string   comment string to add, may be multi-line.
      * @param level    current indent level.
      * @param addSpace if true, additional space will be added before first # and no indent for first line.
-     *
      * @throws IOException from {@link Appendable}
      */
-    static void appendComment(final Appendable writer, final String string, final int level, final boolean addSpace) throws IOException
-    {
-        if (string != null)
-        {
+    static void appendComment(final Appendable writer, final String string, final int level, final boolean addSpace) throws IOException {
+        if (string != null) {
             final String[] split = StringUtils.split(string, '\n');
             boolean first = true;
-            for (int i = 0, splitLength = split.length; i < splitLength; i++)
-            {
+            for (int i = 0, splitLength = split.length; i < splitLength; i++) {
                 final String str = split[i];
-                if (! first || ! addSpace)
-                {
+                if (!first || !addSpace) {
                     spaces(writer, level);
                     writer.append("# ");
-                }
-                else
-                {
+                } else {
                     first = false;
                     writer.append(" # ");
                 }
                 writer.append(str);
-                if ((i + 1) < splitLength)
-                {
+                if ((i + 1) < splitLength) {
                     writer.append('\n');
                 }
             }

@@ -30,8 +30,7 @@ import org.diorite.utils.function.supplier.ShortSupplier;
  * Simple {@link ShortSupplier}-like class, but use "eval" as method name for simpler reflection usage.
  */
 @FunctionalInterface
-public interface ShortEvaluator extends ShortSupplier
-{
+public interface ShortEvaluator extends ShortSupplier {
     /**
      * Gets a result.
      *
@@ -40,8 +39,7 @@ public interface ShortEvaluator extends ShortSupplier
     short eval();
 
     @Override
-    default short getAsShort()
-    {
+    default short getAsShort() {
         return this.eval();
     }
 }

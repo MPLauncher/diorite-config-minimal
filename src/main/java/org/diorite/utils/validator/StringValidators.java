@@ -24,37 +24,29 @@
 
 package org.diorite.utils.validator;
 
+import org.diorite.utils.validator.SimpleValidator.ValidatorEntry;
+import org.diorite.utils.validator.string.*;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import org.diorite.utils.validator.SimpleValidator.ValidatorEntry;
-import org.diorite.utils.validator.string.StringAllowedCharsValidator;
-import org.diorite.utils.validator.string.StringCustomValidator;
-import org.diorite.utils.validator.string.StringDisallowedCharsValidator;
-import org.diorite.utils.validator.string.StringLengthValidator;
-import org.diorite.utils.validator.string.StringRegExValidator;
-
 /**
  * Utility class for creating ValidatorEntires for Strings
  */
-public final class StringValidators
-{
-    private StringValidators()
-    {
+public final class StringValidators {
+    private StringValidators() {
     }
 
     /**
      * Create new custom String validator that don't throw exception on invalid parameter.
      *
      * @param predicate predicate to be used as validator.
-     *
      * @return created validator.
      */
-    public static Validator<String> custom(final Predicate<String> predicate)
-    {
+    public static Validator<String> custom(final Predicate<String> predicate) {
         return custom(predicate, null);
     }
 
@@ -64,11 +56,9 @@ public final class StringValidators
      * @param predicate predicate to be used as validator.
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
      * @param <T>       type of Predicate.
-     *
      * @return created validator.
      */
-    public static <T extends Predicate<String>> Validator<String> custom(final T predicate, final BiFunction<String, StringCustomValidator<T>, ? extends IllegalArgumentException> exception)
-    {
+    public static <T extends Predicate<String>> Validator<String> custom(final T predicate, final BiFunction<String, StringCustomValidator<T>, ? extends IllegalArgumentException> exception) {
         return new ValidatorEntry<>(StringCustomValidator.create(predicate), exception);
     }
 
@@ -77,11 +67,9 @@ public final class StringValidators
      *
      * @param min minimum length of string.
      * @param max maximum length of string.
-     *
      * @return created validator.
      */
-    public static Validator<String> length(final int min, final int max)
-    {
+    public static Validator<String> length(final int min, final int max) {
         return length(min, max, null);
     }
 
@@ -91,11 +79,9 @@ public final class StringValidators
      * @param min       minimum length of string.
      * @param max       maximum length of string.
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
-     *
      * @return created validator.
      */
-    public static Validator<String> length(final int min, final int max, final BiFunction<String, StringLengthValidator, ? extends IllegalArgumentException> exception)
-    {
+    public static Validator<String> length(final int min, final int max, final BiFunction<String, StringLengthValidator, ? extends IllegalArgumentException> exception) {
         return new ValidatorEntry<>(StringLengthValidator.create(min, max), exception);
     }
 
@@ -103,11 +89,9 @@ public final class StringValidators
      * Create new String regex validator that don't throw exception on invalid parameter.
      *
      * @param pattern rexex pattern to be used as validator.
-     *
      * @return created validator.
      */
-    public static Validator<String> regEx(final Pattern pattern)
-    {
+    public static Validator<String> regEx(final Pattern pattern) {
         return regEx(pattern, null);
     }
 
@@ -116,11 +100,9 @@ public final class StringValidators
      *
      * @param pattern   rexex pattern to be used as validator.
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
-     *
      * @return created validator.
      */
-    public static Validator<String> regEx(final Pattern pattern, final BiFunction<String, StringRegExValidator, ? extends IllegalArgumentException> exception)
-    {
+    public static Validator<String> regEx(final Pattern pattern, final BiFunction<String, StringRegExValidator, ? extends IllegalArgumentException> exception) {
         return new ValidatorEntry<>(StringRegExValidator.create(pattern), exception);
     }
 
@@ -128,11 +110,9 @@ public final class StringValidators
      * Create new String allowed chars validator that don't throw exception on invalid parameter.
      *
      * @param chars array of allowed chars.
-     *
      * @return created validator.
      */
-    public static Validator<String> allowedChars(final char... chars)
-    {
+    public static Validator<String> allowedChars(final char... chars) {
         return allowedChars(chars, null);
     }
 
@@ -141,11 +121,9 @@ public final class StringValidators
      *
      * @param chars     array of allowed chars.
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
-     *
      * @return created validator.
      */
-    public static Validator<String> allowedChars(final char[] chars, final BiFunction<String, StringAllowedCharsValidator, ? extends IllegalArgumentException> exception)
-    {
+    public static Validator<String> allowedChars(final char[] chars, final BiFunction<String, StringAllowedCharsValidator, ? extends IllegalArgumentException> exception) {
         return new ValidatorEntry<>(StringAllowedCharsValidator.create(chars), exception);
     }
 
@@ -154,11 +132,9 @@ public final class StringValidators
      *
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
      * @param chars     array of allowed chars.
-     *
      * @return created validator.
      */
-    public static Validator<String> allowedChars(final BiFunction<String, StringAllowedCharsValidator, ? extends IllegalArgumentException> exception, final char... chars)
-    {
+    public static Validator<String> allowedChars(final BiFunction<String, StringAllowedCharsValidator, ? extends IllegalArgumentException> exception, final char... chars) {
         return allowedChars(chars, exception);
     }
 
@@ -166,11 +142,9 @@ public final class StringValidators
      * Create new String allowed chars validator that don't throw exception on invalid parameter.
      *
      * @param chars array of strings contains ranges of disallowed chars.
-     *
      * @return created validator.
      */
-    public static Validator<String> allowedChars(final String... chars)
-    {
+    public static Validator<String> allowedChars(final String... chars) {
         return allowedChars(chars, null);
     }
 
@@ -179,11 +153,9 @@ public final class StringValidators
      *
      * @param chars     array of strings contains ranges of disallowed chars.
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
-     *
      * @return created validator.
      */
-    public static Validator<String> allowedChars(final String[] chars, final BiFunction<String, StringAllowedCharsValidator, ? extends IllegalArgumentException> exception)
-    {
+    public static Validator<String> allowedChars(final String[] chars, final BiFunction<String, StringAllowedCharsValidator, ? extends IllegalArgumentException> exception) {
         return new ValidatorEntry<>(StringAllowedCharsValidator.create(joinRanges(chars)), exception);
     }
 
@@ -192,11 +164,9 @@ public final class StringValidators
      *
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
      * @param chars     array of strings contains ranges of disallowed chars.
-     *
      * @return created validator.
      */
-    public static Validator<String> allowedChars(final BiFunction<String, StringAllowedCharsValidator, ? extends IllegalArgumentException> exception, final String... chars)
-    {
+    public static Validator<String> allowedChars(final BiFunction<String, StringAllowedCharsValidator, ? extends IllegalArgumentException> exception, final String... chars) {
         return allowedChars(chars, exception);
     }
 
@@ -204,11 +174,9 @@ public final class StringValidators
      * Create new String disallowed chars validator that don't throw exception on invalid parameter.
      *
      * @param chars array of disallowed chars.
-     *
      * @return created validator.
      */
-    public static Validator<String> disallowedChars(final char... chars)
-    {
+    public static Validator<String> disallowedChars(final char... chars) {
         return disallowedChars(chars, null);
     }
 
@@ -217,11 +185,9 @@ public final class StringValidators
      *
      * @param chars     array of disallowed chars.
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
-     *
      * @return created validator.
      */
-    public static Validator<String> disallowedChars(final char[] chars, final BiFunction<String, StringDisallowedCharsValidator, ? extends IllegalArgumentException> exception)
-    {
+    public static Validator<String> disallowedChars(final char[] chars, final BiFunction<String, StringDisallowedCharsValidator, ? extends IllegalArgumentException> exception) {
         return new ValidatorEntry<>(StringDisallowedCharsValidator.create(chars), exception);
     }
 
@@ -230,11 +196,9 @@ public final class StringValidators
      *
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
      * @param chars     array of disallowed chars.
-     *
      * @return created validator.
      */
-    public static Validator<String> disallowedChars(final BiFunction<String, StringDisallowedCharsValidator, ? extends IllegalArgumentException> exception, final char... chars)
-    {
+    public static Validator<String> disallowedChars(final BiFunction<String, StringDisallowedCharsValidator, ? extends IllegalArgumentException> exception, final char... chars) {
         return disallowedChars(chars, exception);
     }
 
@@ -242,11 +206,9 @@ public final class StringValidators
      * Create new String disallowed chars validator that don't throw exception on invalid parameter.
      *
      * @param chars array of strings contains ranges of disallowed chars.
-     *
      * @return created validator.
      */
-    public static Validator<String> disallowedChars(final String... chars)
-    {
+    public static Validator<String> disallowedChars(final String... chars) {
         return disallowedChars(chars, null);
     }
 
@@ -255,11 +217,9 @@ public final class StringValidators
      *
      * @param chars     array of strings contains ranges of disallowed chars.
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
-     *
      * @return created validator.
      */
-    public static Validator<String> disallowedChars(final String[] chars, final BiFunction<String, StringDisallowedCharsValidator, ? extends IllegalArgumentException> exception)
-    {
+    public static Validator<String> disallowedChars(final String[] chars, final BiFunction<String, StringDisallowedCharsValidator, ? extends IllegalArgumentException> exception) {
         return new ValidatorEntry<>(StringDisallowedCharsValidator.create(joinRanges(chars)), exception);
     }
 
@@ -268,23 +228,17 @@ public final class StringValidators
      *
      * @param exception function that create exception from validated object and used validator. If function will return null, validator will not throw any exception.
      * @param chars     array of strings contains ranges of disallowed chars.
-     *
      * @return created validator.
      */
-    public static Validator<String> disallowedChars(final BiFunction<String, StringDisallowedCharsValidator, ? extends IllegalArgumentException> exception, final String... chars)
-    {
+    public static Validator<String> disallowedChars(final BiFunction<String, StringDisallowedCharsValidator, ? extends IllegalArgumentException> exception, final String... chars) {
         return disallowedChars(chars, exception);
     }
 
-    private static char[] joinRanges(final String... ranges)
-    {
+    private static char[] joinRanges(final String... ranges) {
         final Collection<Character> charSet = new HashSet<>((ranges.length * 20) + 1);
-        for (final String range : ranges)
-        {
-            if (range.length() != 3)
-            {
-                if (range.length() == 1)
-                {
+        for (final String range : ranges) {
+            if (range.length() != 3) {
+                if (range.length() == 1) {
                     charSet.add(range.charAt(0));
                     continue;
                 }
@@ -292,15 +246,13 @@ public final class StringValidators
             }
             char a = range.charAt(0);
             final char b = range.charAt(2);
-            while (a <= b)
-            {
+            while (a <= b) {
                 charSet.add(a++);
             }
         }
         final char[] chars = new char[charSet.size()];
         int i = 0;
-        for (final Character character : charSet)
-        {
+        for (final Character character : charSet) {
             chars[i++] = character;
         }
         return chars;

@@ -24,20 +24,19 @@
 
 package org.diorite.cfg.system.elements.math;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.cfg.system.elements.StringTemplateElement;
 import org.diorite.cfg.system.elements.TemplateElement;
 import org.diorite.utils.math.DoubleRange;
+
+import java.io.IOException;
 
 /**
  * Template handler for all double range objects.
  *
  * @see DoubleRange
  */
-public class DoubleRangeTemplateElement extends TemplateElement<DoubleRange>
-{
+public class DoubleRangeTemplateElement extends TemplateElement<DoubleRange> {
     /**
      * Instance of template to direct-use.
      */
@@ -46,89 +45,70 @@ public class DoubleRangeTemplateElement extends TemplateElement<DoubleRange>
     /**
      * Construct new default template handler.
      */
-    public DoubleRangeTemplateElement()
-    {
+    public DoubleRangeTemplateElement() {
         super(DoubleRange.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return DoubleRange.class.isAssignableFrom(c) || String.class.isAssignableFrom(c);
     }
 
     @Override
-    protected DoubleRange convertObject0(final Object obj) throws UnsupportedOperationException
-    {
+    protected DoubleRange convertObject0(final Object obj) throws UnsupportedOperationException {
         final DoubleRange convert = this.convert(obj);
-        if (convert != null)
-        {
+        if (convert != null) {
             return convert;
         }
         throw this.getException(obj);
     }
 
-    private DoubleRange convert(final Object obj)
-    {
-        if (obj instanceof String)
-        {
+    private DoubleRange convert(final Object obj) {
+        if (obj instanceof String) {
             final DoubleRange doubleRange = DoubleRange.valueOf((String) obj);
-            if (doubleRange == null)
-            {
+            if (doubleRange == null) {
                 throw this.getException(obj);
             }
             return doubleRange;
         }
-        if (obj instanceof byte[])
-        {
+        if (obj instanceof byte[]) {
             final byte[] array = (byte[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new DoubleRange(array[0], array[1]);
         }
-        if (obj instanceof short[])
-        {
+        if (obj instanceof short[]) {
             final short[] array = (short[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new DoubleRange(array[0], array[1]);
         }
-        if (obj instanceof int[])
-        {
+        if (obj instanceof int[]) {
             final int[] array = (int[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new DoubleRange(array[0], array[1]);
         }
-        if (obj instanceof float[])
-        {
+        if (obj instanceof float[]) {
             final float[] array = (float[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new DoubleRange(array[0], array[1]);
         }
-        if (obj instanceof double[])
-        {
+        if (obj instanceof double[]) {
             final double[] array = (double[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new DoubleRange(array[0], array[1]);
         }
-        if (obj instanceof long[])
-        {
+        if (obj instanceof long[]) {
             final long[] array = (long[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new DoubleRange(array[0], array[1]);
@@ -137,23 +117,19 @@ public class DoubleRangeTemplateElement extends TemplateElement<DoubleRange>
     }
 
     @Override
-    protected DoubleRange convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof DoubleRange)
-        {
+    protected DoubleRange convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof DoubleRange) {
             return (DoubleRange) obj;
         }
         final DoubleRange convert = this.convert(obj);
-        if (convert != null)
-        {
+        if (convert != null) {
             return convert;
         }
         throw this.getException(obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final DoubleRange element = (elementRaw instanceof DoubleRange) ? ((DoubleRange) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.getMin() + ", " + element.getMax()), level, elementPlace);
     }

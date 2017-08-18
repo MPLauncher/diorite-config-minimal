@@ -29,41 +29,34 @@ import java.util.NoSuchElementException;
 /**
  * Represent Float iterator for float array.
  */
-public class FloatIterator extends PrimitiveIterator<Float, float[]>
-{
+public class FloatIterator extends PrimitiveIterator<Float, float[]> {
     /**
      * Construct new FloatIterator for given primitive array.
      *
      * @param primitiveArray array to be iterated.
      */
-    public FloatIterator(final float[] primitiveArray)
-    {
+    public FloatIterator(final float[] primitiveArray) {
         super(primitiveArray);
     }
 
     @Override
-    public void setValue(final Float number)
-    {
+    public void setValue(final Float number) {
         this.primitiveArray[this.index - 1] = number;
     }
 
     @Override
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.primitiveArray[this.index - 1] = number.floatValue();
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.index < this.primitiveArray.length;
     }
 
     @Override
-    public Float next()
-    {
-        if (! this.hasNext())
-        {
+    public Float next() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("Index >= Length, Index: " + this.index + ", Length: " + this.primitiveArray.length);
         }
         return this.primitiveArray[this.index++];

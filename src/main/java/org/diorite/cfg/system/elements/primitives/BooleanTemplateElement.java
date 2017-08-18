@@ -27,8 +27,7 @@ package org.diorite.cfg.system.elements.primitives;
 /**
  * Template used by booleans.
  */
-public class BooleanTemplateElement extends PrimitiveTemplateElement<Boolean>
-{
+public class BooleanTemplateElement extends PrimitiveTemplateElement<Boolean> {
     /**
      * Instance of template to direct-use.
      */
@@ -37,30 +36,25 @@ public class BooleanTemplateElement extends PrimitiveTemplateElement<Boolean>
     /**
      * Construct new boolean template
      */
-    public BooleanTemplateElement()
-    {
+    public BooleanTemplateElement() {
         super(boolean.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return Boolean.class.isAssignableFrom(c);
     }
 
     @Override
-    protected Boolean convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof Boolean)
-        {
+    protected Boolean convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof Boolean) {
             return (boolean) obj;
         }
         throw this.getException(obj);
     }
 
     @Override
-    protected Boolean convertDefault0(final Object obj, final Class<?> fieldType)
-    {
+    protected Boolean convertDefault0(final Object obj, final Class<?> fieldType) {
         throw this.getException(obj);
     }
 }

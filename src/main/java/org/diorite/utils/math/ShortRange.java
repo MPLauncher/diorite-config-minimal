@@ -24,21 +24,20 @@
 
 package org.diorite.utils.math;
 
-import java.util.Random;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Random;
+
 /**
  * Class defining range in short, may be used to validate numbers.
  */
-public class ShortRange
-{
+public class ShortRange {
     /**
      * Range from 1 to 1.
      */
-    public static final ShortRange ONE   = new ShortRange(1, 1);
+    public static final ShortRange ONE = new ShortRange(1, 1);
     /**
      * Range from 0 to 0.
      */
@@ -46,7 +45,7 @@ public class ShortRange
     /**
      * Range from {@link Short#MIN_VALUE} to {@link Short#MAX_VALUE}
      */
-    public static final ShortRange FULL  = new ShortRange(Short.MIN_VALUE, Short.MAX_VALUE);
+    public static final ShortRange FULL = new ShortRange(Short.MIN_VALUE, Short.MAX_VALUE);
 
     private final short min;
     private final short max;
@@ -57,8 +56,7 @@ public class ShortRange
      * @param min min value of range.
      * @param max max value of range.
      */
-    public ShortRange(final short min, final short max)
-    {
+    public ShortRange(final short min, final short max) {
         this.min = min;
         this.max = max;
     }
@@ -69,32 +67,28 @@ public class ShortRange
      * @param min min value of range.
      * @param max max value of range.
      */
-    public ShortRange(final int min, final int max)
-    {
+    public ShortRange(final int min, final int max) {
         this((short) min, (short) max);
     }
 
     /**
      * @return min value in range.
      */
-    public short getMin()
-    {
+    public short getMin() {
         return this.min;
     }
 
     /**
      * @return max value in range.
      */
-    public short getMax()
-    {
+    public short getMax() {
         return this.max;
     }
 
     /**
      * @return random value in range.
      */
-    public short getRandom()
-    {
+    public short getRandom() {
         return ((this.max - this.min) == 0) ? this.max : (short) DioriteRandomUtils.getRandomInt(this.min, this.max);
     }
 
@@ -102,19 +96,16 @@ public class ShortRange
      * Returns random value in range.
      *
      * @param random random instance to use.
-     *
      * @return random value in range.
      */
-    public short getRandom(final Random random)
-    {
+    public short getRandom(final Random random) {
         return ((this.max - this.min) == 0) ? this.max : (short) DioriteRandomUtils.getRandomInt(random, this.min, this.max);
     }
 
     /**
      * @return size of range. (max - min + 1)
      */
-    public int size()
-    {
+    public int size() {
         return ((this.max - this.min) + 1);
     }
 
@@ -122,11 +113,9 @@ public class ShortRange
      * Check if given number is in range.
      *
      * @param i number to check.
-     *
      * @return true if it is in range
      */
-    public boolean isIn(final int i)
-    {
+    public boolean isIn(final int i) {
         return (i >= this.min) && (i <= this.max);
     }
 
@@ -134,11 +123,9 @@ public class ShortRange
      * Check if given number is in range.
      *
      * @param i number to check.
-     *
      * @return true if it is in range
      */
-    public boolean isIn(final short i)
-    {
+    public boolean isIn(final short i) {
         return (i >= this.min) && (i <= this.max);
     }
 
@@ -149,17 +136,13 @@ public class ShortRange
      * {@code else -> i}
      *
      * @param i number to validate.
-     *
      * @return closest number in range.
      */
-    public int getIn(final short i)
-    {
-        if (i > this.max)
-        {
+    public int getIn(final short i) {
+        if (i > this.max) {
             return this.max;
         }
-        if (i < this.min)
-        {
+        if (i < this.min) {
             return this.min;
         }
         return i;
@@ -173,13 +156,10 @@ public class ShortRange
      *
      * @param i   number to validate.
      * @param def default value.
-     *
      * @return given number or default value.
      */
-    public int getIn(final short i, final short def)
-    {
-        if (! this.isIn(i))
-        {
+    public int getIn(final short i, final short def) {
+        if (!this.isIn(i)) {
             return def;
         }
         return i;
@@ -193,13 +173,10 @@ public class ShortRange
      *
      * @param i   number to validate.
      * @param def default value.
-     *
      * @return given number or default value.
      */
-    public int getIn(final short i, final int def)
-    {
-        if (! this.isIn(i))
-        {
+    public int getIn(final short i, final int def) {
+        if (!this.isIn(i)) {
             return def;
         }
         return i;
@@ -212,17 +189,13 @@ public class ShortRange
      * {@code else -> i}
      *
      * @param i number to validate.
-     *
      * @return closest number in range.
      */
-    public short getIn(final int i)
-    {
-        if (i > this.max)
-        {
+    public short getIn(final int i) {
+        if (i > this.max) {
             return this.max;
         }
-        if (i < this.min)
-        {
+        if (i < this.min) {
             return this.min;
         }
         return (short) i;
@@ -236,35 +209,28 @@ public class ShortRange
      *
      * @param i   number to validate.
      * @param def default value.
-     *
      * @return closest number in range.
      */
-    public short getIn(final int i, final int def)
-    {
-        if (! this.isIn(i))
-        {
+    public short getIn(final int i, final int def) {
+        if (!this.isIn(i)) {
             return (short) def;
         }
         return (short) i;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = (int) this.min;
         result = (31 * result) + (int) this.max;
         return result;
     }
 
     @Override
-    public boolean equals(final Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (! (o instanceof ShortRange))
-        {
+        if (!(o instanceof ShortRange)) {
             return false;
         }
 
@@ -275,8 +241,7 @@ public class ShortRange
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("min", this.min).append("max", this.max).toString();
     }
 
@@ -284,11 +249,9 @@ public class ShortRange
      * Create range with only gived value in range.
      *
      * @param num min and max of range.
-     *
      * @return range with only one value in range.
      */
-    public static ShortRange fixed(final int num)
-    {
+    public static ShortRange fixed(final int num) {
         return new ShortRange(num, num);
     }
 
@@ -296,11 +259,9 @@ public class ShortRange
      * Create range with only gived value in range.
      *
      * @param num min and max of range.
-     *
      * @return range with only one value in range.
      */
-    public static ShortRange fixed(final short num)
-    {
+    public static ShortRange fixed(final short num) {
         return new ShortRange(num, num);
     }
 
@@ -309,38 +270,30 @@ public class ShortRange
      * " - ", " : ", " ; ", ", ", " ", ",", ";", ":", "-"
      *
      * @param string string to parse.
-     *
      * @return parsed range or null.
      */
-    public static ShortRange valueOf(String string)
-    {
-        if (string.isEmpty())
-        {
+    public static ShortRange valueOf(String string) {
+        if (string.isEmpty()) {
             return null;
         }
         String[] nums = null;
         int i = 0;
         final boolean firstMinus = string.charAt(0) == '-';
-        if (firstMinus)
-        {
+        if (firstMinus) {
             string = string.substring(1);
         }
-        while ((i < ByteRange.SPLITS.length) && ((nums == null) || (nums.length != 2)))
-        {
+        while ((i < ByteRange.SPLITS.length) && ((nums == null) || (nums.length != 2))) {
             nums = StringUtils.splitByWholeSeparator(string, ByteRange.SPLITS[i++], 2);
         }
-        if ((nums == null) || (nums.length != 2))
-        {
+        if ((nums == null) || (nums.length != 2)) {
             return null;
         }
         final Integer min = DioriteMathUtils.asInt(firstMinus ? ("-" + nums[0]) : nums[0]);
-        if ((min == null) || (min < Short.MIN_VALUE))
-        {
+        if ((min == null) || (min < Short.MIN_VALUE)) {
             return null;
         }
         final Integer max = DioriteMathUtils.asInt(nums[1]);
-        if ((max == null) || (max > Short.MAX_VALUE) || (min > max))
-        {
+        if ((max == null) || (max > Short.MAX_VALUE) || (min > max)) {
             return null;
         }
         return new ShortRange(min.shortValue(), max.shortValue());

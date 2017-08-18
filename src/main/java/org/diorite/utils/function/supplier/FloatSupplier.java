@@ -36,8 +36,7 @@ import java.util.function.Supplier;
  * @see Supplier
  */
 @FunctionalInterface
-public interface FloatSupplier
-{
+public interface FloatSupplier {
 
     /**
      * Gets a result.

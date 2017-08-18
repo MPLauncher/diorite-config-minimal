@@ -24,20 +24,19 @@
 
 package org.diorite.cfg.system.elements.math;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.cfg.system.elements.StringTemplateElement;
 import org.diorite.cfg.system.elements.TemplateElement;
 import org.diorite.utils.math.LongRange;
+
+import java.io.IOException;
 
 /**
  * Template handler for all long range objects.
  *
  * @see LongRange
  */
-public class LongRangeTemplateElement extends TemplateElement<LongRange>
-{
+public class LongRangeTemplateElement extends TemplateElement<LongRange> {
     /**
      * Instance of template to direct-use.
      */
@@ -46,71 +45,56 @@ public class LongRangeTemplateElement extends TemplateElement<LongRange>
     /**
      * Construct new default template handler.
      */
-    public LongRangeTemplateElement()
-    {
+    public LongRangeTemplateElement() {
         super(LongRange.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return LongRange.class.isAssignableFrom(c) || String.class.isAssignableFrom(c);
     }
 
     @Override
-    protected LongRange convertObject0(final Object obj) throws UnsupportedOperationException
-    {
+    protected LongRange convertObject0(final Object obj) throws UnsupportedOperationException {
         final LongRange convert = this.convert(obj);
-        if (convert != null)
-        {
+        if (convert != null) {
             return convert;
         }
         throw this.getException(obj);
     }
 
-    private LongRange convert(final Object obj)
-    {
-        if (obj instanceof String)
-        {
+    private LongRange convert(final Object obj) {
+        if (obj instanceof String) {
             final LongRange longRange = LongRange.valueOf((String) obj);
-            if (longRange == null)
-            {
+            if (longRange == null) {
                 throw this.getException(obj);
             }
             return longRange;
         }
-        if (obj instanceof byte[])
-        {
+        if (obj instanceof byte[]) {
             final byte[] array = (byte[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new LongRange(array[0], array[1]);
         }
-        if (obj instanceof short[])
-        {
+        if (obj instanceof short[]) {
             final short[] array = (short[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new LongRange(array[0], array[1]);
         }
-        if (obj instanceof int[])
-        {
+        if (obj instanceof int[]) {
             final int[] array = (int[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new LongRange(array[0], array[1]);
         }
-        if (obj instanceof long[])
-        {
+        if (obj instanceof long[]) {
             final long[] array = (long[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new LongRange(array[0], array[1]);
@@ -119,23 +103,19 @@ public class LongRangeTemplateElement extends TemplateElement<LongRange>
     }
 
     @Override
-    protected LongRange convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof LongRange)
-        {
+    protected LongRange convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof LongRange) {
             return (LongRange) obj;
         }
         final LongRange convert = this.convert(obj);
-        if (convert != null)
-        {
+        if (convert != null) {
             return convert;
         }
         throw this.getException(obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final LongRange element = (elementRaw instanceof LongRange) ? ((LongRange) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.getMin() + ", " + element.getMax()), level, elementPlace);
     }

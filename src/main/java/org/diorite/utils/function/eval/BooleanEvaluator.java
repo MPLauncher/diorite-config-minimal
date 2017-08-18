@@ -30,8 +30,7 @@ import java.util.function.BooleanSupplier;
  * Simple {@link BooleanSupplier}-like class, but use "eval" as method name for simpler reflection usage.
  */
 @FunctionalInterface
-public interface BooleanEvaluator extends BooleanSupplier
-{
+public interface BooleanEvaluator extends BooleanSupplier {
     /**
      * Gets a result.
      *
@@ -40,8 +39,7 @@ public interface BooleanEvaluator extends BooleanSupplier
     boolean eval();
 
     @Override
-    default boolean getAsBoolean()
-    {
+    default boolean getAsBoolean() {
         return this.eval();
     }
 }

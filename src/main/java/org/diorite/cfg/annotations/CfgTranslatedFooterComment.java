@@ -40,8 +40,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
 @Repeatable(CfgTranslatedFooterCommentArray.class)
-public @interface CfgTranslatedFooterComment
-{
+public @interface CfgTranslatedFooterComment {
     /**
      * Don't add {@literal #} symbol.
      *

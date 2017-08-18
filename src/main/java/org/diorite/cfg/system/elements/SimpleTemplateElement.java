@@ -29,15 +29,13 @@ package org.diorite.cfg.system.elements;
  *
  * @param <T> type of supported/handled element.
  */
-public abstract class SimpleTemplateElement<T> extends TemplateElement<T>
-{
+public abstract class SimpleTemplateElement<T> extends TemplateElement<T> {
     /**
      * Construct new template for given class, convert function and class type checking function.
      *
      * @param fieldType type of supported template element.
      */
-    public SimpleTemplateElement(final Class<T> fieldType)
-    {
+    public SimpleTemplateElement(final Class<T> fieldType) {
         super(fieldType);
     }
 
@@ -46,46 +44,36 @@ public abstract class SimpleTemplateElement<T> extends TemplateElement<T>
      * Simple convert method, used both by {@link #convertDefault0(Object, Class)} and {@link #convertObject0(Object)} to make creating element simpler.
      *
      * @param obj object to convert.
-     *
      * @return converted object.
-     *
      * @throws UnsupportedOperationException when method can't convert object.
      */
     protected abstract T simpleConvert(final Object obj) throws UnsupportedOperationException;
 
     @Override
-    protected T convertObject0(final Object obj)
-    {
+    protected T convertObject0(final Object obj) {
         return this.convert0(obj);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected T convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (this.fieldType.isAssignableFrom(obj.getClass()))
-        {
+    protected T convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (this.fieldType.isAssignableFrom(obj.getClass())) {
             return (T) obj;
         }
         return this.convert0(obj);
     }
 
-    private T convert0(final Object obj)
-    {
+    private T convert0(final Object obj) {
         final T converted;
-        try
-        {
+        try {
             converted = this.simpleConvert(obj);
-        } catch (final Exception e)
-        {
-            if (e instanceof UnsupportedOperationException)
-            {
+        } catch (final Exception e) {
+            if (e instanceof UnsupportedOperationException) {
                 throw e;
             }
             throw this.getException(obj, e);
         }
-        if (converted == null)
-        {
+        if (converted == null) {
             throw this.getException(obj);
         }
         return converted;

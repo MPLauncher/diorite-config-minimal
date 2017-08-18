@@ -26,19 +26,17 @@ package org.diorite.utils.lazy;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
 import org.diorite.utils.others.Resetable;
 
 /**
  * Class to represent lazy init char values, lazy value is initialized on first {@link #get()} invoke by {@link #init()} method. <br>
  * Class also implements {@link Resetable} so cached value can be reset and new value will be created on next {@link #get()} method invoke.
  */
-public abstract class CharLazyValueAbstract implements Resetable
-{
+public abstract class CharLazyValueAbstract implements Resetable {
     /**
      * Used to store cached value.
      */
-    protected char    cached;
+    protected char cached;
     /**
      * Determine if value was already initialized.
      */
@@ -47,8 +45,7 @@ public abstract class CharLazyValueAbstract implements Resetable
     /**
      * Construct new CharLazyValueAbstract object.
      */
-    protected CharLazyValueAbstract()
-    {
+    protected CharLazyValueAbstract() {
     }
 
     /**
@@ -56,14 +53,10 @@ public abstract class CharLazyValueAbstract implements Resetable
      *
      * @return value of this lazy value.
      */
-    public char get()
-    {
-        if (this.isCached)
-        {
+    public char get() {
+        if (this.isCached) {
             return this.cached;
-        }
-        else
-        {
+        } else {
             this.cached = this.init();
             this.isCached = true;
             return this.cached;
@@ -83,20 +76,17 @@ public abstract class CharLazyValueAbstract implements Resetable
      *
      * @return true if value was already initialized.
      */
-    public boolean isCached()
-    {
+    public boolean isCached() {
         return this.isCached;
     }
 
     @Override
-    public void reset()
-    {
+    public void reset() {
         this.isCached = false;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("isCached", this.isCached).append("cached", this.cached).toString();
     }
 }

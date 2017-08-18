@@ -42,8 +42,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
-public @interface CfgFooterComments
-{
+public @interface CfgFooterComments {
     /**
      * Don't add {@literal #} symbol.
      *

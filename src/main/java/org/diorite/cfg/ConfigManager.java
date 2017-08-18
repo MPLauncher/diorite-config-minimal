@@ -24,41 +24,27 @@
 
 package org.diorite.cfg;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+import org.diorite.cfg.yaml.DioriteYaml;
+
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import org.diorite.cfg.yaml.DioriteYaml;
 
 /**
  * Config manager for fast using template config system.
  */
-public interface ConfigManager
-{
+public interface ConfigManager {
     /**
      * Load given file as object using {@link org.diorite.cfg.system.Template} configuration system. <br>
      * This method will use UTF-8 as default encoding.
      *
      * @param file file to load.
      * @param <T>  type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any file-related operation fail.
      * @throws InvalidConfigurationException if config file is invalid.
      */
-    default <T> T load(final File file) throws IOException, InvalidConfigurationException
-    {
+    default <T> T load(final File file) throws IOException, InvalidConfigurationException {
         return this.load(file, StandardCharsets.UTF_8);
     }
 
@@ -69,14 +55,11 @@ public interface ConfigManager
      * @param clazz type of object to load.
      * @param file  file to load.
      * @param <T>   type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any file-related operation fail.
      * @throws InvalidConfigurationException if config file is invalid.
      */
-    default <T> T load(final Class<T> clazz, final File file) throws IOException, InvalidConfigurationException
-    {
+    default <T> T load(final Class<T> clazz, final File file) throws IOException, InvalidConfigurationException {
         return this.load(clazz, file, StandardCharsets.UTF_8);
     }
 
@@ -86,11 +69,9 @@ public interface ConfigManager
      *
      * @param file   file to use, file will be created if it don't exist yet. (including directory)
      * @param object object to save using templates, template will be created if it don't exist yet.
-     *
      * @throws IOException if any file-related operation fail.
      */
-    default void save(final File file, final Object object) throws IOException, InvalidConfigurationException
-    {
+    default void save(final File file, final Object object) throws IOException, InvalidConfigurationException {
         this.save(file, object, StandardCharsets.UTF_8);
     }
 
@@ -100,23 +81,17 @@ public interface ConfigManager
      * @param file    file to load.
      * @param charset charset to use.
      * @param <T>     type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any file-related operation fail.
      * @throws InvalidConfigurationException if config file is invalid.
      */
-    default <T> T load(final File file, final Charset charset) throws IOException, InvalidConfigurationException
-    {
-        if (! file.exists())
-        {
+    default <T> T load(final File file, final Charset charset) throws IOException, InvalidConfigurationException {
+        if (!file.exists()) {
             throw new InvalidConfigurationException("File not found \"" + file.getAbsolutePath() + "\"");
         }
-        try (final FileInputStream input = new FileInputStream(file))
-        {
+        try (final FileInputStream input = new FileInputStream(file)) {
             return this.load(input, charset);
-        } catch (final FileNotFoundException ignored)
-        {
+        } catch (final FileNotFoundException ignored) {
             throw new RuntimeException("Impossible exception.", ignored);
         }
     }
@@ -128,23 +103,17 @@ public interface ConfigManager
      * @param file    file to load.
      * @param charset charset to use.
      * @param <T>     type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any file-related operation fail.
      * @throws InvalidConfigurationException if config file is invalid.
      */
-    default <T> T load(final Class<T> clazz, final File file, final Charset charset) throws IOException, InvalidConfigurationException
-    {
-        if (! file.exists())
-        {
+    default <T> T load(final Class<T> clazz, final File file, final Charset charset) throws IOException, InvalidConfigurationException {
+        if (!file.exists()) {
             throw new InvalidConfigurationException("File not found \"" + file.getAbsolutePath() + "\"");
         }
-        try (final FileInputStream input = new FileInputStream(file))
-        {
+        try (final FileInputStream input = new FileInputStream(file)) {
             return this.load(clazz, input, charset);
-        } catch (final FileNotFoundException ignored)
-        {
+        } catch (final FileNotFoundException ignored) {
             throw new RuntimeException("Impossible exception.", ignored);
         }
     }
@@ -155,27 +124,20 @@ public interface ConfigManager
      * @param file    file to use, file will be created if it don't exist yet. (including directory)
      * @param object  object to save using templates, template will be created if it don't exist yet.
      * @param charset charset to use.
-     *
      * @throws IOException if any file-related operation fail.
      */
-    default void save(final File file, final Object object, final Charset charset) throws IOException, InvalidConfigurationException
-    {
-        if (! file.exists())
-        {
+    default void save(final File file, final Object object, final Charset charset) throws IOException, InvalidConfigurationException {
+        if (!file.exists()) {
             file.getAbsoluteFile().getParentFile().mkdirs();
-            try
-            {
+            try {
                 file.createNewFile();
-            } catch (final IOException e)
-            {
+            } catch (final IOException e) {
                 throw new IOException("Can't create file: \"" + file.getAbsolutePath() + "\"", e);
             }
         }
-        try (final FileOutputStream output = new FileOutputStream(file))
-        {
+        try (final FileOutputStream output = new FileOutputStream(file)) {
             this.save(output, object, charset);
-        } catch (final FileNotFoundException ignored)
-        {
+        } catch (final FileNotFoundException ignored) {
             throw new RuntimeException("Impossible exception.", ignored);
         }
     }
@@ -187,14 +149,11 @@ public interface ConfigManager
      * @param input   {@link InputStream} to load.
      * @param charset charset to use.
      * @param <T>     type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any stream-related operation fail.
      * @throws InvalidConfigurationException if config is invalid.
      */
-    default <T> T load(final InputStream input, final Charset charset) throws IOException, InvalidConfigurationException
-    {
+    default <T> T load(final InputStream input, final Charset charset) throws IOException, InvalidConfigurationException {
         return this.load(new InputStreamReader(input, charset));
     }
 
@@ -205,14 +164,11 @@ public interface ConfigManager
      * @param input   {@link InputStream} to load.
      * @param charset charset to use.
      * @param <T>     type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any stream-related operation fail.
      * @throws InvalidConfigurationException if config is invalid.
      */
-    default <T> T load(final Class<T> clazz, final InputStream input, final Charset charset) throws IOException, InvalidConfigurationException
-    {
+    default <T> T load(final Class<T> clazz, final InputStream input, final Charset charset) throws IOException, InvalidConfigurationException {
         return this.load(clazz, new InputStreamReader(input, charset));
     }
 
@@ -222,11 +178,9 @@ public interface ConfigManager
      * @param output  output stream to use.
      * @param object  object to save using templates, template will be created if it don't exist yet.
      * @param charset charset to use.
-     *
      * @throws IOException if any stream-related operation fail.
      */
-    default void save(final OutputStream output, final Object object, final Charset charset) throws IOException
-    {
+    default void save(final OutputStream output, final Object object, final Charset charset) throws IOException {
         this.save(new OutputStreamWriter(output, charset), object);
     }
 
@@ -237,14 +191,11 @@ public interface ConfigManager
      *
      * @param input {@link InputStream} to load.
      * @param <T>   type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any stream-related operation fail.
      * @throws InvalidConfigurationException if config is invalid.
      */
-    default <T> T load(final InputStream input) throws IOException, InvalidConfigurationException
-    {
+    default <T> T load(final InputStream input) throws IOException, InvalidConfigurationException {
         return this.load(new InputStreamReader(input, StandardCharsets.UTF_8));
     }
 
@@ -255,14 +206,11 @@ public interface ConfigManager
      * @param clazz type of object to load.
      * @param input {@link InputStream} to load.
      * @param <T>   type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any stream-related operation fail.
      * @throws InvalidConfigurationException if config is invalid.
      */
-    default <T> T load(final Class<T> clazz, final InputStream input) throws IOException, InvalidConfigurationException
-    {
+    default <T> T load(final Class<T> clazz, final InputStream input) throws IOException, InvalidConfigurationException {
         return this.load(clazz, new InputStreamReader(input, StandardCharsets.UTF_8));
     }
 
@@ -272,11 +220,9 @@ public interface ConfigManager
      *
      * @param output output stream to use.
      * @param object object to save using templates, template will be created if it don't exist yet.
-     *
      * @throws IOException if any stream-related operation fail.
      */
-    default void save(final OutputStream output, final Object object) throws IOException
-    {
+    default void save(final OutputStream output, final Object object) throws IOException {
         this.save(new OutputStreamWriter(output, StandardCharsets.UTF_8), object);
     }
 
@@ -293,9 +239,7 @@ public interface ConfigManager
      *
      * @param reader {@link Reader} to use.
      * @param <T>    type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any reader-related operation fail.
      * @throws InvalidConfigurationException if config is invalid.
      */
@@ -307,9 +251,7 @@ public interface ConfigManager
      * @param clazz  type of object to load.
      * @param reader {@link Reader} to use.
      * @param <T>    type of returned object.
-     *
      * @return loaded object.
-     *
      * @throws IOException                   if any reader-related operation fail.
      * @throws InvalidConfigurationException if config is invalid.
      */
@@ -320,7 +262,6 @@ public interface ConfigManager
      *
      * @param writer {@link Writer} to use.
      * @param object object to save using templates, template will be created if it don't exist yet.
-     *
      * @throws IOException if any writer-related operation fail.
      */
     void save(Writer writer, Object object) throws IOException;

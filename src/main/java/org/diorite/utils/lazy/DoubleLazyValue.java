@@ -24,10 +24,10 @@
 
 package org.diorite.utils.lazy;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.Collection;
 import java.util.function.DoubleSupplier;
-
-import org.apache.commons.lang3.Validate;
 
 /**
  * Class to represent lazy init double values that use {@link DoubleSupplier} passed in constructor to initialize value in {@link #init()} method. <br>
@@ -36,8 +36,7 @@ import org.apache.commons.lang3.Validate;
  * @see DoubleLazyValueAbstract
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class DoubleLazyValue extends DoubleLazyValueAbstract
-{
+public class DoubleLazyValue extends DoubleLazyValueAbstract {
     /**
      * supplier used by {@link #init()} method.
      */
@@ -48,8 +47,7 @@ public class DoubleLazyValue extends DoubleLazyValueAbstract
      *
      * @param supplier supplier used to initialize value in {@link #init()} method.
      */
-    public DoubleLazyValue(final DoubleSupplier supplier)
-    {
+    public DoubleLazyValue(final DoubleSupplier supplier) {
         Validate.notNull(supplier, "supplier can't be null!");
         this.supplier = supplier;
     }
@@ -60,15 +58,13 @@ public class DoubleLazyValue extends DoubleLazyValueAbstract
      * @param collection created instance will be added to this list.
      * @param supplier   supplier used to initialize value in {@link #init()} method.
      */
-    public DoubleLazyValue(final Collection<? super DoubleLazyValue> collection, final DoubleSupplier supplier)
-    {
+    public DoubleLazyValue(final Collection<? super DoubleLazyValue> collection, final DoubleSupplier supplier) {
         this.supplier = supplier;
         collection.add(this);
     }
 
     @Override
-    protected double init()
-    {
+    protected double init() {
         return this.supplier.getAsDouble();
     }
 }

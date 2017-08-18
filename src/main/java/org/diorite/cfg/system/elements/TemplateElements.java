@@ -24,6 +24,16 @@
 
 package org.diorite.cfg.system.elements;
 
+import org.apache.commons.lang3.Validate;
+import org.diorite.cfg.system.ConfigField;
+import org.diorite.cfg.system.elements.math.*;
+import org.diorite.cfg.system.elements.primitives.*;
+import org.diorite.utils.SimpleEnum;
+import org.diorite.utils.math.*;
+import org.diorite.utils.pipeline.BasePipeline;
+import org.diorite.utils.pipeline.Pipeline;
+import org.diorite.utils.reflections.DioriteReflectionUtils;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -31,36 +41,6 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-
-import org.apache.commons.lang3.Validate;
-
-import org.diorite.cfg.system.ConfigField;
-import org.diorite.cfg.system.elements.math.ByteRangeTemplateElement;
-import org.diorite.cfg.system.elements.math.DoubleRangeTemplateElement;
-import org.diorite.cfg.system.elements.math.FloatRangeTemplateElement;
-import org.diorite.cfg.system.elements.math.IntRangeTemplateElement;
-import org.diorite.cfg.system.elements.math.LongRangeTemplateElement;
-import org.diorite.cfg.system.elements.math.RomanNumeralTemplateElement;
-import org.diorite.cfg.system.elements.math.ShortRangeTemplateElement;
-import org.diorite.cfg.system.elements.primitives.BooleanTemplateElement;
-import org.diorite.cfg.system.elements.primitives.ByteTemplateElement;
-import org.diorite.cfg.system.elements.primitives.CharTemplateElement;
-import org.diorite.cfg.system.elements.primitives.DoubleTemplateElement;
-import org.diorite.cfg.system.elements.primitives.FloatTemplateElement;
-import org.diorite.cfg.system.elements.primitives.IntTemplateElement;
-import org.diorite.cfg.system.elements.primitives.LongTemplateElement;
-import org.diorite.cfg.system.elements.primitives.ShortTemplateElement;
-import org.diorite.utils.SimpleEnum;
-import org.diorite.utils.math.ByteRange;
-import org.diorite.utils.math.DoubleRange;
-import org.diorite.utils.math.FloatRange;
-import org.diorite.utils.math.IntRange;
-import org.diorite.utils.math.LongRange;
-import org.diorite.utils.math.RomanNumeral;
-import org.diorite.utils.math.ShortRange;
-import org.diorite.utils.pipeline.BasePipeline;
-import org.diorite.utils.pipeline.Pipeline;
-import org.diorite.utils.reflections.DioriteReflectionUtils;
 
 /**
  * Manager class for element templates.
@@ -93,21 +73,17 @@ import org.diorite.utils.reflections.DioriteReflectionUtils;
  * Next elements are all primitives arrays: boolean, char, long, int, short. byte, double, float,
  * then Object[], all primitives and {@link String} at the end.
  */
-public final class TemplateElements
-{
+public final class TemplateElements {
     private static final Pipeline<TemplateElement<?>> elements = new BasePipeline<>();
 
-    private TemplateElements()
-    {
+    private TemplateElements() {
     }
 
     /**
      * @return editable pipeline with template elements.
-     *
      * @see TemplateElements
      */
-    public static Pipeline<TemplateElement<?>> getElements()
-    {
+    public static Pipeline<TemplateElement<?>> getElements() {
         return elements;
     }
 
@@ -118,8 +94,7 @@ public final class TemplateElements
      *
      * @return default template handler.
      */
-    public static TemplateElement<Object> getDefaultTemplatesHandler()
-    {
+    public static TemplateElement<Object> getDefaultTemplatesHandler() {
         return defaultTemplatesHandler;
     }
 
@@ -128,8 +103,7 @@ public final class TemplateElements
      *
      * @param defaultTemplatesHandler new template hanlder
      */
-    public static void setDefaultTemplatesHandler(final TemplateElement<Object> defaultTemplatesHandler)
-    {
+    public static void setDefaultTemplatesHandler(final TemplateElement<Object> defaultTemplatesHandler) {
         Validate.notNull(defaultTemplatesHandler, "unhandled handler can't be null");
         TemplateElements.defaultTemplatesHandler = defaultTemplatesHandler;
     }
@@ -144,33 +118,25 @@ public final class TemplateElements
      * 5. If there is still no matching template, {@link #getDefaultTemplatesHandler()} is used.
      *
      * @param clazz class to find template for it.
-     *
      * @return template element.
      */
-    public static TemplateElement<?> getElement(Class<?> clazz)
-    {
+    public static TemplateElement<?> getElement(Class<?> clazz) {
         clazz = DioriteReflectionUtils.getPrimitive(clazz);
         TemplateElement<?> element = elements.get(clazz.getName());
-        if (element != null)
-        {
+        if (element != null) {
             return element;
         }
         element = elements.get(clazz.getSimpleName());
-        if (element != null)
-        {
+        if (element != null) {
             return element;
         }
-        for (final TemplateElement<?> e : elements)
-        {
-            if (e.isValidType(clazz))
-            {
+        for (final TemplateElement<?> e : elements) {
+            if (e.isValidType(clazz)) {
                 return e;
             }
         }
-        for (final TemplateElement<?> e : elements)
-        {
-            if (e.canBeConverted(clazz))
-            {
+        for (final TemplateElement<?> e : elements) {
+            if (e.canBeConverted(clazz)) {
                 return e;
             }
         }
@@ -187,22 +153,18 @@ public final class TemplateElements
      * 5. If there is still no matching template, {@link #getDefaultTemplatesHandler()} is used.
      *
      * @param field field to find template for it.
-     *
      * @return template element.
      */
-    public static TemplateElement<?> getElement(final ConfigField field)
-    {
+    public static TemplateElement<?> getElement(final ConfigField field) {
         return getElement(field.getField().getType());
     }
 
-    private static <T> void addPrimitiveArray(final Class<T> clazz, final SimpleArrayTemplateElement<T> templateElement)
-    {
+    private static <T> void addPrimitiveArray(final Class<T> clazz, final SimpleArrayTemplateElement<T> templateElement) {
         elements.addLast(clazz.getName(), templateElement);
         elements.addLast(clazz.getSimpleName(), templateElement);
     }
 
-    static
-    {
+    static {
         elements.addLast(Enum.class.getName(), EnumTemplateElement.INSTANCE);
         elements.addLast(SimpleEnum.class.getName(), SimpleEnumTemplateElement.INSTANCE);
         elements.addLast(URI.class.getName(), URITemplateElement.INSTANCE);

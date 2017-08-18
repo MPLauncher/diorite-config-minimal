@@ -27,8 +27,7 @@ package org.diorite.cfg.system.elements.primitives;
 /**
  * Template used by doubles.
  */
-public class DoubleTemplateElement extends PrimitiveTemplateElement<Double>
-{
+public class DoubleTemplateElement extends PrimitiveTemplateElement<Double> {
     /**
      * Instance of template to direct-use.
      */
@@ -37,32 +36,26 @@ public class DoubleTemplateElement extends PrimitiveTemplateElement<Double>
     /**
      * Construct new double template
      */
-    public DoubleTemplateElement()
-    {
+    public DoubleTemplateElement() {
         super(double.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return Number.class.isAssignableFrom(c);
     }
 
     @Override
-    protected Double convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof Number)
-        {
+    protected Double convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof Number) {
             return ((Number) obj).doubleValue();
         }
         throw this.getException(obj);
     }
 
     @Override
-    protected Double convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof Number)
-        {
+    protected Double convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof Number) {
             return ((Number) obj).doubleValue();
         }
         throw this.getException(obj);

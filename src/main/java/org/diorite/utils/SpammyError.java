@@ -24,26 +24,23 @@
 
 package org.diorite.utils;
 
-import java.util.concurrent.TimeUnit;
-
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Small utility class useful when we have something to log, that can be invoked very often and we don't want make spam in output. <br>
  * Like log it only once per few minutes.
  */
-public final class SpammyError
-{
+public final class SpammyError {
     private static final Object2LongMap<Object> errors = new Object2LongOpenHashMap<>(10, 0.1f);
 
-    static
-    {
+    static {
         errors.defaultReturnValue(0);
     }
 
-    private SpammyError()
-    {
+    private SpammyError() {
     }
 
     /**
@@ -53,12 +50,10 @@ public final class SpammyError
      * @param secondsBetweenLogs minimum time between messages in seconds.
      * @param key                key to store last time of message.
      */
-    public static void err(final String message, final int secondsBetweenLogs, final Object key)
-    {
+    public static void err(final String message, final int secondsBetweenLogs, final Object key) {
         final long currentTime = System.currentTimeMillis();
         final long nextTime = errors.getLong(key) + TimeUnit.SECONDS.toMillis(secondsBetweenLogs);
-        if (currentTime >= nextTime)
-        {
+        if (currentTime >= nextTime) {
             System.err.println(message);
             errors.put(key, currentTime);
         }
@@ -71,12 +66,10 @@ public final class SpammyError
      * @param secondsBetweenLogs minimum time between messages in seconds.
      * @param key                key to store last time of message.
      */
-    public static void out(final String message, final int secondsBetweenLogs, final Object key)
-    {
+    public static void out(final String message, final int secondsBetweenLogs, final Object key) {
         final long currentTime = System.currentTimeMillis();
         final long nextTime = errors.getLong(key) + TimeUnit.SECONDS.toMillis(secondsBetweenLogs);
-        if (currentTime >= nextTime)
-        {
+        if (currentTime >= nextTime) {
             System.out.println(message);
             errors.put(key, currentTime);
         }

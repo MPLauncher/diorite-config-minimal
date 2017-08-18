@@ -29,41 +29,34 @@ import java.util.NoSuchElementException;
 /**
  * Represent Integer iterator for int array.
  */
-public class IntIterator extends PrimitiveIterator<Integer, int[]>
-{
+public class IntIterator extends PrimitiveIterator<Integer, int[]> {
     /**
      * Construct new IntIterator for given primitive array.
      *
      * @param primitiveArray array to be iterated.
      */
-    public IntIterator(final int[] primitiveArray)
-    {
+    public IntIterator(final int[] primitiveArray) {
         super(primitiveArray);
     }
 
     @Override
-    public void setValue(final Integer number)
-    {
+    public void setValue(final Integer number) {
         this.primitiveArray[this.index - 1] = number;
     }
 
     @Override
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.primitiveArray[this.index - 1] = number.intValue();
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.index < this.primitiveArray.length;
     }
 
     @Override
-    public Integer next()
-    {
-        if (! this.hasNext())
-        {
+    public Integer next() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("Index >= Length, Index: " + this.index + ", Length: " + this.primitiveArray.length);
         }
         return this.primitiveArray[this.index++];

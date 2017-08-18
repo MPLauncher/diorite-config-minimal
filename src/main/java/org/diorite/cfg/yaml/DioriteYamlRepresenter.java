@@ -24,25 +24,23 @@
 
 package org.diorite.cfg.yaml;
 
-import java.util.Map;
-
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Represent;
 import org.yaml.snakeyaml.representer.Representer;
 
+import java.util.Map;
+
 /**
  * Diorite extension of {@link Representer} with more public methods.
  */
-public class DioriteYamlRepresenter extends Representer
-{
+public class DioriteYamlRepresenter extends Representer {
     /**
      * Returns representers map of this yaml representer instance.
      *
      * @return representers map of this yaml representer instance.
      */
-    public Map<Class<?>, Represent> getRepresenters()
-    {
+    public Map<Class<?>, Represent> getRepresenters() {
         return this.representers;
     }
 
@@ -51,8 +49,7 @@ public class DioriteYamlRepresenter extends Representer
      *
      * @return null representer of this yaml representer instance.
      */
-    public Represent getNullRepresenter()
-    {
+    public Represent getNullRepresenter() {
         return this.nullRepresenter;
     }
 
@@ -61,8 +58,7 @@ public class DioriteYamlRepresenter extends Representer
      *
      * @param nullRepresenter new null representer.
      */
-    public void setNullRepresenter(final Represent nullRepresenter)
-    {
+    public void setNullRepresenter(final Represent nullRepresenter) {
         this.nullRepresenter = nullRepresenter;
     }
 
@@ -71,8 +67,7 @@ public class DioriteYamlRepresenter extends Representer
      *
      * @return representers map of this yaml representer instance.
      */
-    public Map<Class<?>, Represent> getMultiRepresenters()
-    {
+    public Map<Class<?>, Represent> getMultiRepresenters() {
         return this.multiRepresenters;
     }
 
@@ -81,8 +76,7 @@ public class DioriteYamlRepresenter extends Representer
      *
      * @return default scalar type of this yaml representer instance.
      */
-    public Character getDefaultScalarStyle()
-    {
+    public Character getDefaultScalarStyle() {
         return this.defaultScalarStyle;
     }
 
@@ -91,8 +85,7 @@ public class DioriteYamlRepresenter extends Representer
      *
      * @param character new default scalar type.
      */
-    public void setDefaultScalarStyle(final Character character)
-    {
+    public void setDefaultScalarStyle(final Character character) {
         this.defaultScalarStyle = character;
     }
 
@@ -101,8 +94,7 @@ public class DioriteYamlRepresenter extends Representer
      *
      * @return represented objects of this yaml representer instance.
      */
-    public Map<Object, Node> getRepresentedObjects()
-    {
+    public Map<Object, Node> getRepresentedObjects() {
         return this.representedObjects;
     }
 
@@ -111,8 +103,7 @@ public class DioriteYamlRepresenter extends Representer
      *
      * @return class tag map of this yaml representer instance.
      */
-    public Map<Class<?>, Tag> getClassTags()
-    {
+    public Map<Class<?>, Tag> getClassTags() {
         return this.classTags;
     }
 
@@ -121,8 +112,7 @@ public class DioriteYamlRepresenter extends Representer
      *
      * @param classTags new class tag map.
      */
-    public void setClassTags(final Map<Class<?>, Tag> classTags)
-    {
+    public void setClassTags(final Map<Class<?>, Tag> classTags) {
         this.classTags = classTags;
     }
 }

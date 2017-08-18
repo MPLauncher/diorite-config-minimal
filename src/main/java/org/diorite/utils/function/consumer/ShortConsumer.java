@@ -35,8 +35,7 @@ import java.util.Objects;
  * @see java.util.function.Consumer
  */
 @FunctionalInterface
-public interface ShortConsumer
-{
+public interface ShortConsumer {
 
     /**
      * Performs this operation on the given argument.
@@ -53,14 +52,11 @@ public interface ShortConsumer
      * the {@code after} operation will not be performed.
      *
      * @param after the operation to perform after this operation
-     *
      * @return a composed {@code ShortConsumer} that performs in sequence this
      * operation followed by the {@code after} operation
-     *
      * @throws NullPointerException if {@code after} is null
      */
-    default ShortConsumer andThen(final ShortConsumer after)
-    {
+    default ShortConsumer andThen(final ShortConsumer after) {
         Objects.requireNonNull(after);
         return (short t) -> {
             this.accept(t);

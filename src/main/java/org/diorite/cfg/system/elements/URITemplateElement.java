@@ -24,6 +24,8 @@
 
 package org.diorite.cfg.system.elements;
 
+import org.diorite.cfg.system.CfgEntryData;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -31,15 +33,12 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 
-import org.diorite.cfg.system.CfgEntryData;
-
 /**
  * Template handler for all uri objects.
  *
  * @see URI
  */
-public class URITemplateElement extends TemplateElement<URI>
-{
+public class URITemplateElement extends TemplateElement<URI> {
     /**
      * Instance of template to direct-use.
      */
@@ -48,55 +47,42 @@ public class URITemplateElement extends TemplateElement<URI>
     /**
      * Construct new default template handler.
      */
-    public URITemplateElement()
-    {
+    public URITemplateElement() {
         super(URI.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return false;
     }
 
     @Override
-    protected URI convertObject0(final Object obj) throws UnsupportedOperationException
-    {
+    protected URI convertObject0(final Object obj) throws UnsupportedOperationException {
         throw this.getException(obj);
     }
 
     @Override
-    protected URI convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof URI)
-        {
+    protected URI convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof URI) {
             return ((URI) obj);
         }
-        if (obj instanceof URL)
-        {
-            try
-            {
+        if (obj instanceof URL) {
+            try {
                 return ((URL) obj).toURI();
-            } catch (final URISyntaxException e)
-            {
+            } catch (final URISyntaxException e) {
                 throw this.getException(obj, e);
             }
         }
-        if (obj instanceof Path)
-        {
+        if (obj instanceof Path) {
             return ((Path) obj).toUri();
         }
-        if (obj instanceof File)
-        {
+        if (obj instanceof File) {
             return ((File) obj).toURI();
         }
-        if (obj instanceof String)
-        {
-            try
-            {
+        if (obj instanceof String) {
+            try {
                 return new URI(obj.toString());
-            } catch (final URISyntaxException e)
-            {
+            } catch (final URISyntaxException e) {
                 throw this.getException(obj, e);
             }
         }
@@ -104,8 +90,7 @@ public class URITemplateElement extends TemplateElement<URI>
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final URI element = (elementRaw instanceof URI) ? ((URI) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.toString()), level, elementPlace);
     }

@@ -24,20 +24,19 @@
 
 package org.diorite.cfg.system.elements.math;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.cfg.system.elements.StringTemplateElement;
 import org.diorite.cfg.system.elements.TemplateElement;
 import org.diorite.utils.math.IntRange;
+
+import java.io.IOException;
 
 /**
  * Template handler for all int range objects.
  *
  * @see IntRange
  */
-public class IntRangeTemplateElement extends TemplateElement<IntRange>
-{
+public class IntRangeTemplateElement extends TemplateElement<IntRange> {
     /**
      * Instance of template to direct-use.
      */
@@ -46,62 +45,49 @@ public class IntRangeTemplateElement extends TemplateElement<IntRange>
     /**
      * Construct new default template handler.
      */
-    public IntRangeTemplateElement()
-    {
+    public IntRangeTemplateElement() {
         super(IntRange.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return IntRange.class.isAssignableFrom(c) || String.class.isAssignableFrom(c);
     }
 
     @Override
-    protected IntRange convertObject0(final Object obj) throws UnsupportedOperationException
-    {
+    protected IntRange convertObject0(final Object obj) throws UnsupportedOperationException {
         final IntRange convert = this.convert(obj);
-        if (convert != null)
-        {
+        if (convert != null) {
             return convert;
         }
         throw this.getException(obj);
     }
 
-    private IntRange convert(final Object obj)
-    {
-        if (obj instanceof String)
-        {
+    private IntRange convert(final Object obj) {
+        if (obj instanceof String) {
             final IntRange intRange = IntRange.valueOf((String) obj);
-            if (intRange == null)
-            {
+            if (intRange == null) {
                 throw this.getException(obj);
             }
             return intRange;
         }
-        if (obj instanceof byte[])
-        {
+        if (obj instanceof byte[]) {
             final byte[] array = (byte[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new IntRange(array[0], array[1]);
         }
-        if (obj instanceof short[])
-        {
+        if (obj instanceof short[]) {
             final short[] array = (short[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new IntRange(array[0], array[1]);
         }
-        if (obj instanceof int[])
-        {
+        if (obj instanceof int[]) {
             final int[] array = (int[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new IntRange(array[0], array[1]);
@@ -110,23 +96,19 @@ public class IntRangeTemplateElement extends TemplateElement<IntRange>
     }
 
     @Override
-    protected IntRange convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof IntRange)
-        {
+    protected IntRange convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof IntRange) {
             return (IntRange) obj;
         }
         final IntRange convert = this.convert(obj);
-        if (convert != null)
-        {
+        if (convert != null) {
             return convert;
         }
         throw this.getException(obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final IntRange element = (elementRaw instanceof IntRange) ? ((IntRange) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.getMin() + ", " + element.getMax()), level, elementPlace);
     }

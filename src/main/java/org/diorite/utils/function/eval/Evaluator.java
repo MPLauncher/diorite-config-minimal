@@ -32,8 +32,7 @@ import java.util.function.Supplier;
  * @param <T> type of evaluator.
  */
 @FunctionalInterface
-public interface Evaluator<T> extends Supplier<T>
-{
+public interface Evaluator<T> extends Supplier<T> {
     /**
      * Gets a result.
      *
@@ -42,8 +41,7 @@ public interface Evaluator<T> extends Supplier<T>
     T eval();
 
     @Override
-    default T get()
-    {
+    default T get() {
         return this.eval();
     }
 }

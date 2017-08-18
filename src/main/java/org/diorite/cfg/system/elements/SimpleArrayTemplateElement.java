@@ -24,17 +24,16 @@
 
 package org.diorite.cfg.system.elements;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.Iterator;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.utils.DioriteUtils;
 import org.diorite.utils.collections.arrays.ReflectArrayIterator;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Iterator;
+
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class SimpleArrayTemplateElement<T> extends TemplateElement<T>
-{
+public class SimpleArrayTemplateElement<T> extends TemplateElement<T> {
     /**
      * Instance of boolean[] template to direct-use.
      */
@@ -80,64 +79,49 @@ public class SimpleArrayTemplateElement<T> extends TemplateElement<T>
      *
      * @param clazz type of template element, should be array type.
      */
-    public SimpleArrayTemplateElement(final Class<T> clazz)
-    {
+    public SimpleArrayTemplateElement(final Class<T> clazz) {
         super(clazz);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return false;
     }
 
     @Override
-    protected T convertObject0(final Object obj) throws UnsupportedOperationException
-    {
+    protected T convertObject0(final Object obj) throws UnsupportedOperationException {
         throw this.getException(obj);
     }
 
     @Override
-    protected T convertDefault0(final Object def, final Class<?> fieldType)
-    {
+    protected T convertDefault0(final Object def, final Class<?> fieldType) {
         final Class<?> c = def.getClass();
-        if (fieldType.isAssignableFrom(c))
-        {
+        if (fieldType.isAssignableFrom(c)) {
             return (T) def;
         }
         final Iterator it;
         final int size;
-        if (c.isArray())
-        {
+        if (c.isArray()) {
             it = new ReflectArrayIterator(def);
             size = Array.getLength(def);
-        }
-        else if (def instanceof Iterator)
-        {
+        } else if (def instanceof Iterator) {
             it = (Iterator) def;
             size = DioriteUtils.size(it);
-        }
-        else if (def instanceof Iterable)
-        {
+        } else if (def instanceof Iterable) {
             it = ((Iterable) def).iterator();
             size = DioriteUtils.size((Iterable) def);
-        }
-        else
-        {
+        } else {
             throw new UnsupportedOperationException("Can't convert default value (" + c.getName() + "): " + def);
         }
         final T array = (T) Array.newInstance(fieldType.getComponentType(), size);
         int i = 0;
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             final Object obj = it.next();
-            if (obj == null)
-            {
+            if (obj == null) {
                 Array.set(array, i++, null);
                 continue;
             }
-            if (fieldType.getComponentType().isAssignableFrom(obj.getClass()))
-            {
+            if (fieldType.getComponentType().isAssignableFrom(obj.getClass())) {
                 Array.set(array, i++, obj);
                 continue;
             }
@@ -148,8 +132,7 @@ public class SimpleArrayTemplateElement<T> extends TemplateElement<T>
 
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object object, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object object, final int level, final ElementPlace elementPlace) throws IOException {
         IterableTemplateElement.INSTANCE.appendValue(writer, field, source, new ReflectArrayIterator(object), level, elementPlace);
     }
 }

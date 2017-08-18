@@ -30,8 +30,7 @@ import org.diorite.utils.function.supplier.ByteSupplier;
  * Simple {@link ByteSupplier}-like class, but use "eval" as method name for simpler reflection usage.
  */
 @FunctionalInterface
-public interface ByteEvaluator extends ByteSupplier
-{
+public interface ByteEvaluator extends ByteSupplier {
     /**
      * Gets a result.
      *
@@ -40,8 +39,7 @@ public interface ByteEvaluator extends ByteSupplier
     byte eval();
 
     @Override
-    default byte getAsByte()
-    {
+    default byte getAsByte() {
         return this.eval();
     }
 }

@@ -38,8 +38,7 @@ import java.io.IOException;
  * @see CharSequence
  */
 @SuppressWarnings("HardcodedFileSeparator")
-public class StringTemplateElement extends TemplateElement<String>
-{
+public class StringTemplateElement extends TemplateElement<String> {
     /**
      * Chars that can't start key/value without quotes
      */
@@ -58,104 +57,81 @@ public class StringTemplateElement extends TemplateElement<String>
     /**
      * Construct new string template handler.
      */
-    public StringTemplateElement()
-    {
+    public StringTemplateElement() {
         super(String.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return CharSequence.class.isAssignableFrom(c);
     }
 
     @Override
-    protected String convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof Enum)
-        {
+    protected String convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof Enum) {
             return ((Enum<?>) obj).name();
         }
-        if (obj instanceof CharSequence)
-        {
+        if (obj instanceof CharSequence) {
             return obj.toString();
         }
         throw this.getException(obj);
     }
 
     @Override
-    protected String convertDefault0(final Object obj, final Class<?> fieldType)
-    {
+    protected String convertDefault0(final Object obj, final Class<?> fieldType) {
         return obj.toString();
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         StringStyle style = field.getOption(FieldOptions.STRING_STYLE, StringStyle.DEFAULT);
         if ((style == StringStyle.ALWAYS_MULTI_LINE) && (elementPlace == ElementPlace.SIMPLE_LIST_OR_MAP)) // multi line strings don't works in simple lists/maps.
         {
             style = StringStyle.DEFAULT;
         }
         final String element = Enum.class.isAssignableFrom(elementRaw.getClass()) ? ((Enum<?>) elementRaw).name() : elementRaw.toString();
-        switch (style)
-        {
-            case ALWAYS_QUOTED:
-            {
+        switch (style) {
+            case ALWAYS_QUOTED: {
                 writeQuoted(writer, element);
                 break;
             }
-            case ALWAYS_SINGLE_QUOTED:
-            {
+            case ALWAYS_SINGLE_QUOTED: {
                 writeSingleQuoted(writer, StringUtils.replaceEach(element, REP_PREV_1, REP_PREV_2));
                 break;
             }
-            case ALWAYS_MULTI_LINE:
-            {
+            case ALWAYS_MULTI_LINE: {
                 writeMultiLine(writer, element, level, elementPlace);
                 break;
             }
-            default:
-            {
+            default: {
                 final boolean haveNewLines = StringUtils.contains(element, '\n');
-                if ((elementPlace != ElementPlace.SIMPLE_LIST_OR_MAP) && haveNewLines)
-                {
+                if ((elementPlace != ElementPlace.SIMPLE_LIST_OR_MAP) && haveNewLines) {
                     writeMultiLine(writer, element, level, elementPlace);
                     return;
                 }
                 boolean needQuote = false;
-                if (element.isEmpty())
-                {
+                if (element.isEmpty()) {
                     writeSingleQuoted(writer, element);
                     return;
                 }
                 final char f = element.charAt(0);
-                if (StringUtils.containsAny(element, ':', '#'))
-                {
+                if (StringUtils.containsAny(element, ':', '#')) {
                     needQuote = true;
-                }
-                else
-                {
-                    for (final char c : CANT_BE_FIRST)
-                    {
-                        if (c == f)
-                        {
+                } else {
+                    for (final char c : CANT_BE_FIRST) {
+                        if (c == f) {
                             needQuote = true;
                             break;
                         }
                     }
                 }
-                if (needQuote)
-                {
+                if (needQuote) {
                     writeQuoted(writer, element);
                     return;
                 }
-                if (StringUtils.isNumeric(element))
-                {
+                if (StringUtils.isNumeric(element)) {
                     writeQuoted(writer, element);
-                }
-                else
-                {
+                } else {
                     writer.append(StringUtils.replace(element, "\n", "\\n"));
                 }
                 break;
@@ -163,31 +139,26 @@ public class StringTemplateElement extends TemplateElement<String>
         }
     }
 
-    private static void writeQuoted(final Appendable writer, final String element) throws IOException
-    {
+    private static void writeQuoted(final Appendable writer, final String element) throws IOException {
         writer.append('\"');
         writer.append(StringUtils.replaceEach(element, REP_LAST_1, REP_LAST_2));
         writer.append('\"');
     }
 
-    private static void writeSingleQuoted(final Appendable writer, final String element) throws IOException
-    {
+    private static void writeSingleQuoted(final Appendable writer, final String element) throws IOException {
         writer.append('\'');
         writer.append(StringUtils.replace(element, "\n", "\\n"));
         writer.append('\'');
     }
 
-    private static void writeMultiLine(final Appendable writer, final String element, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    private static void writeMultiLine(final Appendable writer, final String element, final int level, final ElementPlace elementPlace) throws IOException {
         writer.append("|2-\n");
         final String[] lines = StringUtils.split(element, '\n');
         final int lvl = level + 1;//((elementPlace == ElementPlace.LIST) ? 0 : 1);
-        for (int i = 0, linesLength = lines.length; i < linesLength; i++)
-        {
+        for (int i = 0, linesLength = lines.length; i < linesLength; i++) {
             final String line = lines[i];
             appendElement(writer, lvl, line);
-            if ((i + 1) < linesLength)
-            {
+            if ((i + 1) < linesLength) {
                 writer.append('\n');
             }
         }

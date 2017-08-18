@@ -27,8 +27,7 @@ package org.diorite.cfg.system.elements.primitives;
 /**
  * Template used by chars.
  */
-public class CharTemplateElement extends PrimitiveTemplateElement<Character>
-{
+public class CharTemplateElement extends PrimitiveTemplateElement<Character> {
     /**
      * Instance of template to direct-use.
      */
@@ -37,30 +36,25 @@ public class CharTemplateElement extends PrimitiveTemplateElement<Character>
     /**
      * Construct new char template
      */
-    public CharTemplateElement()
-    {
+    public CharTemplateElement() {
         super(char.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return Character.class.isAssignableFrom(c);
     }
 
     @Override
-    protected Character convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof Character)
-        {
+    protected Character convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof Character) {
             return (char) obj;
         }
         throw this.getException(obj);
     }
 
     @Override
-    protected Character convertDefault0(final Object obj, final Class<?> fieldType)
-    {
+    protected Character convertDefault0(final Object obj, final Class<?> fieldType) {
         throw this.getException(obj);
     }
 }

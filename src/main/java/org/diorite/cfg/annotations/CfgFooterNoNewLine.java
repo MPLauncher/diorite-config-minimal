@@ -38,8 +38,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-public @interface CfgFooterNoNewLine
-{
+public @interface CfgFooterNoNewLine {
     /**
      * @return if comment should be rgiht after node.
      */

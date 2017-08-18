@@ -24,20 +24,18 @@
 
 package org.diorite.utils.math;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 @SuppressWarnings("MagicNumber")
-public class RomanNumeral
-{
+public class RomanNumeral {
     private static final Map<Integer, String> baseValues = new HashMap<>(10);
-    private final     int    num;
+    private final int num;
     private transient String romanStr;
 
-    static
-    {
+    static {
         baseValues.put(0, "");
         baseValues.put(1, "I");
         baseValues.put(2, "II");
@@ -69,77 +67,61 @@ public class RomanNumeral
         baseValues.put(1000, "M");
     }
 
-    public RomanNumeral(final int arabic, final boolean valid)
-    {
-        if (valid && (arabic < 0))
-        {
+    public RomanNumeral(final int arabic, final boolean valid) {
+        if (valid && (arabic < 0)) {
             throw new NumberFormatException("Value of RomanNumeral must be positive.");
         }
-        if (valid && (arabic > 3999))
-        {
+        if (valid && (arabic > 3999)) {
             throw new NumberFormatException("Value of RomanNumeral must be 3999 or less.");
         }
         this.num = arabic;
     }
 
-    public RomanNumeral(final int arabic)
-    {
+    public RomanNumeral(final int arabic) {
         this(arabic, true);
     }
 
-    public RomanNumeral(final String roman, final boolean safeForm)
-    {
-        if (safeForm)
-        {
+    public RomanNumeral(final String roman, final boolean safeForm) {
+        if (safeForm) {
             this.romanStr = roman;
         }
         this.num = toInt(roman);
     }
 
-    public RomanNumeral(final String roman)
-    {
+    public RomanNumeral(final String roman) {
         this(roman, false);
     }
 
-    public RomanNumeral add(final RomanNumeral other)
-    {
+    public RomanNumeral add(final RomanNumeral other) {
         return new RomanNumeral(this.num + other.num, false);
     }
 
-    public RomanNumeral subtract(final RomanNumeral other)
-    {
+    public RomanNumeral subtract(final RomanNumeral other) {
         return new RomanNumeral(this.num - other.num, false);
     }
 
-    public RomanNumeral multiple(final RomanNumeral other)
-    {
+    public RomanNumeral multiple(final RomanNumeral other) {
         return new RomanNumeral(this.num * other.num, false);
     }
 
-    public RomanNumeral divide(final RomanNumeral other)
-    {
+    public RomanNumeral divide(final RomanNumeral other) {
         return new RomanNumeral(this.num / other.num, false);
     }
 
     @Override
-    public String toString()
-    {
-        if (this.romanStr == null)
-        {
+    public String toString() {
+        if (this.romanStr == null) {
             this.romanStr = toString(this.num);
         }
         return this.romanStr;
     }
 
-    public int toInt()
-    {
+    public int toInt() {
         return this.num;
     }
 
-    private static int letterToNumber(final char letter)
-    {
-        switch (letter)
-        {
+    private static int letterToNumber(final char letter) {
+        switch (letter) {
             case 'I':
                 return 1;
             case 'V':
@@ -159,70 +141,53 @@ public class RomanNumeral
         }
     }
 
-    private static int pow(int i, final int pow)
-    {
-        if (pow == 0)
-        {
+    private static int pow(int i, final int pow) {
+        if (pow == 0) {
             return 1;
         }
-        if (pow == 1)
-        {
+        if (pow == 1) {
             return i;
         }
-        for (int k = 0; k < (pow - 1); k++)
-        {
+        for (int k = 0; k < (pow - 1); k++) {
             i *= i;
         }
         return i;
     }
 
-    public static int toInt(String roman) throws NumberFormatException
-    {
+    public static int toInt(String roman) throws NumberFormatException {
         final boolean negative = roman.startsWith("-");
-        if (negative)
-        {
+        if (negative) {
             roman = roman.substring(1);
         }
-        if (roman.isEmpty())
-        {
+        if (roman.isEmpty()) {
             return 0;
         }
         final char[] charArray = roman.toUpperCase().toCharArray();
         int lastValue = 0;
         int lastMulti = 1;
         int result = 0;
-        for (int i = 0, charArrayLength = charArray.length; i < charArrayLength; i++)
-        {
+        for (int i = 0, charArrayLength = charArray.length; i < charArrayLength; i++) {
             final char c = charArray[i];
             final int value = letterToNumber(c);
-            if (i == 0)
-            {
-                if ((i + 1) >= charArrayLength)
-                {
+            if (i == 0) {
+                if ((i + 1) >= charArrayLength) {
                     result += value;
                     break;
                 }
                 lastValue = value;
                 continue;
             }
-            if (value == lastValue)
-            {
+            if (value == lastValue) {
                 lastMulti++;
                 continue;
             }
-            if (lastValue < value)
-            {
-                if (lastMulti != 0)
-                {
+            if (lastValue < value) {
+                if (lastMulti != 0) {
                     result += (value - (lastValue * lastMulti));
-                }
-                else
-                {
+                } else {
                     result += (value - (lastValue << 1));
                 }
-            }
-            else
-            {
+            } else {
                 result += lastValue * lastMulti;
                 result += value;
             }
@@ -230,48 +195,38 @@ public class RomanNumeral
             lastValue = value;
 
         }
-        if (lastMulti != 0)
-        {
+        if (lastMulti != 0) {
             result += (lastValue * lastMulti);
         }
-        return negative ? - result : result;
+        return negative ? -result : result;
     }
 
-    public static String toString(int num)
-    {
+    public static String toString(int num) {
         boolean negative = false;
-        if (num < 0)
-        {
-            num *= - 1;
+        if (num < 0) {
+            num *= -1;
             negative = true;
         }
         String roman = baseValues.get(num);
-        if (roman == null)
-        {
+        if (roman == null) {
             roman = negative ? "-" : "";
-        }
-        else
-        {
+        } else {
             return roman;
         }
-        while (num >= 1000)
-        {
+        while (num >= 1000) {
             roman += "M";
             num -= 1000;
         }
-        if (num == 0)
-        {
+        if (num == 0) {
             return roman;
         }
         final String str = Integer.toString(num);
         final char[] charArray = str.toCharArray();
         final String[] romanParts = new String[charArray.length];
         int k = 0;
-        for (int i = charArray.length - 1; i >= 0; i--)
-        {
+        for (int i = charArray.length - 1; i >= 0; i--) {
             final char c = charArray[i];
-            switch (c)
-            {
+            switch (c) {
                 case '1':
                     romanParts[i] = baseValues.get(pow(10, k));
                     break;

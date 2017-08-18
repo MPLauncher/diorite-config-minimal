@@ -24,6 +24,8 @@
 
 package org.diorite.cfg.system.elements;
 
+import org.diorite.cfg.system.CfgEntryData;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -31,16 +33,13 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 
-import org.diorite.cfg.system.CfgEntryData;
-
 /**
  * Template handler for all path/file objects.
  *
  * @see Path
  * @see File
  */
-public class FileTemplateElement extends TemplateElement<File>
-{
+public class FileTemplateElement extends TemplateElement<File> {
     /**
      * Instance of template to direct-use.
      */
@@ -49,62 +48,49 @@ public class FileTemplateElement extends TemplateElement<File>
     /**
      * Construct new default template handler.
      */
-    public FileTemplateElement()
-    {
+    public FileTemplateElement() {
         super(File.class);
     }
 
     @Override
-    protected File convertObject0(final Object obj)
-    {
-        if (obj instanceof Path)
-        {
+    protected File convertObject0(final Object obj) {
+        if (obj instanceof Path) {
             return ((Path) obj).toFile();
         }
         throw this.getException(obj);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> clazz)
-    {
+    protected boolean canBeConverted0(final Class<?> clazz) {
         return Path.class.isAssignableFrom(clazz) || File.class.isAssignableFrom(clazz);
     }
 
     @Override
-    protected File convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        try
-        {
-            if (obj instanceof File)
-            {
+    protected File convertDefault0(final Object obj, final Class<?> fieldType) {
+        try {
+            if (obj instanceof File) {
                 return (File) obj;
             }
-            if (obj instanceof Path)
-            {
+            if (obj instanceof Path) {
                 return ((Path) obj).toFile();
             }
-            if (obj instanceof String)
-            {
+            if (obj instanceof String) {
                 return new File(obj.toString());
             }
-            if (obj instanceof URI)
-            {
+            if (obj instanceof URI) {
                 return new File(((URI) obj).toURL().getFile());
             }
-            if (obj instanceof URL)
-            {
+            if (obj instanceof URL) {
                 return new File(((URL) obj).getFile());
             }
-        } catch (final MalformedURLException e)
-        {
+        } catch (final MalformedURLException e) {
             throw this.getException(obj, e);
         }
         throw this.getException(obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final File element = (elementRaw instanceof File) ? ((File) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.getPath()), level, elementPlace);
     }

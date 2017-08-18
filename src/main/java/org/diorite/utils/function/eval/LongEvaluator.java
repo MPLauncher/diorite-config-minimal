@@ -30,8 +30,7 @@ import java.util.function.LongSupplier;
  * Simple {@link LongSupplier}-like class, but use "eval" as method name for simpler reflection usage.
  */
 @FunctionalInterface
-public interface LongEvaluator extends LongSupplier
-{
+public interface LongEvaluator extends LongSupplier {
     /**
      * Gets a result.
      *
@@ -40,8 +39,7 @@ public interface LongEvaluator extends LongSupplier
     long eval();
 
     @Override
-    default long getAsLong()
-    {
+    default long getAsLong() {
         return this.eval();
     }
 }

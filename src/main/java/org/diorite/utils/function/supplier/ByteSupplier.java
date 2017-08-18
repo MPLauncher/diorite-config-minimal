@@ -36,8 +36,7 @@ import java.util.function.Supplier;
  * @see Supplier
  */
 @FunctionalInterface
-public interface ByteSupplier
-{
+public interface ByteSupplier {
 
     /**
      * Gets a result.

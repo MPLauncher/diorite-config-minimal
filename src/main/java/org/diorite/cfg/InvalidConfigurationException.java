@@ -27,8 +27,7 @@ package org.diorite.cfg;
 /**
  * Exception used when configuration contains error so diorite can't read/save config.
  */
-public class InvalidConfigurationException extends RuntimeException
-{
+public class InvalidConfigurationException extends RuntimeException {
     private static final long serialVersionUID = 0;
 
 
@@ -37,8 +36,7 @@ public class InvalidConfigurationException extends RuntimeException
      * detail message.  The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause}.
      */
-    public InvalidConfigurationException()
-    {
+    public InvalidConfigurationException() {
     }
 
     /**
@@ -49,8 +47,7 @@ public class InvalidConfigurationException extends RuntimeException
      * @param msg the detail message. The detail message is saved for
      *            later retrieval by the {@link #getMessage()} method.
      */
-    public InvalidConfigurationException(final String msg)
-    {
+    public InvalidConfigurationException(final String msg) {
         super(msg);
     }
 
@@ -66,8 +63,7 @@ public class InvalidConfigurationException extends RuntimeException
      *              permitted, and indicates that the cause is nonexistent or
      *              unknown.)
      */
-    public InvalidConfigurationException(final Throwable cause)
-    {
+    public InvalidConfigurationException(final Throwable cause) {
         super(cause);
     }
 
@@ -84,8 +80,7 @@ public class InvalidConfigurationException extends RuntimeException
      *              permitted, and indicates that the cause is nonexistent or
      *              unknown.)
      */
-    public InvalidConfigurationException(final String msg, final Throwable cause)
-    {
+    public InvalidConfigurationException(final String msg, final Throwable cause) {
         super(msg, cause);
     }
 }

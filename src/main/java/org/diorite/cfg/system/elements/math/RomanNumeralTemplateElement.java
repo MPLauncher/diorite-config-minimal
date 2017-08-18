@@ -24,20 +24,19 @@
 
 package org.diorite.cfg.system.elements.math;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.cfg.system.elements.StringTemplateElement;
 import org.diorite.cfg.system.elements.TemplateElement;
 import org.diorite.utils.math.RomanNumeral;
+
+import java.io.IOException;
 
 /**
  * Template handler for all roman numbers objects.
  *
  * @see RomanNumeral
  */
-public class RomanNumeralTemplateElement extends TemplateElement<RomanNumeral>
-{
+public class RomanNumeralTemplateElement extends TemplateElement<RomanNumeral> {
     /**
      * Instance of template to direct-use.
      */
@@ -46,32 +45,25 @@ public class RomanNumeralTemplateElement extends TemplateElement<RomanNumeral>
     /**
      * Construct new default template handler.
      */
-    public RomanNumeralTemplateElement()
-    {
+    public RomanNumeralTemplateElement() {
         super(RomanNumeral.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return RomanNumeral.class.isAssignableFrom(c) || String.class.isAssignableFrom(c);
     }
 
     @Override
-    protected RomanNumeral convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof String)
-        {
-            try
-            {
+    protected RomanNumeral convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof String) {
+            try {
                 return new RomanNumeral((String) obj, false);
-            } catch (final Exception e)
-            {
+            } catch (final Exception e) {
                 throw this.getException(obj, e);
             }
         }
-        if (obj instanceof Number)
-        {
+        if (obj instanceof Number) {
             final Number n = (Number) obj;
             return new RomanNumeral(n.intValue(), false);
         }
@@ -79,24 +71,18 @@ public class RomanNumeralTemplateElement extends TemplateElement<RomanNumeral>
     }
 
     @Override
-    protected RomanNumeral convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof RomanNumeral)
-        {
+    protected RomanNumeral convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof RomanNumeral) {
             return (RomanNumeral) obj;
         }
-        if (obj instanceof String)
-        {
-            try
-            {
+        if (obj instanceof String) {
+            try {
                 return new RomanNumeral((String) obj, false);
-            } catch (final Exception e)
-            {
+            } catch (final Exception e) {
                 throw this.getException(obj, e);
             }
         }
-        if (obj instanceof Number)
-        {
+        if (obj instanceof Number) {
             final Number n = (Number) obj;
             return new RomanNumeral(n.intValue(), false);
         }
@@ -104,8 +90,7 @@ public class RomanNumeralTemplateElement extends TemplateElement<RomanNumeral>
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final RomanNumeral element = (elementRaw instanceof RomanNumeral) ? ((RomanNumeral) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.toString()), level, elementPlace);
     }

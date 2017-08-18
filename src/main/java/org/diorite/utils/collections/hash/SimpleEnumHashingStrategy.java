@@ -24,23 +24,20 @@
 
 package org.diorite.utils.collections.hash;
 
-import org.diorite.utils.SimpleEnum;
-
 import it.unimi.dsi.fastutil.Hash.Strategy;
+import org.diorite.utils.SimpleEnum;
 
 /**
  * Hashing strategy for simple enum objects.
  */
 @SuppressWarnings("rawtypes")
-public class SimpleEnumHashingStrategy implements Strategy<SimpleEnum>
-{
+public class SimpleEnumHashingStrategy implements Strategy<SimpleEnum> {
     private static final long serialVersionUID = 0;
 
     /**
      * Protected constructor, use {@link #INSTANCE} to get instance.
      */
-    protected SimpleEnumHashingStrategy()
-    {
+    protected SimpleEnumHashingStrategy() {
     }
 
     /**
@@ -49,14 +46,12 @@ public class SimpleEnumHashingStrategy implements Strategy<SimpleEnum>
     public static final SimpleEnumHashingStrategy INSTANCE = new SimpleEnumHashingStrategy();
 
     @Override
-    public int hashCode(final SimpleEnum s)
-    {
+    public int hashCode(final SimpleEnum s) {
         return s.ordinal();
     }
 
     @Override
-    public boolean equals(final SimpleEnum s1, final SimpleEnum s2)
-    {
+    public boolean equals(final SimpleEnum s1, final SimpleEnum s2) {
         //noinspection ObjectEquality
         return (s1 == s2) || (((s2 != null)) && (s1.ordinal() == s2.ordinal()));
     }

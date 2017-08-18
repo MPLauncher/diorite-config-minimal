@@ -24,6 +24,8 @@
 
 package org.diorite.cfg.system.elements;
 
+import org.diorite.cfg.system.CfgEntryData;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -31,15 +33,12 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 
-import org.diorite.cfg.system.CfgEntryData;
-
 /**
  * Template handler for all url objects.
  *
  * @see URL
  */
-public class URLTemplateElement extends TemplateElement<URL>
-{
+public class URLTemplateElement extends TemplateElement<URL> {
     /**
      * Instance of template to direct-use.
      */
@@ -48,58 +47,46 @@ public class URLTemplateElement extends TemplateElement<URL>
     /**
      * Construct new default template handler.
      */
-    public URLTemplateElement()
-    {
+    public URLTemplateElement() {
         super(URL.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return false;
     }
 
     @Override
-    protected URL convertObject0(final Object obj) throws UnsupportedOperationException
-    {
+    protected URL convertObject0(final Object obj) throws UnsupportedOperationException {
         throw this.getException(obj);
     }
 
     @Override
-    protected URL convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        try
-        {
-            if (obj instanceof URL)
-            {
+    protected URL convertDefault0(final Object obj, final Class<?> fieldType) {
+        try {
+            if (obj instanceof URL) {
                 return ((URL) obj);
             }
-            if (obj instanceof URI)
-            {
+            if (obj instanceof URI) {
                 return ((URI) obj).toURL();
             }
-            if (obj instanceof Path)
-            {
+            if (obj instanceof Path) {
                 return ((Path) obj).toUri().toURL();
             }
-            if (obj instanceof File)
-            {
+            if (obj instanceof File) {
                 return ((File) obj).toURI().toURL();
             }
-            if (obj instanceof String)
-            {
+            if (obj instanceof String) {
                 return new URL(obj.toString());
             }
-        } catch (final MalformedURLException e)
-        {
+        } catch (final MalformedURLException e) {
             throw this.getException(obj, e);
         }
         throw this.getException(obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final URL element = (elementRaw instanceof URL) ? ((URL) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.toString()), level, elementPlace);
     }

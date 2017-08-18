@@ -38,27 +38,25 @@ import java.util.Random;
  * http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf</a>
  */
 @SuppressWarnings("MagicNumber")
-public class SimplexNoiseGenerator extends PerlinNoiseGenerator
-{
-    protected static final double                SQRT_3   = Math.sqrt(3);
-    protected static final double                SQRT_5   = Math.sqrt(5);
-    protected static final double                F2       = 0.5 * (SQRT_3 - 1);
-    protected static final double                G2       = (3 - SQRT_3) / 6;
-    protected static final double                G22      = (G2 * 2.0) - 1;
-    protected static final double                F3       = 1.0 / 3.0;
-    protected static final double                G3       = 1.0 / 6.0;
-    protected static final double                F4       = (SQRT_5 - 1.0) / 4.0;
-    protected static final double                G4       = (5.0 - SQRT_5) / 20.0;
-    protected static final double                G42      = G4 * 2.0;
-    protected static final double                G43      = G4 * 3.0;
-    protected static final double                G44      = (G4 * 4.0) - 1.0;
-    protected static final int[][]               grad4    = {{0, 1, 1, 1}, {0, 1, 1, - 1}, {0, 1, - 1, 1}, {0, 1, - 1, - 1}, {0, - 1, 1, 1}, {0, - 1, 1, - 1}, {0, - 1, - 1, 1}, {0, - 1, - 1, - 1}, {1, 0, 1, 1}, {1, 0, 1, - 1}, {1, 0, - 1, 1}, {1, 0, - 1, - 1}, {- 1, 0, 1, 1}, {- 1, 0, 1, - 1}, {- 1, 0, - 1, 1}, {- 1, 0, - 1, - 1}, {1, 1, 0, 1}, {1, 1, 0, - 1}, {1, - 1, 0, 1}, {1, - 1, 0, - 1}, {- 1, 1, 0, 1}, {- 1, 1, 0, - 1}, {- 1, - 1, 0, 1}, {- 1, - 1, 0, - 1}, {1, 1, 1, 0}, {1, 1, - 1, 0}, {1, - 1, 1, 0}, {1, - 1, - 1, 0}, {- 1, 1, 1, 0}, {- 1, 1, - 1, 0}, {- 1, - 1, 1, 0}, {- 1, - 1, - 1, 0}};
-    protected static final int[][]               simplex  = {{0, 1, 2, 3}, {0, 1, 3, 2}, {0, 0, 0, 0}, {0, 2, 3, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 2, 3, 0}, {0, 2, 1, 3}, {0, 0, 0, 0}, {0, 3, 1, 2}, {0, 3, 2, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 3, 2, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 2, 0, 3}, {0, 0, 0, 0}, {1, 3, 0, 2}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {2, 3, 0, 1}, {2, 3, 1, 0}, {1, 0, 2, 3}, {1, 0, 3, 2}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {2, 0, 3, 1}, {0, 0, 0, 0}, {2, 1, 3, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {2, 0, 1, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {3, 0, 1, 2}, {3, 0, 2, 1}, {0, 0, 0, 0}, {3, 1, 2, 0}, {2, 1, 0, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {3, 1, 0, 2}, {0, 0, 0, 0}, {3, 2, 0, 1}, {3, 2, 1, 0}};
-    private static final   SimplexNoiseGenerator instance = new SimplexNoiseGenerator();
+public class SimplexNoiseGenerator extends PerlinNoiseGenerator {
+    protected static final double SQRT_3 = Math.sqrt(3);
+    protected static final double SQRT_5 = Math.sqrt(5);
+    protected static final double F2 = 0.5 * (SQRT_3 - 1);
+    protected static final double G2 = (3 - SQRT_3) / 6;
+    protected static final double G22 = (G2 * 2.0) - 1;
+    protected static final double F3 = 1.0 / 3.0;
+    protected static final double G3 = 1.0 / 6.0;
+    protected static final double F4 = (SQRT_5 - 1.0) / 4.0;
+    protected static final double G4 = (5.0 - SQRT_5) / 20.0;
+    protected static final double G42 = G4 * 2.0;
+    protected static final double G43 = G4 * 3.0;
+    protected static final double G44 = (G4 * 4.0) - 1.0;
+    protected static final int[][] grad4 = {{0, 1, 1, 1}, {0, 1, 1, -1}, {0, 1, -1, 1}, {0, 1, -1, -1}, {0, -1, 1, 1}, {0, -1, 1, -1}, {0, -1, -1, 1}, {0, -1, -1, -1}, {1, 0, 1, 1}, {1, 0, 1, -1}, {1, 0, -1, 1}, {1, 0, -1, -1}, {-1, 0, 1, 1}, {-1, 0, 1, -1}, {-1, 0, -1, 1}, {-1, 0, -1, -1}, {1, 1, 0, 1}, {1, 1, 0, -1}, {1, -1, 0, 1}, {1, -1, 0, -1}, {-1, 1, 0, 1}, {-1, 1, 0, -1}, {-1, -1, 0, 1}, {-1, -1, 0, -1}, {1, 1, 1, 0}, {1, 1, -1, 0}, {1, -1, 1, 0}, {1, -1, -1, 0}, {-1, 1, 1, 0}, {-1, 1, -1, 0}, {-1, -1, 1, 0}, {-1, -1, -1, 0}};
+    protected static final int[][] simplex = {{0, 1, 2, 3}, {0, 1, 3, 2}, {0, 0, 0, 0}, {0, 2, 3, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 2, 3, 0}, {0, 2, 1, 3}, {0, 0, 0, 0}, {0, 3, 1, 2}, {0, 3, 2, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 3, 2, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 2, 0, 3}, {0, 0, 0, 0}, {1, 3, 0, 2}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {2, 3, 0, 1}, {2, 3, 1, 0}, {1, 0, 2, 3}, {1, 0, 3, 2}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {2, 0, 3, 1}, {0, 0, 0, 0}, {2, 1, 3, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {2, 0, 1, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {3, 0, 1, 2}, {3, 0, 2, 1}, {0, 0, 0, 0}, {3, 1, 2, 0}, {2, 1, 0, 3}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {3, 1, 0, 2}, {0, 0, 0, 0}, {3, 2, 0, 1}, {3, 2, 1, 0}};
+    private static final SimplexNoiseGenerator instance = new SimplexNoiseGenerator();
     protected static double offsetW;
 
-    protected SimplexNoiseGenerator()
-    {
+    protected SimplexNoiseGenerator() {
         super();
     }
 
@@ -67,8 +65,7 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
      *
      * @param seed Seed to construct this generator for
      */
-    public SimplexNoiseGenerator(final long seed)
-    {
+    public SimplexNoiseGenerator(final long seed) {
         this(new Random(seed));
     }
 
@@ -77,15 +74,13 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
      *
      * @param rand Random to construct with
      */
-    public SimplexNoiseGenerator(final Random rand)
-    {
+    public SimplexNoiseGenerator(final Random rand) {
         super(rand);
         offsetW = rand.nextDouble() * 256;
     }
 
     @Override
-    public double noise(double xin, double yin, double zin)
-    {
+    public double noise(double xin, double yin, double zin) {
         xin += this.offsetX;
         yin += this.offsetY;
         zin += this.offsetZ;
@@ -117,10 +112,8 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
         final int i2; // Offsets for third corner of simplex in (i,j,k) coords
         final int j2;
         final int k2;
-        if (x0 >= y0)
-        {
-            if (y0 >= z0)
-            {
+        if (x0 >= y0) {
+            if (y0 >= z0) {
                 i1 = 1;
                 j1 = 0;
                 k1 = 0;
@@ -128,8 +121,7 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
                 j2 = 1;
                 k2 = 0;
             } // X Y Z order
-            else if (x0 >= z0)
-            {
+            else if (x0 >= z0) {
                 i1 = 1;
                 j1 = 0;
                 k1 = 0;
@@ -137,8 +129,7 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
                 j2 = 0;
                 k2 = 1;
             } // X Z Y order
-            else
-            {
+            else {
                 i1 = 0;
                 j1 = 0;
                 k1 = 1;
@@ -146,11 +137,8 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
                 j2 = 0;
                 k2 = 1;
             } // Z X Y order
-        }
-        else
-        { // x0<y0
-            if (y0 < z0)
-            {
+        } else { // x0<y0
+            if (y0 < z0) {
                 i1 = 0;
                 j1 = 0;
                 k1 = 1;
@@ -158,8 +146,7 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
                 j2 = 1;
                 k2 = 1;
             } // Z Y X order
-            else if (x0 < z0)
-            {
+            else if (x0 < z0) {
                 i1 = 0;
                 j1 = 1;
                 k1 = 0;
@@ -167,8 +154,7 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
                 j2 = 1;
                 k2 = 1;
             } // Y Z X order
-            else
-            {
+            else {
                 i1 = 0;
                 j1 = 1;
                 k1 = 0;
@@ -203,45 +189,33 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
 
         // Calculate the contribution from the four corners
         double t0 = 0.6 - (x0 * x0) - (y0 * y0) - (z0 * z0);
-        if (t0 < 0)
-        {
+        if (t0 < 0) {
             n0 = 0.0;
-        }
-        else
-        {
+        } else {
             t0 *= t0;
             n0 = t0 * t0 * dot(grad3[gi0], x0, y0, z0);
         }
 
         double t1 = 0.6 - (x1 * x1) - (y1 * y1) - (z1 * z1);
-        if (t1 < 0)
-        {
+        if (t1 < 0) {
             n1 = 0.0;
-        }
-        else
-        {
+        } else {
             t1 *= t1;
             n1 = t1 * t1 * dot(grad3[gi1], x1, y1, z1);
         }
 
         double t2 = 0.6 - (x2 * x2) - (y2 * y2) - (z2 * z2);
-        if (t2 < 0)
-        {
+        if (t2 < 0) {
             n2 = 0.0;
-        }
-        else
-        {
+        } else {
             t2 *= t2;
             n2 = t2 * t2 * dot(grad3[gi2], x2, y2, z2);
         }
 
         double t3 = 0.6 - (x3 * x3) - (y3 * y3) - (z3 * z3);
-        if (t3 < 0)
-        {
+        if (t3 < 0) {
             n3 = 0.0;
-        }
-        else
-        {
+        } else {
             t3 *= t3;
             n3 = t3 * t3 * dot(grad3[gi3], x3, y3, z3);
         }
@@ -252,8 +226,7 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
     }
 
     @Override
-    public double noise(double xin, double yin)
-    {
+    public double noise(double xin, double yin) {
         xin += this.offsetX;
         yin += this.offsetY;
 
@@ -276,13 +249,11 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
         // Determine which simplex we are in.
         final int i1; // Offsets for second (middle) corner of simplex in (i,j) coords
         final int j1;
-        if (x0 > y0)
-        {
+        if (x0 > y0) {
             i1 = 1;
             j1 = 0;
         } // lower triangle, XY order: (0,0)->(1,0)->(1,1)
-        else
-        {
+        else {
             i1 = 0;
             j1 = 1;
         } // upper triangle, YX order: (0,0)->(0,1)->(1,1)
@@ -305,34 +276,25 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
 
         // Calculate the contribution from the three corners
         double t0 = 0.5 - (x0 * x0) - (y0 * y0);
-        if (t0 < 0)
-        {
+        if (t0 < 0) {
             n0 = 0.0;
-        }
-        else
-        {
+        } else {
             t0 *= t0;
             n0 = t0 * t0 * dot(grad3[gi0], x0, y0); // (x,y) of grad3 used for 2D gradient
         }
 
         double t1 = 0.5 - (x1 * x1) - (y1 * y1);
-        if (t1 < 0)
-        {
+        if (t1 < 0) {
             n1 = 0.0;
-        }
-        else
-        {
+        } else {
             t1 *= t1;
             n1 = t1 * t1 * dot(grad3[gi1], x1, y1);
         }
 
         double t2 = 0.5 - (x2 * x2) - (y2 * y2);
-        if (t2 < 0)
-        {
+        if (t2 < 0) {
             n2 = 0.0;
-        }
-        else
-        {
+        } else {
             t2 *= t2;
             n2 = t2 * t2 * dot(grad3[gi2], x2, y2);
         }
@@ -350,11 +312,9 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
      * @param y Y coordinate
      * @param z Z coordinate
      * @param w W coordinate
-     *
      * @return Noise at given location, from range -1 to 1
      */
-    public double noise(double x, double y, double z, double w)
-    {
+    public double noise(double x, double y, double z, double w) {
         x += this.offsetX;
         y += this.offsetY;
         z += this.offsetZ;
@@ -470,56 +430,41 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
 
         // Calculate the contribution from the five corners
         double t0 = 0.6 - (x0 * x0) - (y0 * y0) - (z0 * z0) - (w0 * w0);
-        if (t0 < 0)
-        {
+        if (t0 < 0) {
             n0 = 0.0;
-        }
-        else
-        {
+        } else {
             t0 *= t0;
             n0 = t0 * t0 * dot(grad4[gi0], x0, y0, z0, w0);
         }
 
         double t1 = 0.6 - (x1 * x1) - (y1 * y1) - (z1 * z1) - (w1 * w1);
-        if (t1 < 0)
-        {
+        if (t1 < 0) {
             n1 = 0.0;
-        }
-        else
-        {
+        } else {
             t1 *= t1;
             n1 = t1 * t1 * dot(grad4[gi1], x1, y1, z1, w1);
         }
 
         double t2 = 0.6 - (x2 * x2) - (y2 * y2) - (z2 * z2) - (w2 * w2);
-        if (t2 < 0)
-        {
+        if (t2 < 0) {
             n2 = 0.0;
-        }
-        else
-        {
+        } else {
             t2 *= t2;
             n2 = t2 * t2 * dot(grad4[gi2], x2, y2, z2, w2);
         }
 
         double t3 = 0.6 - (x3 * x3) - (y3 * y3) - (z3 * z3) - (w3 * w3);
-        if (t3 < 0)
-        {
+        if (t3 < 0) {
             n3 = 0.0;
-        }
-        else
-        {
+        } else {
             t3 *= t3;
             n3 = t3 * t3 * dot(grad4[gi3], x3, y3, z3, w3);
         }
 
         double t4 = 0.6 - (x4 * x4) - (y4 * y4) - (z4 * z4) - (w4 * w4);
-        if (t4 < 0)
-        {
+        if (t4 < 0) {
             n4 = 0.0;
-        }
-        else
-        {
+        } else {
             t4 *= t4;
             n4 = t4 * t4 * dot(grad4[gi4], x4, y4, z4, w4);
         }
@@ -528,18 +473,15 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
         return 27.0 * (n0 + n1 + n2 + n3 + n4);
     }
 
-    protected static double dot(final int[] g, final double x, final double y)
-    {
+    protected static double dot(final int[] g, final double x, final double y) {
         return (g[0] * x) + (g[1] * y);
     }
 
-    protected static double dot(final int[] g, final double x, final double y, final double z)
-    {
+    protected static double dot(final int[] g, final double x, final double y, final double z) {
         return (g[0] * x) + (g[1] * y) + (g[2] * z);
     }
 
-    protected static double dot(final int[] g, final double x, final double y, final double z, final double w)
-    {
+    protected static double dot(final int[] g, final double x, final double y, final double z, final double w) {
         return (g[0] * x) + (g[1] * y) + (g[2] * z) + (g[3] * w);
     }
 
@@ -548,11 +490,9 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
      * coordinates in 1D space
      *
      * @param xin X coordinate
-     *
      * @return Noise at given location, from range -1 to 1
      */
-    public static double getNoise(final double xin)
-    {
+    public static double getNoise(final double xin) {
         return instance.noise(xin);
     }
 
@@ -562,11 +502,9 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
      *
      * @param xin X coordinate
      * @param yin Y coordinate
-     *
      * @return Noise at given location, from range -1 to 1
      */
-    public static double getNoise(final double xin, final double yin)
-    {
+    public static double getNoise(final double xin, final double yin) {
         return instance.noise(xin, yin);
     }
 
@@ -577,11 +515,9 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
      * @param xin X coordinate
      * @param yin Y coordinate
      * @param zin Z coordinate
-     *
      * @return Noise at given location, from range -1 to 1
      */
-    public static double getNoise(final double xin, final double yin, final double zin)
-    {
+    public static double getNoise(final double xin, final double yin, final double zin) {
         return instance.noise(xin, yin, zin);
     }
 
@@ -593,11 +529,9 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
      * @param y Y coordinate
      * @param z Z coordinate
      * @param w W coordinate
-     *
      * @return Noise at given location, from range -1 to 1
      */
-    public static double getNoise(final double x, final double y, final double z, final double w)
-    {
+    public static double getNoise(final double x, final double y, final double z, final double w) {
         return instance.noise(x, y, z, w);
     }
 
@@ -606,8 +540,7 @@ public class SimplexNoiseGenerator extends PerlinNoiseGenerator
      *
      * @return Singleton
      */
-    public static SimplexNoiseGenerator getInstance()
-    {
+    public static SimplexNoiseGenerator getInstance() {
         return instance;
     }
 }

@@ -38,8 +38,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
 @Repeatable(CfgTranslatedCommentArray.class)
-public @interface CfgTranslatedComment
-{
+public @interface CfgTranslatedComment {
     /**
      * Translation key
      * Don't add {@literal #} symbol.

@@ -24,21 +24,20 @@
 
 package org.diorite.utils.math;
 
-import java.util.Random;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Random;
+
 /**
  * Class defining range in longs, may be used to validate numbers.
  */
-public class LongRange
-{
+public class LongRange {
     /**
      * Range from 1 to 1.
      */
-    public static final LongRange ONE   = new LongRange(1, 1);
+    public static final LongRange ONE = new LongRange(1, 1);
     /**
      * Range from 0 to 0.
      */
@@ -46,7 +45,7 @@ public class LongRange
     /**
      * Range from {@link Long#MIN_VALUE} to {@link Long#MAX_VALUE}
      */
-    public static final LongRange FULL  = new LongRange(Long.MIN_VALUE, Long.MAX_VALUE);
+    public static final LongRange FULL = new LongRange(Long.MIN_VALUE, Long.MAX_VALUE);
 
     private final long min;
     private final long max;
@@ -57,8 +56,7 @@ public class LongRange
      * @param min min value of range.
      * @param max max value of range.
      */
-    public LongRange(final long min, final long max)
-    {
+    public LongRange(final long min, final long max) {
         this.min = min;
         this.max = max;
     }
@@ -66,24 +64,21 @@ public class LongRange
     /**
      * @return min value in range.
      */
-    public long getMin()
-    {
+    public long getMin() {
         return this.min;
     }
 
     /**
      * @return max value in range.
      */
-    public long getMax()
-    {
+    public long getMax() {
         return this.max;
     }
 
     /**
      * @return random value in range.
      */
-    public long getRandom()
-    {
+    public long getRandom() {
         return ((this.max - this.min) == 0) ? this.max : DioriteRandomUtils.getRandomLong(this.min, this.max);
     }
 
@@ -91,19 +86,16 @@ public class LongRange
      * Returns random value in range.
      *
      * @param random random instance to use.
-     *
      * @return random value in range.
      */
-    public long getRandom(final Random random)
-    {
+    public long getRandom(final Random random) {
         return ((this.max - this.min) == 0) ? this.max : DioriteRandomUtils.getRandomLong(random, this.min, this.max);
     }
 
     /**
      * @return size of range. (max - min + 1) may overflow
      */
-    public long size()
-    {
+    public long size() {
         return ((this.max - this.min) + 1);
     }
 
@@ -111,11 +103,9 @@ public class LongRange
      * Check if given number is in range.
      *
      * @param i number to check.
-     *
      * @return true if it is in range
      */
-    public boolean isIn(final long i)
-    {
+    public boolean isIn(final long i) {
         return (i >= this.min) && (i <= this.max);
     }
 
@@ -126,17 +116,13 @@ public class LongRange
      * {@code else -> i}
      *
      * @param i number to validate.
-     *
      * @return closest number in range.
      */
-    public long getIn(final long i)
-    {
-        if (i > this.max)
-        {
+    public long getIn(final long i) {
+        if (i > this.max) {
             return this.max;
         }
-        if (i < this.min)
-        {
+        if (i < this.min) {
             return this.min;
         }
         return i;
@@ -150,35 +136,28 @@ public class LongRange
      *
      * @param i   number to validate.
      * @param def default value.
-     *
      * @return given number or default value.
      */
-    public long getIn(final long i, final long def)
-    {
-        if (! this.isIn(i))
-        {
+    public long getIn(final long i, final long def) {
+        if (!this.isIn(i)) {
             return def;
         }
         return i;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = (int) (this.min ^ (this.min >>> 32));
         result = (31 * result) + (int) (this.max ^ (this.max >>> 32));
         return result;
     }
 
     @Override
-    public boolean equals(final Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (! (o instanceof LongRange))
-        {
+        if (!(o instanceof LongRange)) {
             return false;
         }
 
@@ -189,8 +168,7 @@ public class LongRange
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("min", this.min).append("max", this.max).toString();
     }
 
@@ -198,11 +176,9 @@ public class LongRange
      * Create range with only gived value in range.
      *
      * @param num min and max of range.
-     *
      * @return range with only one value in range.
      */
-    public static LongRange fixed(final long num)
-    {
+    public static LongRange fixed(final long num) {
         return new LongRange(num, num);
     }
 
@@ -211,38 +187,30 @@ public class LongRange
      * " - ", " : ", " ; ", ", ", " ", ",", ";", ":", "-"
      *
      * @param string string to parse.
-     *
      * @return parsed range or null.
      */
-    public static LongRange valueOf(String string)
-    {
-        if (string.isEmpty())
-        {
+    public static LongRange valueOf(String string) {
+        if (string.isEmpty()) {
             return null;
         }
         String[] nums = null;
         int i = 0;
         final boolean firstMinus = string.charAt(0) == '-';
-        if (firstMinus)
-        {
+        if (firstMinus) {
             string = string.substring(1);
         }
-        while ((i < ByteRange.SPLITS.length) && ((nums == null) || (nums.length != 2)))
-        {
+        while ((i < ByteRange.SPLITS.length) && ((nums == null) || (nums.length != 2))) {
             nums = StringUtils.splitByWholeSeparator(string, ByteRange.SPLITS[i++], 2);
         }
-        if ((nums == null) || (nums.length != 2))
-        {
+        if ((nums == null) || (nums.length != 2)) {
             return null;
         }
         final Long min = DioriteMathUtils.asLong(firstMinus ? ("-" + nums[0]) : nums[0]);
-        if (min == null)
-        {
+        if (min == null) {
             return null;
         }
         final Long max = DioriteMathUtils.asLong(nums[1]);
-        if ((max == null) || (min > max))
-        {
+        if ((max == null) || (min > max)) {
             return null;
         }
         return new LongRange(min, max);

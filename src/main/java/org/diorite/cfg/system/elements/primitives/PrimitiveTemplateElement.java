@@ -24,29 +24,26 @@
 
 package org.diorite.cfg.system.elements.primitives;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.cfg.system.elements.TemplateElement;
+
+import java.io.IOException;
 
 /**
  * Template used by primitive values.
  */
-public abstract class PrimitiveTemplateElement<T> extends TemplateElement<T>
-{
+public abstract class PrimitiveTemplateElement<T> extends TemplateElement<T> {
     /**
      * construct new template for given class.
      *
      * @param clazz type of supported template element.
      */
-    PrimitiveTemplateElement(final Class<T> clazz)
-    {
+    PrimitiveTemplateElement(final Class<T> clazz) {
         super(clazz);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object object, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object object, final int level, final ElementPlace elementPlace) throws IOException {
         writer.append(object.toString());
     }
 }

@@ -24,24 +24,22 @@
 
 package org.diorite.cfg.system.elements;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
+
+import java.io.IOException;
 
 /**
  * Base class for template elements handlers, with simpler methods and made for String representation of objects.
  *
  * @param <T> type of supported/handled element.
  */
-public abstract class SimpleStringTemplateElement<T> extends SimpleTemplateElement<T>
-{
+public abstract class SimpleStringTemplateElement<T> extends SimpleTemplateElement<T> {
     /**
      * Construct new template for given class, convert function and class type checking function.
      *
      * @param fieldType type of supported template element.
      */
-    public SimpleStringTemplateElement(final Class<T> fieldType)
-    {
+    public SimpleStringTemplateElement(final Class<T> fieldType) {
         super(fieldType);
     }
 
@@ -50,15 +48,13 @@ public abstract class SimpleStringTemplateElement<T> extends SimpleTemplateEleme
      * String returned by this method must produce this same object via {@link #simpleConvert(Object)}.
      *
      * @param object object to be coverted.
-     *
      * @return ready to save string.
      */
     protected abstract String convertToString(T object);
 
     @SuppressWarnings("unchecked")
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final T element = (this.fieldType.isAssignableFrom(elementRaw.getClass())) ? (T) elementRaw : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(this.convertToString(element)), level, elementPlace);
     }

@@ -32,8 +32,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  *
  * @param <T> type of wrapped object.
  */
-public class WeightedRandomChoiceWrapper<T> extends WeightedRandomChoice
-{
+public class WeightedRandomChoiceWrapper<T> extends WeightedRandomChoice {
     /**
      * Wrapped object.
      */
@@ -45,8 +44,7 @@ public class WeightedRandomChoiceWrapper<T> extends WeightedRandomChoice
      * @param weight  weight of this choice.
      * @param wrapped wrapped object.
      */
-    public WeightedRandomChoiceWrapper(final int weight, final T wrapped)
-    {
+    public WeightedRandomChoiceWrapper(final int weight, final T wrapped) {
         super(weight);
         this.wrapped = wrapped;
     }
@@ -56,14 +54,12 @@ public class WeightedRandomChoiceWrapper<T> extends WeightedRandomChoice
      *
      * @return wrapped object.
      */
-    public T getWrapped()
-    {
+    public T getWrapped() {
         return this.wrapped;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("wrapped", this.wrapped).toString();
     }
 }

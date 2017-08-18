@@ -24,38 +24,32 @@
 
 package org.diorite.utils.math.geometry;
 
-import javax.vecmath.Vector3d;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class BoundingBox implements Cloneable
-{
+import javax.vecmath.Vector3d;
+
+public class BoundingBox implements Cloneable {
     protected final Vector3d min = new Vector3d();
     protected final Vector3d max = new Vector3d();
 
-    public Vector3d getSize()
-    {
+    public Vector3d getSize() {
         return new Vector3d(this.max.x - this.min.x, this.max.y - this.min.y, this.max.z - this.min.z);
     }
 
-    public Vector3d getMin()
-    {
+    public Vector3d getMin() {
         return this.min;
     }
 
-    public Vector3d getMax()
-    {
+    public Vector3d getMax() {
         return this.max;
     }
 
-    public final boolean intersects(final BoundingBox other)
-    {
+    public final boolean intersects(final BoundingBox other) {
         return intersects(this, other);
     }
 
-    public static boolean intersects(final BoundingBox a, final BoundingBox b)
-    {
+    public static boolean intersects(final BoundingBox a, final BoundingBox b) {
         if ((b == null) || (a == null)) // TODO maybe error?
         {
             return false;
@@ -67,8 +61,7 @@ public class BoundingBox implements Cloneable
         return ((maxA.x >= minB.x) && (minA.x <= maxB.x) && (maxA.y >= minB.y) && (minA.y <= maxB.y) && (maxA.z >= minB.z) && (minA.z <= maxB.z));
     }
 
-    public static BoundingBox fromCorners(final Vector3d a, final Vector3d b)
-    {
+    public static BoundingBox fromCorners(final Vector3d a, final Vector3d b) {
         final BoundingBox box = new BoundingBox();
         box.min.setX(Math.min(a.x, b.x));
         box.min.setY(Math.min(a.y, b.y));
@@ -79,8 +72,7 @@ public class BoundingBox implements Cloneable
         return box;
     }
 
-    public final BoundingBox grow(final double x, final double y, final double z)
-    {
+    public final BoundingBox grow(final double x, final double y, final double z) {
         final BoundingBox bb = new BoundingBox();
         bb.min.setX(this.min.x - x);
         bb.min.setY(this.min.y - y);
@@ -91,16 +83,14 @@ public class BoundingBox implements Cloneable
         return bb;
     }
 
-    public static BoundingBox fromPositionAndSize(final Vector3d pos, final Vector3d size)
-    {
+    public static BoundingBox fromPositionAndSize(final Vector3d pos, final Vector3d size) {
         final BoundingBox box = new BoundingBox();
         box.min.set(pos);
         box.max.set(pos.x + size.x, pos.y + size.y, pos.z + size.z);
         return box;
     }
 
-    public static BoundingBox copyOf(final BoundingBox original)
-    {
+    public static BoundingBox copyOf(final BoundingBox original) {
         final BoundingBox box = new BoundingBox();
         box.min.set(original.min);
         box.max.set(original.max);
@@ -108,8 +98,7 @@ public class BoundingBox implements Cloneable
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("min", this.min).append("max", this.max).toString();
     }
 }

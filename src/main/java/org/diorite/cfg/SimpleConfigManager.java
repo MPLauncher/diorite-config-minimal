@@ -24,66 +24,54 @@
 
 package org.diorite.cfg;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.diorite.cfg.yaml.DioriteYaml;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Map;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import org.diorite.cfg.yaml.DioriteYaml;
-
-public class SimpleConfigManager implements ConfigManager
-{
+public class SimpleConfigManager implements ConfigManager {
     protected final DioriteYaml yaml;
 
-    public SimpleConfigManager()
-    {
+    public SimpleConfigManager() {
         this.yaml = new DioriteYaml();
     }
 
-    public SimpleConfigManager(final DioriteYaml yaml)
-    {
+    public SimpleConfigManager(final DioriteYaml yaml) {
         this.yaml = yaml;
     }
 
     @Override
-    public DioriteYaml getYaml()
-    {
+    public DioriteYaml getYaml() {
         return this.yaml;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T load(final Reader reader) throws IOException
-    {
+    public <T> T load(final Reader reader) throws IOException {
         return (T) this.yaml.load(reader);
     }
 
     @Override
-    public <T> T load(final Class<T> clazz, final Reader reader) throws IOException
-    {
+    public <T> T load(final Class<T> clazz, final Reader reader) throws IOException {
         return this.yaml.loadAs(reader, clazz);
     }
 
     @Override
-    public void save(final Writer writer, final Object object) throws IOException
-    {
-        if (object instanceof Map)
-        {
+    public void save(final Writer writer, final Object object) throws IOException {
+        if (object instanceof Map) {
             writer.write(this.yaml.dumpAsMap(object));
             writer.flush();
-        }
-        else
-        {
+        } else {
             this.yaml.dump(object, writer);
         }
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("yaml", this.yaml).toString();
     }
 }

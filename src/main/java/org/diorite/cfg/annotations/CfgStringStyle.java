@@ -38,8 +38,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CfgStringStyle
-{
+public @interface CfgStringStyle {
     /**
      * @return {@link org.diorite.cfg.annotations.CfgStringStyle.StringStyle} for this field.
      */
@@ -48,8 +47,7 @@ public @interface CfgStringStyle
     /**
      * enum with all possible styles.
      */
-    enum StringStyle
-    {
+    enum StringStyle {
         /**
          * Default style, template will automagically choose best option.
          * (it must scan all elements, so it will be slower)

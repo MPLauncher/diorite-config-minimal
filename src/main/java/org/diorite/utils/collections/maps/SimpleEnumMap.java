@@ -24,14 +24,13 @@
 
 package org.diorite.utils.collections.maps;
 
-import java.util.Map;
-
-import org.diorite.utils.SimpleEnum;
-import org.diorite.utils.collections.hash.SimpleEnumHashingStrategy;
-
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
+import org.diorite.utils.SimpleEnum;
+import org.diorite.utils.collections.hash.SimpleEnumHashingStrategy;
+
+import java.util.Map;
 
 /**
  * Map with simple enum objects as keys.
@@ -40,15 +39,13 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
  * @param <V> value type.
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpenCustomHashMap<K, V>
-{
+public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpenCustomHashMap<K, V> {
     private static final long serialVersionUID = 0;
 
     /**
      * Creates a new hash map with initial expected {@link Hash#DEFAULT_INITIAL_SIZE} entries and {@link Hash#DEFAULT_LOAD_FACTOR} as load factor.
      */
-    public SimpleEnumMap()
-    {
+    public SimpleEnumMap() {
         super((Strategy) SimpleEnumHashingStrategy.INSTANCE);
     }
 
@@ -60,8 +57,7 @@ public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpen
      * @param expected the expected number of elements in the hash set.
      * @param f        the load factor.
      */
-    public SimpleEnumMap(final int expected, final float f)
-    {
+    public SimpleEnumMap(final int expected, final float f) {
         super(expected, f, (Strategy) SimpleEnumHashingStrategy.INSTANCE);
     }
 
@@ -70,8 +66,7 @@ public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpen
      *
      * @param expected the expected number of elements in the hash map.
      */
-    public SimpleEnumMap(final int expected)
-    {
+    public SimpleEnumMap(final int expected) {
         super(expected, (Strategy) SimpleEnumHashingStrategy.INSTANCE);
     }
 
@@ -81,8 +76,7 @@ public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpen
      * @param m a {@link Map} to be copied into the new hash map.
      * @param f the load factor.
      */
-    public SimpleEnumMap(final Map<? extends K, ? extends V> m, final float f)
-    {
+    public SimpleEnumMap(final Map<? extends K, ? extends V> m, final float f) {
         super(m, f, (Strategy) SimpleEnumHashingStrategy.INSTANCE);
     }
 
@@ -91,8 +85,7 @@ public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpen
      *
      * @param m a {@link Map} to be copied into the new hash map.
      */
-    public SimpleEnumMap(final Map<? extends K, ? extends V> m)
-    {
+    public SimpleEnumMap(final Map<? extends K, ? extends V> m) {
         super(m, (Strategy) SimpleEnumHashingStrategy.INSTANCE);
     }
 
@@ -102,8 +95,7 @@ public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpen
      * @param m a type-specific map to be copied into the new hash map.
      * @param f the load factor.
      */
-    public SimpleEnumMap(final Object2ObjectMap<K, V> m, final float f)
-    {
+    public SimpleEnumMap(final Object2ObjectMap<K, V> m, final float f) {
         super(m, f, (Strategy) SimpleEnumHashingStrategy.INSTANCE);
     }
 
@@ -112,8 +104,7 @@ public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpen
      *
      * @param m a type-specific map to be copied into the new hash map.
      */
-    public SimpleEnumMap(final Object2ObjectMap<K, V> m)
-    {
+    public SimpleEnumMap(final Object2ObjectMap<K, V> m) {
         super(m, (Strategy) SimpleEnumHashingStrategy.INSTANCE);
     }
 
@@ -123,11 +114,9 @@ public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpen
      * @param k the array of keys of the new hash map.
      * @param v the array of corresponding values in the new hash map.
      * @param f the load factor.
-     *
      * @throws IllegalArgumentException if <code>k</code> and <code>v</code> have different lengths.
      */
-    public SimpleEnumMap(final K[] k, final V[] v, final float f)
-    {
+    public SimpleEnumMap(final K[] k, final V[] v, final float f) {
         super(k, v, f, (Strategy) SimpleEnumHashingStrategy.INSTANCE);
     }
 
@@ -136,11 +125,9 @@ public class SimpleEnumMap<K extends SimpleEnum<K>, V> extends Object2ObjectOpen
      *
      * @param k the array of keys of the new hash map.
      * @param v the array of corresponding values in the new hash map.
-     *
      * @throws IllegalArgumentException if <code>k</code> and <code>v</code> have different lengths.
      */
-    public SimpleEnumMap(final K[] k, final V[] v)
-    {
+    public SimpleEnumMap(final K[] k, final V[] v) {
         super(k, v, (Strategy) SimpleEnumHashingStrategy.INSTANCE);
     }
 }

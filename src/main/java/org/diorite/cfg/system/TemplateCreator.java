@@ -24,24 +24,7 @@
 
 package org.diorite.cfg.system;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
-
 import org.apache.commons.lang3.StringUtils;
-
 import org.apache.commons.lang3.Validate;
 import org.diorite.cfg.ConfigTranslation;
 import org.diorite.cfg.annotations.*;
@@ -52,16 +35,20 @@ import org.diorite.utils.reflections.DioriteReflectionUtils;
 import org.diorite.utils.reflections.MethodInvoker;
 import org.diorite.utils.reflections.ReflectGetter;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
+
 /**
  * Class for generating config templates, with simple cache system.
  */
-public final class TemplateCreator
-{
-    private static final Map<Class<?>, Template<?>>              templateMap = new ConcurrentHashMap<>(20, 0.1f, 4);
-    private static final Map<Class<?>, Map<String, ConfigField>> fields      = new ConcurrentHashMap<>(20, 0.1f, 4);
+public final class TemplateCreator {
+    private static final Map<Class<?>, Template<?>> templateMap = new ConcurrentHashMap<>(20, 0.1f, 4);
+    private static final Map<Class<?>, Map<String, ConfigField>> fields = new ConcurrentHashMap<>(20, 0.1f, 4);
 
-    private TemplateCreator()
-    {
+    private TemplateCreator() {
     }
 
     /**
@@ -69,14 +56,11 @@ public final class TemplateCreator
      *
      * @param clazz clazz with field.
      * @param key   name of field.
-     *
      * @return config field instance for given field.
      */
-    public static ConfigField getField(final Class<?> clazz, final String key)
-    {
+    public static ConfigField getField(final Class<?> clazz, final String key) {
         final Map<String, ConfigField> map = fields.get(clazz);
-        if (map == null)
-        {
+        if (map == null) {
             return null;
         }
         return map.get(key);
@@ -89,23 +73,17 @@ public final class TemplateCreator
      * @param type type/class to check
      */
     @SuppressWarnings("ObjectEquality")
-    public static void checkTemplate(final Type type)
-    {
-        if (type instanceof Class)
-        {
+    public static void checkTemplate(final Type type) {
+        if (type instanceof Class) {
             Class<?> c = (Class<?>) type;
-            do
-            {
-                if ((c == null) || (Enum.class.isAssignableFrom(c)) || (c == Object.class) || (c == Object[].class) || (c.isArray() && (DioriteReflectionUtils.getPrimitive(c.getComponentType()).isPrimitive() || String.class.isAssignableFrom(c.getComponentType()))) || (TemplateElements.getElement(c) != TemplateElements.getDefaultTemplatesHandler()))
-                {
+            do {
+                if ((c == null) || (Enum.class.isAssignableFrom(c)) || (c == Object.class) || (c == Object[].class) || (c.isArray() && (DioriteReflectionUtils.getPrimitive(c.getComponentType()).isPrimitive() || String.class.isAssignableFrom(c.getComponentType()))) || (TemplateElements.getElement(c) != TemplateElements.getDefaultTemplatesHandler())) {
                     return;
                 }
                 // generate and cache template
 
-                if (c.isArray())
-                {
-                    while (c.isArray())
-                    {
+                if (c.isArray()) {
+                    while (c.isArray()) {
                         c = c.getComponentType();
                     }
                     checkTemplate(c);
@@ -113,12 +91,9 @@ public final class TemplateCreator
                 getTemplate(c, true, true, false);
                 c = c.getSuperclass();
             } while (true);
-        }
-        else if (type instanceof ParameterizedType)
-        {
+        } else if (type instanceof ParameterizedType) {
             final ParameterizedType pType = (ParameterizedType) type;
-            for (final Type t : pType.getActualTypeArguments())
-            {
+            for (final Type t : pType.getActualTypeArguments()) {
                 checkTemplate(t);
             }
         }
@@ -132,12 +107,10 @@ public final class TemplateCreator
      * @param cache    if template should be saved to memory if created.
      * @param recreate if template should be force re-created even if it exisit.
      * @param <T>      Type of template class
-     *
      * @return template class or null.
      */
     @SuppressWarnings("unchecked")
-    public static <T> Template<T> getTemplate(final Class<T> clazz, final boolean create, final boolean cache, final boolean recreate)
-    {
+    public static <T> Template<T> getTemplate(final Class<T> clazz, final boolean create, final boolean cache, final boolean recreate) {
         return getTemplate(clazz, null, create, cache, recreate);
     }
 
@@ -150,82 +123,60 @@ public final class TemplateCreator
      * @param cache       if template should be saved to memory if created.
      * @param recreate    if template should be force re-created even if it exisit.
      * @param <T>         Type of template class
-     *
      * @return template class or null.
      */
     @SuppressWarnings("unchecked")
-    public static <T> Template<T> getTemplate(final Class<T> clazz, final ConfigTranslation translation, final boolean create, final boolean cache, final boolean recreate)
-    {
-        if (! recreate)
-        {
+    public static <T> Template<T> getTemplate(final Class<T> clazz, final ConfigTranslation translation, final boolean create, final boolean cache, final boolean recreate) {
+        if (!recreate) {
             final Template<T> template = (Template<T>) templateMap.get(clazz);
-            if (template != null)
-            {
+            if (template != null) {
                 return template;
             }
-            if (! create)
-            {
+            if (!create) {
                 return null;
             }
         }
         Supplier<T> def = null;
         {
             final CfgDelegateDefault annotation = clazz.getAnnotation(CfgDelegateDefault.class);
-            if (annotation != null)
-            {
+            if (annotation != null) {
                 final String path = annotation.value();
                 final Supplier<Object> basicDelegate = ConfigField.getBasicDelegate(path);
-                if (basicDelegate != null)
-                {
+                if (basicDelegate != null) {
                     def = (Supplier<T>) basicDelegate;
-                }
-                else if (path.equalsIgnoreCase("{new}"))
-                {
+                } else if (path.equalsIgnoreCase("{new}")) {
                     final ConstructorInvoker constructor = DioriteReflectionUtils.getConstructor(clazz);
                     def = () -> (T) constructor.invoke();
-                }
-                else
-                {
+                } else {
                     final int sepIndex = path.indexOf("::");
                     final Class<?> targetClass;
                     final String methodName;
-                    if (sepIndex == - 1)
-                    {
+                    if (sepIndex == -1) {
                         targetClass = clazz;
                         methodName = path;
-                    }
-                    else
-                    {
-                        try
-                        {
+                    } else {
+                        try {
                             Class<?> tmpClass = DioriteReflectionUtils.tryGetCanonicalClass(path.substring(0, sepIndex));
-                            if (tmpClass == null)
-                            {
+                            if (tmpClass == null) {
                                 tmpClass = DioriteReflectionUtils.tryGetCanonicalClass(clazz.getPackage().getName() + "." + path.substring(0, sepIndex));
-                                if (tmpClass == null)
-                                {
+                                if (tmpClass == null) {
                                     tmpClass = DioriteReflectionUtils.getNestedClass(clazz, path.substring(0, sepIndex));
                                 }
                             }
                             targetClass = tmpClass;
-                        } catch (final Exception e)
-                        {
+                        } catch (final Exception e) {
                             throw new RuntimeException("Can't find class for: " + path, e);
                         }
                         methodName = path.substring(sepIndex + 2);
                     }
-                    if (targetClass == null)
-                    {
+                    if (targetClass == null) {
                         throw new RuntimeException("Can't find class for delegate: " + path);
                     }
                     final MethodInvoker methodInvoker = DioriteReflectionUtils.getMethod(targetClass, methodName, false);
-                    if (methodInvoker == null)
-                    {
+                    if (methodInvoker == null) {
                         final ReflectGetter<Object> reflectGetter = DioriteReflectionUtils.getReflectGetter(methodName, targetClass);
                         def = () -> (T) reflectGetter.get(null);
-                    }
-                    else
-                    {
+                    } else {
                         def = () -> (T) methodInvoker.invoke(null);
                     }
                 }
@@ -241,16 +192,13 @@ public final class TemplateCreator
         final Collection<String> excludedFields = new HashSet<>(5);
         {
             final CfgClass cfgInfo = clazz.getAnnotation(CfgClass.class);
-            if (cfgInfo != null)
-            {
+            if (cfgInfo != null) {
                 allFields = cfgInfo.allFields();
 //                superFields = cfgInfo.superFields();
                 ignoreTransient = cfgInfo.ignoreTransient();
                 name = (cfgInfo.name() != null) ? cfgInfo.name() : clazz.getSimpleName();
                 Collections.addAll(excludedFields, cfgInfo.excludeFields());
-            }
-            else
-            {
+            } else {
                 allFields = true;
 //                superFields = true;
                 ignoreTransient = true;
@@ -269,37 +217,30 @@ public final class TemplateCreator
             final Collection<Class<?>> classes = new ArrayList<>(5);
             {
                 Class<?> fieldsSrc = clazz;
-                do
-                {
+                do {
                     classes.add(fieldsSrc);
                     fieldsSrc = fieldsSrc.getSuperclass();
-                    if (fieldsSrc == null)
-                    {
+                    if (fieldsSrc == null) {
                         break;
                     }
                     final CfgClass cfgInfo = fieldsSrc.getAnnotation(CfgClass.class);
-                    if ((cfgInfo != null) && ! cfgInfo.superFields())
-                    {
+                    if ((cfgInfo != null) && !cfgInfo.superFields()) {
                         break;
                     }
-                } while (! fieldsSrc.equals(Object.class));
+                } while (!fieldsSrc.equals(Object.class));
             }
 
-            for (final Class<?> fieldsSrc : classes)
-            {
+            for (final Class<?> fieldsSrc : classes) {
                 int i = 0;
-                for (final Field field : fieldsSrc.getDeclaredFields())
-                {
-                    if ((field.isAnnotationPresent(CfgField.class) || (! field.isAnnotationPresent(CfgExclude.class) && ! field.isSynthetic() && (! ignoreTransient || ! Modifier.isTransient(field.getModifiers())) && (allFields || field.isAnnotationPresent(CfgField.class)) && ! excludedFields.contains(field.getName()))) && ! Modifier.isStatic(field.getModifiers()))
-                    {
+                for (final Field field : fieldsSrc.getDeclaredFields()) {
+                    if ((field.isAnnotationPresent(CfgField.class) || (!field.isAnnotationPresent(CfgExclude.class) && !field.isSynthetic() && (!ignoreTransient || !Modifier.isTransient(field.getModifiers())) && (allFields || field.isAnnotationPresent(CfgField.class)) && !excludedFields.contains(field.getName()))) && !Modifier.isStatic(field.getModifiers())) {
                         fields.add(new ConfigField(field, i++, translation));
                     }
                 }
             }
         }
         final Template<T> template = new BaseTemplate<>(name, clazz, header, footer, fields, clazz.getClassLoader(), def);
-        if (cache)
-        {
+        if (cache) {
             templateMap.put(clazz, template);
             TemplateCreator.fields.put(clazz, template.getFieldsNameMap());
         }
@@ -312,13 +253,10 @@ public final class TemplateCreator
      *
      * @param clazz class to get template.
      * @param <T>   Type of template class
-     *
      * @return template class or null.
-     *
      * @see #getTemplate(Class, boolean, boolean, boolean)
      */
-    public static <T> Template<T> getTemplate(final Class<T> clazz)
-    {
+    public static <T> Template<T> getTemplate(final Class<T> clazz) {
         return getTemplate(clazz, true, true, false);
     }
 
@@ -329,13 +267,10 @@ public final class TemplateCreator
      * @param clazz       class to get template.
      * @param translation translations
      * @param <T>         Type of template class
-     *
      * @return template class or null.
-     *
      * @see #getTemplate(Class, boolean, boolean, boolean)
      */
-    public static <T> Template<T> getTemplate(final Class<T> clazz, final ConfigTranslation translation)
-    {
+    public static <T> Template<T> getTemplate(final Class<T> clazz, final ConfigTranslation translation) {
         return getTemplate(clazz, translation, true, true, false);
     }
 
@@ -346,13 +281,10 @@ public final class TemplateCreator
      * @param clazz  class to get template.
      * @param create if template should be created if it don't exisit yet.
      * @param <T>    Type of template class
-     *
      * @return template class or null.
-     *
      * @see #getTemplate(Class, boolean, boolean, boolean)
      */
-    public static <T> Template<T> getTemplate(final Class<T> clazz, final boolean create)
-    {
+    public static <T> Template<T> getTemplate(final Class<T> clazz, final boolean create) {
         return getTemplate(clazz, create, true, false);
     }
 
@@ -363,95 +295,70 @@ public final class TemplateCreator
      * @param create if template should be created if it don't exisit yet.
      * @param cache  if template should be saved to memory if created.
      * @param <T>    Type of template class
-     *
      * @return template class or null.
-     *
      * @see #getTemplate(Class, boolean, boolean, boolean)
      */
-    public static <T> Template<T> getTemplate(final Class<T> clazz, final boolean create, final boolean cache)
-    {
+    public static <T> Template<T> getTemplate(final Class<T> clazz, final boolean create, final boolean cache) {
         return getTemplate(clazz, create, cache, false);
     }
 
-    static String[] readComments(final AnnotatedElement element, final ConfigTranslation translation)
-    {
+    static String[] readComments(final AnnotatedElement element, final ConfigTranslation translation) {
         final String header;
         final String footer;
         final Collection<String> headerTemp = new ArrayList<>(5);
         final Collection<String> footerTemp = new ArrayList<>(5);
-        for (final Annotation annotation : element.getAnnotations())
-        {
-            if (annotation instanceof CfgComment)
-            {
+        for (final Annotation annotation : element.getAnnotations()) {
+            if (annotation instanceof CfgComment) {
                 headerTemp.add(((CfgComment) annotation).value());
             }
-            if (annotation instanceof CfgCommentsArray)
-            {
-                for (final CfgComment comment : ((CfgCommentsArray) annotation).value())
-                {
+            if (annotation instanceof CfgCommentsArray) {
+                for (final CfgComment comment : ((CfgCommentsArray) annotation).value()) {
                     headerTemp.add(comment.value());
                 }
             }
-            if (annotation instanceof CfgTranslatedComment)
-            {
+            if (annotation instanceof CfgTranslatedComment) {
                 Validate.isTrue(translation != null, "Trying to use @CfgTranslatedComment without translation");
                 headerTemp.add(translation.get(((CfgTranslatedComment) annotation).value()));
             }
-            if (annotation instanceof CfgTranslatedCommentArray)
-            {
+            if (annotation instanceof CfgTranslatedCommentArray) {
                 Validate.isTrue(translation != null, "Trying to use @CfgTranslatedCommentArray without translation");
-                for (final CfgTranslatedComment comment : ((CfgTranslatedCommentArray) annotation).value())
-                {
+                for (final CfgTranslatedComment comment : ((CfgTranslatedCommentArray) annotation).value()) {
                     headerTemp.add(translation.get(comment.value()));
                 }
             }
-            if (annotation instanceof CfgTranslatedFooterComment)
-            {
+            if (annotation instanceof CfgTranslatedFooterComment) {
                 Validate.isTrue(translation != null, "Trying to use @CfgTranslatedFooterComment without translation");
                 footerTemp.add(translation.get(((CfgTranslatedFooterComment) annotation).value()));
             }
-            if (annotation instanceof CfgTranslatedFooterCommentArray)
-            {
+            if (annotation instanceof CfgTranslatedFooterCommentArray) {
                 Validate.isTrue(translation != null, "Trying to use @CfgTranslatedFooterCommentArray without translation");
-                for (final CfgTranslatedFooterComment comment : ((CfgTranslatedFooterCommentArray) annotation).value())
-                {
+                for (final CfgTranslatedFooterComment comment : ((CfgTranslatedFooterCommentArray) annotation).value()) {
                     footerTemp.add(translation.get(comment.value()));
                 }
             }
-            if (annotation instanceof CfgComments)
-            {
+            if (annotation instanceof CfgComments) {
                 Collections.addAll(headerTemp, ((CfgComments) annotation).value());
             }
-            if (annotation instanceof CfgFooterComment)
-            {
+            if (annotation instanceof CfgFooterComment) {
                 footerTemp.add(((CfgFooterComment) annotation).value());
             }
-            if (annotation instanceof CfgFooterCommentsArray)
-            {
-                for (final CfgFooterComment comment : ((CfgFooterCommentsArray) annotation).value())
-                {
+            if (annotation instanceof CfgFooterCommentsArray) {
+                for (final CfgFooterComment comment : ((CfgFooterCommentsArray) annotation).value()) {
                     footerTemp.add(comment.value());
                 }
             }
-            if (annotation instanceof CfgFooterComments)
-            {
+            if (annotation instanceof CfgFooterComments) {
                 Collections.addAll(footerTemp, ((CfgFooterComments) annotation).value());
             }
         }
-        if (headerTemp.isEmpty())
-        {
+        if (headerTemp.isEmpty()) {
             header = null;
-        }
-        else
-        {
+        } else {
             header = StringUtils.join(headerTemp, '\n');
         }
-        if (footerTemp.isEmpty())
-        {
+        if (footerTemp.isEmpty()) {
             footer = null;
-        }
-        else
-        {
+        } else {
             footer = StringUtils.join(footerTemp, '\n');
         }
         return new String[]{header, footer};

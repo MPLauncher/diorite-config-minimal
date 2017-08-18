@@ -24,24 +24,15 @@
 
 package org.diorite.utils.pipeline;
 
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
 import org.diorite.utils.DioriteUtils;
+
+import java.util.AbstractMap.SimpleEntry;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * Based on {@link java.util.concurrent.ConcurrentLinkedDeque}
@@ -51,35 +42,28 @@ import org.diorite.utils.DioriteUtils;
  * @param <E> type of elements stored in pipeline.
  */
 @SuppressWarnings("ObjectEquality")
-public class BasePipeline<E> implements Pipeline<E>
-{
+public class BasePipeline<E> implements Pipeline<E> {
     @SuppressWarnings("rawtypes")
     private static final Node PREV_TERMINATOR, NEXT_TERMINATOR;
     private static final int HOPS = 2;
-    private static final       sun.misc.Unsafe UNSAFE;
-    private static final       long            headOffset;
-    private static final       long            tailOffset;
-    private transient volatile Node<E>         head;
-    private transient volatile Node<E>         tail;
+    private static final sun.misc.Unsafe UNSAFE;
+    private static final long headOffset;
+    private static final long tailOffset;
+    private transient volatile Node<E> head;
+    private transient volatile Node<E> tail;
 
-    public BasePipeline()
-    {
+    public BasePipeline() {
         this.head = this.tail = new Node<>("", null);
     }
 
-    public BasePipeline(final Map<? extends String, ? extends E> map)
-    {
+    public BasePipeline(final Map<? extends String, ? extends E> map) {
         Node<E> h = null, t = null;
-        for (final Entry<? extends String, ? extends E> e : map.entrySet())
-        {
+        for (final Entry<? extends String, ? extends E> e : map.entrySet()) {
             checkNotNull(e);
             final Node<E> newNode = new Node<>(e.getKey(), e.getValue());
-            if (h == null)
-            {
+            if (h == null) {
                 h = t = newNode;
-            }
-            else
-            {
+            } else {
                 t.lazySetNext(newNode);
                 newNode.lazySetPrev(t);
                 t = newNode;
@@ -89,27 +73,20 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @SuppressWarnings("unchecked")
-    Node<E> prevTerminator()
-    {
+    Node<E> prevTerminator() {
         return (Node<E>) PREV_TERMINATOR;
     }
 
     @SuppressWarnings("unchecked")
-    Node<E> nextTerminator()
-    {
+    Node<E> nextTerminator() {
         return (Node<E>) NEXT_TERMINATOR;
     }
 
-    private void initHeadTail(Node<E> h, Node<E> t)
-    {
-        if (h == t)
-        {
-            if (h == null)
-            {
+    private void initHeadTail(Node<E> h, Node<E> t) {
+        if (h == t) {
+            if (h == null) {
                 h = t = new Node<>("", null);
-            }
-            else
-            {
+            } else {
                 final Node<E> newNode = new Node<>("", null);
                 t.lazySetNext(newNode);
                 newNode.lazySetPrev(t);
@@ -120,31 +97,21 @@ public class BasePipeline<E> implements Pipeline<E>
         this.tail = t;
     }
 
-    private void linkFirst(final String name, final E e)
-    {
+    private void linkFirst(final String name, final E e) {
         checkNotNull(e);
         final Node<E> newNode = new Node<>(name, e);
 
         restartFromHead:
-        while (true)
-        {
-            for (Node<E> h = this.head, p = h, q; ; )
-            {
-                if ((((q = p.prev)) != null) && (((q = (p = q).prev)) != null))
-                {
+        while (true) {
+            for (Node<E> h = this.head, p = h, q; ; ) {
+                if ((((q = p.prev)) != null) && (((q = (p = q).prev)) != null)) {
                     p = (h != (h = this.head)) ? h : q;
-                }
-                else if (p.next == p)
-                {
+                } else if (p.next == p) {
                     continue restartFromHead;
-                }
-                else
-                {
+                } else {
                     newNode.lazySetNext(p);
-                    if (p.casPrev(null, newNode))
-                    {
-                        if (p != h)
-                        {
+                    if (p.casPrev(null, newNode)) {
+                        if (p != h) {
                             this.casHead(h, newNode);
                         }
                         return;
@@ -154,31 +121,21 @@ public class BasePipeline<E> implements Pipeline<E>
         }
     }
 
-    private void linkLast(final String name, final E value)
-    {
+    private void linkLast(final String name, final E value) {
         checkNotNull(value);
         final Node<E> newNode = new Node<>(name, value);
 
         restartFromTail:
-        while (true)
-        {
-            for (Node<E> t = this.tail, p = t, q; ; )
-            {
-                if ((((q = p.next)) != null) && (((q = (p = q).next)) != null))
-                {
+        while (true) {
+            for (Node<E> t = this.tail, p = t, q; ; ) {
+                if ((((q = p.next)) != null) && (((q = (p = q).next)) != null)) {
                     p = (t != (t = this.tail)) ? t : q;
-                }
-                else if (p.prev == p)
-                {
+                } else if (p.prev == p) {
                     continue restartFromTail;
-                }
-                else
-                {
+                } else {
                     newNode.lazySetPrev(p);
-                    if (p.casNext(null, newNode))
-                    {
-                        if (p != t)
-                        {
+                    if (p.casNext(null, newNode)) {
+                        if (p != t) {
                             this.casTail(t, newNode);
                         }
                         return;
@@ -188,94 +145,70 @@ public class BasePipeline<E> implements Pipeline<E>
         }
     }
 
-    void unlink(final Node<E> x)
-    {
+    void unlink(final Node<E> x) {
         final Node<E> prev = x.prev;
         final Node<E> next = x.next;
-        if (prev == null)
-        {
+        if (prev == null) {
             this.unlinkFirst(x, next);
-        }
-        else if (next == null)
-        {
+        } else if (next == null) {
             this.unlinkLast(x, prev);
-        }
-        else
-        {
+        } else {
             final Node<E> activePred;
             final Node<E> activeSucc;
             final boolean isFirst;
             final boolean isLast;
             int hops = 1;
 
-            for (Node<E> p = prev; ; ++ hops)
-            {
-                if (p.item != null)
-                {
+            for (Node<E> p = prev; ; ++hops) {
+                if (p.item != null) {
                     activePred = p;
                     isFirst = false;
                     break;
                 }
                 final Node<E> q = p.prev;
-                if (q == null)
-                {
-                    if (p.next == p)
-                    {
+                if (q == null) {
+                    if (p.next == p) {
                         return;
                     }
                     activePred = p;
                     isFirst = true;
                     break;
-                }
-                else if (p == q)
-                {
+                } else if (p == q) {
                     return;
-                }
-                else
-                {
+                } else {
                     p = q;
                 }
             }
 
-            for (Node<E> p = next; ; ++ hops)
-            {
-                if (p.item != null)
-                {
+            for (Node<E> p = next; ; ++hops) {
+                if (p.item != null) {
                     activeSucc = p;
                     isLast = false;
                     break;
                 }
                 final Node<E> q = p.next;
-                if (q == null)
-                {
-                    if (p.prev == p)
-                    {
+                if (q == null) {
+                    if (p.prev == p) {
                         return;
                     }
                     activeSucc = p;
                     isLast = true;
                     break;
-                }
-                else if (p == q)
-                {
+                } else if (p == q) {
                     return;
-                }
-                else
-                {
+                } else {
                     p = q;
                 }
             }
 
-            if ((hops < HOPS) && (isFirst | isLast))
-            {
+            if ((hops < HOPS) && (isFirst | isLast)) {
                 return;
             }
 
             this.skipDeletedSuccessors(activePred);
             this.skipDeletedPredecessors(activeSucc);
 
-            if ((isFirst | isLast) && (activePred.next == activeSucc) && (activeSucc.prev == activePred) && (isFirst ? (activePred.prev == null) : (activePred.item != null)) && (isLast ? (activeSucc.next == null) : (activeSucc.item != null)))
-            {
+            if ((isFirst | isLast) && (activePred.next == activeSucc) && (activeSucc.prev == activePred) && (isFirst ? (activePred.prev == null) : (activePred.item != null)) && (isLast ? (activeSucc.next == null) : (activeSucc.item != null))) {
 
                 this.updateHead();
                 this.updateTail();
@@ -286,17 +219,12 @@ public class BasePipeline<E> implements Pipeline<E>
         }
     }
 
-    private void unlinkFirst(final Node<E> first, final Node<E> next)
-    {
-        for (Node<E> o = null, p = next, q; ; )
-        {
-            if ((p.item != null) || (((q = p.next)) == null))
-            {
-                if ((o != null) && (p.prev != p) && first.casNext(next, p))
-                {
+    private void unlinkFirst(final Node<E> first, final Node<E> next) {
+        for (Node<E> o = null, p = next, q; ; ) {
+            if ((p.item != null) || (((q = p.next)) == null)) {
+                if ((o != null) && (p.prev != p) && first.casNext(next, p)) {
                     this.skipDeletedPredecessors(p);
-                    if ((first.prev == null) && ((p.next == null) || (p.item != null)) && (p.prev == first))
-                    {
+                    if ((first.prev == null) && ((p.next == null) || (p.item != null)) && (p.prev == first)) {
 
                         this.updateHead();
                         this.updateTail();
@@ -306,30 +234,21 @@ public class BasePipeline<E> implements Pipeline<E>
                     }
                 }
                 return;
-            }
-            else if (p == q)
-            {
+            } else if (p == q) {
                 return;
-            }
-            else
-            {
+            } else {
                 o = p;
                 p = q;
             }
         }
     }
 
-    private void unlinkLast(final Node<E> last, final Node<E> prev)
-    {
-        for (Node<E> o = null, p = prev, q; ; )
-        {
-            if ((p.item != null) || (((q = p.prev)) == null))
-            {
-                if ((o != null) && (p.next != p) && last.casPrev(prev, p))
-                {
+    private void unlinkLast(final Node<E> last, final Node<E> prev) {
+        for (Node<E> o = null, p = prev, q; ; ) {
+            if ((p.item != null) || (((q = p.prev)) == null)) {
+                if ((o != null) && (p.next != p) && last.casPrev(prev, p)) {
                     this.skipDeletedSuccessors(p);
-                    if ((last.next == null) && ((p.prev == null) || (p.item != null)) && (p.next == last))
-                    {
+                    if ((last.next == null) && ((p.prev == null) || (p.item != null)) && (p.next == last)) {
 
                         this.updateHead();
                         this.updateTail();
@@ -339,213 +258,147 @@ public class BasePipeline<E> implements Pipeline<E>
                     }
                 }
                 return;
-            }
-            else if (p == q)
-            {
+            } else if (p == q) {
                 return;
-            }
-            else
-            {
+            } else {
                 o = p;
                 p = q;
             }
         }
     }
 
-    private void updateHead()
-    {
+    private void updateHead() {
         Node<E> h, p, q;
         restartFromHead:
-        while (((h = this.head).item == null) && (((p = h.prev)) != null))
-        {
-            while (true)
-            {
-                if ((((q = p.prev)) == null) || (((q = (p = q).prev)) == null))
-                {
-                    if (this.casHead(h, p))
-                    {
+        while (((h = this.head).item == null) && (((p = h.prev)) != null)) {
+            while (true) {
+                if ((((q = p.prev)) == null) || (((q = (p = q).prev)) == null)) {
+                    if (this.casHead(h, p)) {
                         return;
-                    }
-                    else
-                    {
+                    } else {
                         continue restartFromHead;
                     }
-                }
-                else if (h != this.head)
-                {
+                } else if (h != this.head) {
                     continue restartFromHead;
-                }
-                else
-                {
+                } else {
                     p = q;
                 }
             }
         }
     }
 
-    private void updateTail()
-    {
+    private void updateTail() {
         Node<E> t, p, q;
         restartFromTail:
-        while (((t = this.tail).item == null) && (((p = t.next)) != null))
-        {
-            while (true)
-            {
-                if ((((q = p.next)) == null) || (((q = (p = q).next)) == null))
-                {
-                    if (this.casTail(t, p))
-                    {
+        while (((t = this.tail).item == null) && (((p = t.next)) != null)) {
+            while (true) {
+                if ((((q = p.next)) == null) || (((q = (p = q).next)) == null)) {
+                    if (this.casTail(t, p)) {
                         return;
-                    }
-                    else
-                    {
+                    } else {
                         continue restartFromTail;
                     }
-                }
-                else if (t != this.tail)
-                {
+                } else if (t != this.tail) {
                     continue restartFromTail;
-                }
-                else
-                {
+                } else {
                     p = q;
                 }
             }
         }
     }
 
-    private void skipDeletedPredecessors(final Node<E> x)
-    {
+    private void skipDeletedPredecessors(final Node<E> x) {
         whileActive:
-        do
-        {
+        do {
             final Node<E> prev = x.prev;
             Node<E> p = prev;
-            while (true)
-            {
-                if (p.item != null)
-                {
+            while (true) {
+                if (p.item != null) {
                     break;
                 }
                 final Node<E> q = p.prev;
-                if (q == null)
-                {
-                    if (p.next == p)
-                    {
+                if (q == null) {
+                    if (p.next == p) {
                         continue whileActive;
                     }
                     break;
-                }
-                else if (p == q)
-                {
+                } else if (p == q) {
                     continue whileActive;
-                }
-                else
-                {
+                } else {
                     p = q;
                 }
             }
 
-            if ((prev == p) || x.casPrev(prev, p))
-            {
+            if ((prev == p) || x.casPrev(prev, p)) {
                 return;
             }
 
         } while ((x.item != null) || (x.next == null));
     }
 
-    private void skipDeletedSuccessors(final Node<E> x)
-    {
+    private void skipDeletedSuccessors(final Node<E> x) {
         whileActive:
-        do
-        {
+        do {
             final Node<E> next = x.next;
             Node<E> p = next;
-            while (true)
-            {
-                if (p.item != null)
-                {
+            while (true) {
+                if (p.item != null) {
                     break;
                 }
                 final Node<E> q = p.next;
-                if (q == null)
-                {
-                    if (p.prev == p)
-                    {
+                if (q == null) {
+                    if (p.prev == p) {
                         continue whileActive;
                     }
                     break;
-                }
-                else if (p == q)
-                {
+                } else if (p == q) {
                     continue whileActive;
-                }
-                else
-                {
+                } else {
                     p = q;
                 }
             }
 
-            if ((next == p) || x.casNext(next, p))
-            {
+            if ((next == p) || x.casNext(next, p)) {
                 return;
             }
 
         } while ((x.item != null) || (x.prev == null));
     }
 
-    Node<E> succ(final Node<E> p)
-    {
+    Node<E> succ(final Node<E> p) {
         final Node<E> q = p.next;
         return (p == q) ? this.first() : q;
     }
 
-    Node<E> pred(final Node<E> p)
-    {
+    Node<E> pred(final Node<E> p) {
         final Node<E> q = p.prev;
         return (p == q) ? this.last() : q;
     }
 
-    Node<E> first()
-    {
+    Node<E> first() {
         restartFromHead:
-        while (true)
-        {
-            for (Node<E> h = this.head, p = h, q; ; )
-            {
-                if ((((q = p.prev)) != null) && (((q = (p = q).prev)) != null))
-                {
+        while (true) {
+            for (Node<E> h = this.head, p = h, q; ; ) {
+                if ((((q = p.prev)) != null) && (((q = (p = q).prev)) != null)) {
                     p = (h != (h = this.head)) ? h : q;
-                }
-                else if ((p == h) || this.casHead(h, p))
-                {
+                } else if ((p == h) || this.casHead(h, p)) {
                     return p;
-                }
-                else
-                {
+                } else {
                     continue restartFromHead;
                 }
             }
         }
     }
 
-    Node<E> last()
-    {
+    Node<E> last() {
         restartFromTail:
-        while (true)
-        {
-            for (Node<E> t = this.tail, p = t, q; ; )
-            {
-                if ((((q = p.next)) != null) && (((q = (p = q).next)) != null))
-                {
+        while (true) {
+            for (Node<E> t = this.tail, p = t, q; ; ) {
+                if ((((q = p.next)) != null) && (((q = (p = q).next)) != null)) {
                     p = (t != (t = this.tail)) ? t : q;
-                }
-                else if ((p == t) || this.casTail(t, p))
-                {
+                } else if ((p == t) || this.casTail(t, p)) {
                     return p;
-                }
-                else
-                {
+                } else {
                     continue restartFromTail;
                 }
             }
@@ -553,14 +406,11 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public Collection<E> toCollection()
-    {
+    public Collection<E> toCollection() {
         final Collection<E> list = new ArrayList<>(20);
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if (item != null)
-            {
+            if (item != null) {
                 list.add(item);
             }
         }
@@ -568,13 +418,10 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public Collection<String> toNamesCollection()
-    {
+    public Collection<String> toNamesCollection() {
         final Collection<String> list = new ArrayList<>(20);
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
-            if (p.item != null)
-            {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
+            if (p.item != null) {
                 list.add(p.name);
             }
         }
@@ -582,14 +429,11 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public Set<Entry<String, E>> entrySet()
-    {
+    public Set<Entry<String, E>> entrySet() {
         final Set<Entry<String, E>> set = new LinkedHashSet<>(20);
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if (item != null)
-            {
+            if (item != null) {
                 set.add(new SimpleEntry<>(p.name, item));
             }
         }
@@ -597,13 +441,10 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public E removeFirst()
-    {
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+    public E removeFirst() {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && p.casItem(item, null))
-            {
+            if ((item != null) && p.casItem(item, null)) {
                 this.unlink(p);
                 return item;
             }
@@ -612,13 +453,10 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public E removeLast()
-    {
-        for (Node<E> p = this.last(); p != null; p = this.pred(p))
-        {
+    public E removeLast() {
+        for (Node<E> p = this.last(); p != null; p = this.pred(p)) {
             final E item = p.item;
-            if ((item != null) && p.casItem(item, null))
-            {
+            if ((item != null) && p.casItem(item, null)) {
                 this.unlink(p);
                 return item;
             }
@@ -627,41 +465,33 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public Iterator<Entry<String, E>> entriesIterator()
-    {
+    public Iterator<Entry<String, E>> entriesIterator() {
         return new EntriesItr();
     }
 
     @Override
-    public Iterator<Entry<String, E>> entriesDescendingIterator()
-    {
+    public Iterator<Entry<String, E>> entriesDescendingIterator() {
         return new EntriesDescendingItr();
     }
 
     @Override
-    public void clear()
-    {
+    public void clear() {
         //noinspection StatementWithEmptyBody
-        while (this.removeFirst() != null)
-        {
+        while (this.removeFirst() != null) {
         }
     }
 
     @Override
-    public Iterator<E> descendingIterator()
-    {
+    public Iterator<E> descendingIterator() {
         return new DescendingItr();
     }
 
     @Override
-    public boolean linkInsteadFromTail(final String element, final String name, final E value, int index)
-    {
+    public boolean linkInsteadFromTail(final String element, final String name, final E value, int index) {
         checkNotNull(value);
-        for (Node<E> p = this.last(); p != null; p = this.pred(p))
-        {
+        for (Node<E> p = this.last(); p != null; p = this.pred(p)) {
             final E item = p.item;
-            if ((item != null) && p.name.equals(element) && (index-- <= 0) && p.casItem(item, value))
-            {
+            if ((item != null) && p.name.equals(element) && (index-- <= 0) && p.casItem(item, value)) {
                 p.name = name;
                 return true;  // true if element was replaced
             }
@@ -670,14 +500,11 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public boolean linkInsteadFromHead(final String element, final String name, final E value, int index)
-    {
+    public boolean linkInsteadFromHead(final String element, final String name, final E value, int index) {
         checkNotNull(value);
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && p.name.equals(element) && (index-- <= 0) && p.casItem(item, value))
-            {
+            if ((item != null) && p.name.equals(element) && (index-- <= 0) && p.casItem(item, value)) {
                 p.name = name;
                 return true;  // true if element was replaced
             }
@@ -686,30 +513,22 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public boolean linkAfterFromHead(final String after, final String name, final E value, int index)
-    {
+    public boolean linkAfterFromHead(final String after, final String name, final E value, int index) {
         checkNotNull(value);
         final Node<E> newNode = new Node<>(name, value);
         Node<E> p = this.first();
-        for (; p != null; p = this.succ(p))
-        {
+        for (; p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && p.name.equals(after) && (index-- <= 0))
-            {
+            if ((item != null) && p.name.equals(after) && (index-- <= 0)) {
                 final Node<E> next = this.succ(p);
                 newNode.lazySetPrev(p);
-                if (p == this.tail)
-                {
-                    if (p.casNext(next, newNode))
-                    {
+                if (p == this.tail) {
+                    if (p.casNext(next, newNode)) {
                         this.casTail(this.tail, newNode);
                     }
-                }
-                else
-                {
+                } else {
                     newNode.lazySetNext(next);
-                    if (p.casNext(next, newNode))
-                    {
+                    if (p.casNext(next, newNode)) {
                         next.casPrev(p, newNode);
                     }
                 }
@@ -720,30 +539,22 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public boolean linkAfterFromTail(final String after, final String name, final E value, int index)
-    {
+    public boolean linkAfterFromTail(final String after, final String name, final E value, int index) {
         checkNotNull(value);
         final Node<E> newNode = new Node<>(name, value);
         Node<E> p = this.last();
         Node<E> prev = p;
-        for (; p != null; p = this.pred(p))
-        {
+        for (; p != null; p = this.pred(p)) {
             final E item = p.item;
-            if ((item != null) && p.name.equals(after) && (index-- <= 0))
-            {
+            if ((item != null) && p.name.equals(after) && (index-- <= 0)) {
                 newNode.lazySetPrev(p);
-                if (p == this.tail)
-                {
-                    if (p.casNext(null, newNode))
-                    {
+                if (p == this.tail) {
+                    if (p.casNext(null, newNode)) {
                         this.casTail(this.tail, newNode);
                     }
-                }
-                else
-                {
+                } else {
                     newNode.lazySetNext(prev);
-                    if (p.casNext(prev, newNode))
-                    {
+                    if (p.casNext(prev, newNode)) {
                         prev.casPrev(p, newNode);
                     }
                 }
@@ -755,30 +566,22 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public boolean linkBeforeFromHead(final String before, final String name, final E value, int index)
-    {
+    public boolean linkBeforeFromHead(final String before, final String name, final E value, int index) {
         checkNotNull(value);
         final Node<E> newNode = new Node<>(name, value);
         Node<E> p = this.first();
         Node<E> prev = p;
-        for (; p != null; p = this.succ(p))
-        {
+        for (; p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && p.name.equals(before) && (index-- <= 0))
-            {
+            if ((item != null) && p.name.equals(before) && (index-- <= 0)) {
                 newNode.lazySetNext(p);
-                if (prev == this.head)
-                {
-                    if (p.casPrev(prev, newNode))
-                    {
+                if (prev == this.head) {
+                    if (p.casPrev(prev, newNode)) {
                         this.casHead(this.head, newNode);
                     }
-                }
-                else
-                {
+                } else {
                     newNode.lazySetPrev(prev);
-                    if (prev.casNext(p, newNode))
-                    {
+                    if (prev.casNext(p, newNode)) {
                         p.casPrev(prev, newNode);
                     }
                 }
@@ -790,30 +593,22 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public boolean linkBeforeFromTail(final String before, final String name, final E value, int index)
-    {
+    public boolean linkBeforeFromTail(final String before, final String name, final E value, int index) {
         checkNotNull(value);
         final Node<E> newNode = new Node<>(name, value);
         Node<E> p = this.first();
-        for (; p != null; p = this.succ(p))
-        {
+        for (; p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && p.name.equals(before) && (index-- <= 0))
-            {
+            if ((item != null) && p.name.equals(before) && (index-- <= 0)) {
                 final Node<E> next = this.pred(p);
                 newNode.lazySetNext(p);
-                if (p == this.head)
-                {
-                    if (p.casPrev(next, newNode))
-                    {
+                if (p == this.head) {
+                    if (p.casPrev(next, newNode)) {
                         this.casHead(this.head, newNode);
                     }
-                }
-                else
-                {
+                } else {
                     newNode.lazySetPrev(next);
-                    if (p.casPrev(next, newNode))
-                    {
+                    if (p.casPrev(next, newNode)) {
                         next.casNext(p, newNode);
                     }
                 }
@@ -824,14 +619,11 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public String removeSingleOccurrenceFromTail(final Object o, int index)
-    {
+    public String removeSingleOccurrenceFromTail(final Object o, int index) {
         checkNotNull(o);
-        for (Node<E> p = this.last(); p != null; p = this.pred(p))
-        {
+        for (Node<E> p = this.last(); p != null; p = this.pred(p)) {
             final E item = p.item;
-            if ((item != null) && o.equals(item) && (index-- <= 0) && p.casItem(item, null))
-            {
+            if ((item != null) && o.equals(item) && (index-- <= 0) && p.casItem(item, null)) {
                 this.unlink(p);
                 return p.name;
             }
@@ -840,20 +632,16 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public String removeLastOccurrence(final Object o)
-    {
+    public String removeLastOccurrence(final Object o) {
         return this.removeSingleOccurrenceFromTail(o, 0);
     }
 
     @Override
-    public String removeSingleOccurrenceFromHead(final Object o, int index)
-    {
+    public String removeSingleOccurrenceFromHead(final Object o, int index) {
         checkNotNull(o);
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && o.equals(item) && (index-- <= 0) && p.casItem(item, null))
-            {
+            if ((item != null) && o.equals(item) && (index-- <= 0) && p.casItem(item, null)) {
                 this.unlink(p);
                 return p.name;
             }
@@ -862,21 +650,17 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public String removeFirstOccurrence(final Object o)
-    {
+    public String removeFirstOccurrence(final Object o) {
         return this.removeSingleOccurrenceFromHead(o, 0);
     }
 
     @Override
-    public Collection<String> removeAllFromTail(final Object o, int limit)
-    {
+    public Collection<String> removeAllFromTail(final Object o, int limit) {
         checkNotNull(o);
         final Collection<String> result = new ArrayList<>((limit > 0) ? limit : 5);
-        for (Node<E> p = this.last(); p != null; p = this.pred(p))
-        {
+        for (Node<E> p = this.last(); p != null; p = this.pred(p)) {
             final E item = p.item;
-            if ((item != null) && o.equals(item) && (limit-- != 0) && p.casItem(item, null))
-            {
+            if ((item != null) && o.equals(item) && (limit-- != 0) && p.casItem(item, null)) {
                 this.unlink(p);
                 result.add(p.name);
             }
@@ -885,15 +669,12 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public Collection<E> removeAllFromTail(final String name, int limit)
-    {
+    public Collection<E> removeAllFromTail(final String name, int limit) {
         checkNotNull(name);
         final Collection<E> result = new ArrayList<>((limit > 0) ? limit : 5);
-        for (Node<E> p = this.last(); p != null; p = this.pred(p))
-        {
+        for (Node<E> p = this.last(); p != null; p = this.pred(p)) {
             final E item = p.item;
-            if ((item != null) && name.equals(p.name) && (limit-- != 0) && p.casItem(item, null))
-            {
+            if ((item != null) && name.equals(p.name) && (limit-- != 0) && p.casItem(item, null)) {
                 this.unlink(p);
                 result.add(item);
             }
@@ -902,15 +683,12 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public Collection<String> removeAllFromHead(final Object o, int limit)
-    {
+    public Collection<String> removeAllFromHead(final Object o, int limit) {
         checkNotNull(o);
         final Collection<String> result = new ArrayList<>((limit > 0) ? limit : 5);
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && o.equals(item) && (limit-- != 0) && p.casItem(item, null))
-            {
+            if ((item != null) && o.equals(item) && (limit-- != 0) && p.casItem(item, null)) {
                 this.unlink(p);
                 result.add(p.name);
             }
@@ -919,15 +697,12 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public Collection<E> removeAllFromHead(final String name, int limit)
-    {
+    public Collection<E> removeAllFromHead(final String name, int limit) {
         checkNotNull(name);
         final Collection<E> result = new ArrayList<>((limit > 0) ? limit : 5);
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && name.equals(p.name) && (limit-- != 0) && p.casItem(item, null))
-            {
+            if ((item != null) && name.equals(p.name) && (limit-- != 0) && p.casItem(item, null)) {
                 this.unlink(p);
                 result.add(item);
             }
@@ -936,14 +711,11 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public E removeSingleOccurrenceFromTail(final String name, int index)
-    {
+    public E removeSingleOccurrenceFromTail(final String name, int index) {
         checkNotNull(name);
-        for (Node<E> p = this.last(); p != null; p = this.pred(p))
-        {
+        for (Node<E> p = this.last(); p != null; p = this.pred(p)) {
             final E item = p.item;
-            if ((item != null) && name.equals(p.name) && (index-- <= 0) && p.casItem(item, null))
-            {
+            if ((item != null) && name.equals(p.name) && (index-- <= 0) && p.casItem(item, null)) {
                 this.unlink(p);
                 return item;
             }
@@ -952,20 +724,16 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public E removeLastOccurrence(final String name)
-    {
+    public E removeLastOccurrence(final String name) {
         return this.removeSingleOccurrenceFromTail(name, 0);
     }
 
     @Override
-    public E removeSingleOccurrenceFromHead(final String name, int index)
-    {
+    public E removeSingleOccurrenceFromHead(final String name, int index) {
         checkNotNull(name);
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && name.equals(p.name) && (index-- <= 0) && p.casItem(item, null))
-            {
+            if ((item != null) && name.equals(p.name) && (index-- <= 0) && p.casItem(item, null)) {
                 this.unlink(p);
                 return item;
             }
@@ -974,55 +742,45 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public E removeFirstOccurrence(final String name)
-    {
+    public E removeFirstOccurrence(final String name) {
         return this.removeSingleOccurrenceFromHead(name, 0);
     }
 
     @Override
-    public Collection<E> removeAll(final String name)
-    {
-        return this.removeAllFromTail(name, - 1);
+    public Collection<E> removeAll(final String name) {
+        return this.removeAllFromTail(name, -1);
     }
 
     @Override
-    public Collection<String> removeAll(final Object o)
-    {
-        return this.removeAllFromTail(o, - 1);
+    public Collection<String> removeAll(final Object o) {
+        return this.removeAllFromTail(o, -1);
     }
 
     @Override
-    public E remove(final String name)
-    {
+    public E remove(final String name) {
         return this.removeLastOccurrence(name);
     }
 
     @Override
-    public void add(final String name, final E value)
-    {
+    public void add(final String name, final E value) {
         this.addLast(name, value);
     }
 
     @Override
-    public void addFirst(final String name, final E value)
-    {
+    public void addFirst(final String name, final E value) {
         this.linkFirst(name, value);
     }
 
     @Override
-    public void addLast(final String name, final E value)
-    {
+    public void addLast(final String name, final E value) {
         this.linkLast(name, value);
     }
 
     @Override
-    public E getFirst()
-    {
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+    public E getFirst() {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if (item != null)
-            {
+            if (item != null) {
                 return item;
             }
         }
@@ -1030,13 +788,10 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public String getNameOfFirst()
-    {
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+    public String getNameOfFirst() {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if (item != null)
-            {
+            if (item != null) {
                 return p.name;
             }
         }
@@ -1044,13 +799,10 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public E getLast()
-    {
-        for (Node<E> p = this.last(); p != null; p = this.pred(p))
-        {
+    public E getLast() {
+        for (Node<E> p = this.last(); p != null; p = this.pred(p)) {
             final E item = p.item;
-            if (item != null)
-            {
+            if (item != null) {
                 return item;
             }
         }
@@ -1058,13 +810,10 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public String getNameOfLast()
-    {
-        for (Node<E> p = this.last(); p != null; p = this.pred(p))
-        {
+    public String getNameOfLast() {
+        for (Node<E> p = this.last(); p != null; p = this.pred(p)) {
             final E item = p.item;
-            if (item != null)
-            {
+            if (item != null) {
                 return p.name;
             }
         }
@@ -1072,423 +821,347 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public BasePipeline<E> set(final String element, final E value) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromHead(element, element, value, 0))
-        {
+    public BasePipeline<E> set(final String element, final E value) throws NoSuchElementException {
+        if (!this.linkInsteadFromHead(element, element, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> setFromHead(final String element, final E value) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromHead(element, element, value, 0))
-        {
+    public BasePipeline<E> setFromHead(final String element, final E value) throws NoSuchElementException {
+        if (!this.linkInsteadFromHead(element, element, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> setFromTail(final String element, final E value) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromTail(element, element, value, 0))
-        {
+    public BasePipeline<E> setFromTail(final String element, final E value) throws NoSuchElementException {
+        if (!this.linkInsteadFromTail(element, element, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> set(final String element, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromHead(element, element, value, index))
-        {
+    public BasePipeline<E> set(final String element, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkInsteadFromHead(element, element, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> setFromHead(final String element, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromHead(element, element, value, index))
-        {
+    public BasePipeline<E> setFromHead(final String element, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkInsteadFromHead(element, element, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> setFromTail(final String element, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromTail(element, element, value, index))
-        {
+    public BasePipeline<E> setFromTail(final String element, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkInsteadFromTail(element, element, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> replace(final String element, final String name, final E value) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromHead(element, name, value, 0))
-        {
+    public BasePipeline<E> replace(final String element, final String name, final E value) throws NoSuchElementException {
+        if (!this.linkInsteadFromHead(element, name, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceFromHead(final String element, final String name, final E value) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromHead(element, name, value, 0))
-        {
+    public BasePipeline<E> replaceFromHead(final String element, final String name, final E value) throws NoSuchElementException {
+        if (!this.linkInsteadFromHead(element, name, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceFromTail(final String element, final String name, final E value) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromTail(element, name, value, 0))
-        {
+    public BasePipeline<E> replaceFromTail(final String element, final String name, final E value) throws NoSuchElementException {
+        if (!this.linkInsteadFromTail(element, name, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> replace(final String element, final String name, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromHead(element, name, value, index))
-        {
+    public BasePipeline<E> replace(final String element, final String name, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkInsteadFromHead(element, name, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceFromHead(final String element, final String name, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromHead(element, name, value, index))
-        {
+    public BasePipeline<E> replaceFromHead(final String element, final String name, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkInsteadFromHead(element, name, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceFromTail(final String element, final String name, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkInsteadFromTail(element, name, value, index))
-        {
+    public BasePipeline<E> replaceFromTail(final String element, final String name, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkInsteadFromTail(element, name, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + element);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBefore(final String before, final String name, final E value) throws NoSuchElementException
-    {
-        if (! this.linkBeforeFromHead(before, name, value, 0))
-        {
+    public BasePipeline<E> addBefore(final String before, final String name, final E value) throws NoSuchElementException {
+        if (!this.linkBeforeFromHead(before, name, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + before);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeFromHead(final String before, final String name, final E value) throws NoSuchElementException
-    {
-        if (! this.linkBeforeFromHead(before, name, value, 0))
-        {
+    public BasePipeline<E> addBeforeFromHead(final String before, final String name, final E value) throws NoSuchElementException {
+        if (!this.linkBeforeFromHead(before, name, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + before);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeFromTail(final String before, final String name, final E value) throws NoSuchElementException
-    {
-        if (! this.linkBeforeFromTail(before, name, value, 0))
-        {
+    public BasePipeline<E> addBeforeFromTail(final String before, final String name, final E value) throws NoSuchElementException {
+        if (!this.linkBeforeFromTail(before, name, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + before);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBefore(final String before, final String name, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkBeforeFromHead(before, name, value, index))
-        {
+    public BasePipeline<E> addBefore(final String before, final String name, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkBeforeFromHead(before, name, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + before);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeFromHead(final String before, final String name, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkBeforeFromHead(before, name, value, index))
-        {
+    public BasePipeline<E> addBeforeFromHead(final String before, final String name, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkBeforeFromHead(before, name, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + before);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeFromTail(final String before, final String name, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkBeforeFromTail(before, name, value, index))
-        {
+    public BasePipeline<E> addBeforeFromTail(final String before, final String name, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkBeforeFromTail(before, name, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + before);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfter(final String after, final String name, final E value) throws NoSuchElementException
-    {
-        if (! this.linkAfterFromHead(after, name, value, 0))
-        {
+    public BasePipeline<E> addAfter(final String after, final String name, final E value) throws NoSuchElementException {
+        if (!this.linkAfterFromHead(after, name, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + after);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterFromHead(final String after, final String name, final E value) throws NoSuchElementException
-    {
-        if (! this.linkAfterFromHead(after, name, value, 0))
-        {
+    public BasePipeline<E> addAfterFromHead(final String after, final String name, final E value) throws NoSuchElementException {
+        if (!this.linkAfterFromHead(after, name, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + after);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterFromTail(final String after, final String name, final E value) throws NoSuchElementException
-    {
-        if (! this.linkAfterFromTail(after, name, value, 0))
-        {
+    public BasePipeline<E> addAfterFromTail(final String after, final String name, final E value) throws NoSuchElementException {
+        if (!this.linkAfterFromTail(after, name, value, 0)) {
             throw new NoSuchElementException("No element in pipeline named: " + after);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfter(final String after, final String name, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkAfterFromHead(after, name, value, index))
-        {
+    public BasePipeline<E> addAfter(final String after, final String name, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkAfterFromHead(after, name, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + after);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterFromHead(final String after, final String name, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkAfterFromHead(after, name, value, index))
-        {
+    public BasePipeline<E> addAfterFromHead(final String after, final String name, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkAfterFromHead(after, name, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + after);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterFromTail(final String after, final String name, final E value, final int index) throws NoSuchElementException
-    {
-        if (! this.linkAfterFromTail(after, name, value, index))
-        {
+    public BasePipeline<E> addAfterFromTail(final String after, final String name, final E value, final int index) throws NoSuchElementException {
+        if (!this.linkAfterFromTail(after, name, value, index)) {
             throw new NoSuchElementException("No element in pipeline named: " + after);
         }
         return this;
     }
 
     @Override
-    public BasePipeline<E> setIfContains(final String element, final E value)
-    {
+    public BasePipeline<E> setIfContains(final String element, final E value) {
         this.linkInsteadFromHead(element, element, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> setIfContainsFromHead(final String element, final E value)
-    {
+    public BasePipeline<E> setIfContainsFromHead(final String element, final E value) {
         this.linkInsteadFromHead(element, element, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> setIfContainsFromTail(final String element, final E value)
-    {
+    public BasePipeline<E> setIfContainsFromTail(final String element, final E value) {
         this.linkInsteadFromTail(element, element, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> setIfContains(final String element, final E value, final int index)
-    {
+    public BasePipeline<E> setIfContains(final String element, final E value, final int index) {
         this.linkInsteadFromHead(element, element, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> setIfContainsFromHead(final String element, final E value, final int index)
-    {
+    public BasePipeline<E> setIfContainsFromHead(final String element, final E value, final int index) {
         this.linkInsteadFromHead(element, element, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> setIfContainsFromTail(final String element, final E value, final int index)
-    {
+    public BasePipeline<E> setIfContainsFromTail(final String element, final E value, final int index) {
         this.linkInsteadFromTail(element, element, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceIfContains(final String element, final String name, final E value)
-    {
+    public BasePipeline<E> replaceIfContains(final String element, final String name, final E value) {
         this.linkInsteadFromHead(element, name, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceIfContainsFromHead(final String element, final String name, final E value)
-    {
+    public BasePipeline<E> replaceIfContainsFromHead(final String element, final String name, final E value) {
         this.linkInsteadFromHead(element, name, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceIfContainsFromTail(final String element, final String name, final E value)
-    {
+    public BasePipeline<E> replaceIfContainsFromTail(final String element, final String name, final E value) {
         this.linkInsteadFromTail(element, name, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceIfContains(final String element, final String name, final E value, final int index)
-    {
+    public BasePipeline<E> replaceIfContains(final String element, final String name, final E value, final int index) {
         this.linkInsteadFromHead(element, name, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceIfContainsFromHead(final String element, final String name, final E value, final int index)
-    {
+    public BasePipeline<E> replaceIfContainsFromHead(final String element, final String name, final E value, final int index) {
         this.linkInsteadFromHead(element, name, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> replaceIfContainsFromTail(final String element, final String name, final E value, final int index)
-    {
+    public BasePipeline<E> replaceIfContainsFromTail(final String element, final String name, final E value, final int index) {
         this.linkInsteadFromTail(element, name, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeIfContains(final String before, final String name, final E value)
-    {
+    public BasePipeline<E> addBeforeIfContains(final String before, final String name, final E value) {
         this.linkBeforeFromHead(before, name, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeIfContainsFromHead(final String before, final String name, final E value)
-    {
+    public BasePipeline<E> addBeforeIfContainsFromHead(final String before, final String name, final E value) {
         this.linkBeforeFromHead(before, name, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeIfContainsFromTail(final String before, final String name, final E value)
-    {
+    public BasePipeline<E> addBeforeIfContainsFromTail(final String before, final String name, final E value) {
         this.linkBeforeFromTail(before, name, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeIfContains(final String before, final String name, final E value, final int index)
-    {
+    public BasePipeline<E> addBeforeIfContains(final String before, final String name, final E value, final int index) {
         this.linkBeforeFromHead(before, name, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeIfContainsFromHead(final String before, final String name, final E value, final int index)
-    {
+    public BasePipeline<E> addBeforeIfContainsFromHead(final String before, final String name, final E value, final int index) {
         this.linkBeforeFromHead(before, name, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addBeforeIfContainsFromTail(final String before, final String name, final E value, final int index)
-    {
+    public BasePipeline<E> addBeforeIfContainsFromTail(final String before, final String name, final E value, final int index) {
         this.linkBeforeFromTail(before, name, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterIfContains(final String after, final String name, final E value)
-    {
+    public BasePipeline<E> addAfterIfContains(final String after, final String name, final E value) {
         this.linkAfterFromHead(after, name, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterIfContainsFromHead(final String after, final String name, final E value)
-    {
+    public BasePipeline<E> addAfterIfContainsFromHead(final String after, final String name, final E value) {
         this.linkAfterFromHead(after, name, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterIfContainsFromTail(final String after, final String name, final E value)
-    {
+    public BasePipeline<E> addAfterIfContainsFromTail(final String after, final String name, final E value) {
         this.linkAfterFromTail(after, name, value, 0);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterIfContains(final String after, final String name, final E value, final int index)
-    {
+    public BasePipeline<E> addAfterIfContains(final String after, final String name, final E value, final int index) {
         this.linkAfterFromHead(after, name, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterIfContainsFromHead(final String after, final String name, final E value, final int index)
-    {
+    public BasePipeline<E> addAfterIfContainsFromHead(final String after, final String name, final E value, final int index) {
         this.linkAfterFromHead(after, name, value, index);
         return this;
     }
 
     @Override
-    public BasePipeline<E> addAfterIfContainsFromTail(final String after, final String name, final E value, final int index)
-    {
+    public BasePipeline<E> addAfterIfContainsFromTail(final String after, final String name, final E value, final int index) {
         this.linkAfterFromTail(after, name, value, index);
         return this;
     }
 
     @Override
-    public int size()
-    {
+    public int size() {
         int count = 0;
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
-            if (p.item != null)
-            {
-                if (++ count == Integer.MAX_VALUE)
-                {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
+            if (p.item != null) {
+                if (++count == Integer.MAX_VALUE) {
                     break;
                 }
             }
@@ -1497,19 +1170,15 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return this.getFirst() == null;
     }
 
     @Override
-    public boolean containsKey(final String name)
-    {
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+    public boolean containsKey(final String name) {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && name.equals(p.name))
-            {
+            if ((item != null) && name.equals(p.name)) {
                 return true;
             }
         }
@@ -1517,17 +1186,13 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public boolean containsValue(final Object value)
-    {
-        if (value == null)
-        {
+    public boolean containsValue(final Object value) {
+        if (value == null) {
             return false;
         }
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && value.equals(item))
-            {
+            if ((item != null) && value.equals(item)) {
                 return true;
             }
         }
@@ -1535,13 +1200,10 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public E get(final String name)
-    {
-        for (Node<E> p = this.first(); p != null; p = this.succ(p))
-        {
+    public E get(final String name) {
+        for (Node<E> p = this.first(); p != null; p = this.succ(p)) {
             final E item = p.item;
-            if ((item != null) && name.equals(p.name))
-            {
+            if ((item != null) && name.equals(p.name)) {
                 return item;
             }
         }
@@ -1549,62 +1211,52 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @Override
-    public Object[] toArray()
-    {
+    public Object[] toArray() {
         return this.toCollection().toArray();
     }
 
     @Override
-    public String[] toNamesArray()
-    {
+    public String[] toNamesArray() {
         final Collection<String> names = this.toNamesCollection();
         return names.toArray(new String[names.size()]);
     }
 
     @Override
-    public <T> T[] toArray(final T[] a)
-    {
+    public <T> T[] toArray(final T[] a) {
         //noinspection SuspiciousToArrayCall
         return this.toCollection().toArray(a);
     }
 
     @Override
-    public Iterator<E> iterator()
-    {
+    public Iterator<E> iterator() {
         return new Itr();
     }
 
     @Override
-    public Spliterator<E> spliterator()
-    {
+    public Spliterator<E> spliterator() {
         return new PipelineSpliterator<>(this);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("head", this.head).append("tail", this.tail).toString();
     }
 
-    private boolean casHead(final Node<E> cmp, final Node<E> val)
-    {
+    private boolean casHead(final Node<E> cmp, final Node<E> val) {
         return UNSAFE.compareAndSwapObject(this, headOffset, cmp, val);
     }
 
-    private boolean casTail(final Node<E> cmp, final Node<E> val)
-    {
+    private boolean casTail(final Node<E> cmp, final Node<E> val) {
         return UNSAFE.compareAndSwapObject(this, tailOffset, cmp, val);
     }
 
     @SuppressWarnings("ClassHasNoToStringMethod")
-    private abstract class AbstractItr implements Iterator<E>
-    {
+    private abstract class AbstractItr implements Iterator<E> {
         private Node<E> nextNode;
-        private E       nextItem;
+        private E nextItem;
         private Node<E> lastRet;
 
-        AbstractItr()
-        {
+        AbstractItr() {
             this.advance();
         }
 
@@ -1612,22 +1264,18 @@ public class BasePipeline<E> implements Pipeline<E>
 
         abstract Node<E> nextNode(Node<E> p);
 
-        private void advance()
-        {
+        private void advance() {
             this.lastRet = this.nextNode;
 
             Node<E> p = (this.nextNode == null) ? this.startNode() : this.nextNode(this.nextNode);
-            for (; ; p = this.nextNode(p))
-            {
-                if (p == null)
-                {
+            for (; ; p = this.nextNode(p)) {
+                if (p == null) {
                     this.nextNode = null;
                     this.nextItem = null;
                     break;
                 }
                 final E item = p.item;
-                if (item != null)
-                {
+                if (item != null) {
                     this.nextNode = p;
                     this.nextItem = item;
                     break;
@@ -1636,17 +1284,14 @@ public class BasePipeline<E> implements Pipeline<E>
         }
 
         @Override
-        public boolean hasNext()
-        {
+        public boolean hasNext() {
             return this.nextItem != null;
         }
 
         @Override
-        public E next()
-        {
+        public E next() {
             final E item = this.nextItem;
-            if (item == null)
-            {
+            if (item == null) {
                 throw new NoSuchElementException();
             }
             this.advance();
@@ -1654,11 +1299,9 @@ public class BasePipeline<E> implements Pipeline<E>
         }
 
         @Override
-        public void remove()
-        {
+        public void remove() {
             final Node<E> l = this.lastRet;
-            if (l == null)
-            {
+            if (l == null) {
                 throw new IllegalStateException();
             }
             l.item = null;
@@ -1668,14 +1311,12 @@ public class BasePipeline<E> implements Pipeline<E>
     }
 
     @SuppressWarnings("ClassHasNoToStringMethod")
-    private abstract class AbstractEntriesItr implements Iterator<Entry<String, E>>
-    {
-        private Node<E>          nextNode;
+    private abstract class AbstractEntriesItr implements Iterator<Entry<String, E>> {
+        private Node<E> nextNode;
         private Entry<String, E> nextItem;
-        private Node<E>          lastRet;
+        private Node<E> lastRet;
 
-        AbstractEntriesItr()
-        {
+        AbstractEntriesItr() {
             this.advance();
         }
 
@@ -1683,22 +1324,18 @@ public class BasePipeline<E> implements Pipeline<E>
 
         abstract Node<E> nextNode(Node<E> p);
 
-        private void advance()
-        {
+        private void advance() {
             this.lastRet = this.nextNode;
 
             Node<E> p = (this.nextNode == null) ? this.startNode() : this.nextNode(this.nextNode);
-            for (; ; p = this.nextNode(p))
-            {
-                if (p == null)
-                {
+            for (; ; p = this.nextNode(p)) {
+                if (p == null) {
                     this.nextNode = null;
                     this.nextItem = null;
                     break;
                 }
                 final E item = p.item;
-                if (item != null)
-                {
+                if (item != null) {
                     this.nextNode = p;
                     this.nextItem = new SimpleEntry<>(p.name, item);
                     break;
@@ -1707,17 +1344,14 @@ public class BasePipeline<E> implements Pipeline<E>
         }
 
         @Override
-        public boolean hasNext()
-        {
+        public boolean hasNext() {
             return this.nextItem != null;
         }
 
         @Override
-        public Entry<String, E> next()
-        {
+        public Entry<String, E> next() {
             final Entry<String, E> item = this.nextItem;
-            if (item == null)
-            {
+            if (item == null) {
                 throw new NoSuchElementException();
             }
             this.advance();
@@ -1725,11 +1359,9 @@ public class BasePipeline<E> implements Pipeline<E>
         }
 
         @Override
-        public void remove()
-        {
+        public void remove() {
             final Node<E> l = this.lastRet;
-            if (l == null)
-            {
+            if (l == null) {
                 throw new IllegalStateException();
             }
             l.item = null;
@@ -1738,62 +1370,50 @@ public class BasePipeline<E> implements Pipeline<E>
         }
     }
 
-    private class EntriesItr extends AbstractEntriesItr
-    {
+    private class EntriesItr extends AbstractEntriesItr {
         @Override
-        Node<E> startNode()
-        {
+        Node<E> startNode() {
             return BasePipeline.this.first();
         }
 
         @Override
-        Node<E> nextNode(final Node<E> p)
-        {
+        Node<E> nextNode(final Node<E> p) {
             return BasePipeline.this.succ(p);
         }
     }
 
-    private class EntriesDescendingItr extends AbstractEntriesItr
-    {
+    private class EntriesDescendingItr extends AbstractEntriesItr {
         @Override
-        Node<E> startNode()
-        {
+        Node<E> startNode() {
             return BasePipeline.this.last();
         }
 
         @Override
-        Node<E> nextNode(final Node<E> p)
-        {
+        Node<E> nextNode(final Node<E> p) {
             return BasePipeline.this.pred(p);
         }
     }
 
-    private class Itr extends AbstractItr
-    {
+    private class Itr extends AbstractItr {
         @Override
-        Node<E> startNode()
-        {
+        Node<E> startNode() {
             return BasePipeline.this.first();
         }
 
         @Override
-        Node<E> nextNode(final Node<E> p)
-        {
+        Node<E> nextNode(final Node<E> p) {
             return BasePipeline.this.succ(p);
         }
     }
 
-    private class DescendingItr extends AbstractItr
-    {
+    private class DescendingItr extends AbstractItr {
         @Override
-        Node<E> startNode()
-        {
+        Node<E> startNode() {
             return BasePipeline.this.last();
         }
 
         @Override
-        Node<E> nextNode(final Node<E> p)
-        {
+        Node<E> nextNode(final Node<E> p) {
             return BasePipeline.this.pred(p);
         }
     }
@@ -1803,54 +1423,43 @@ public class BasePipeline<E> implements Pipeline<E>
      *
      * @param v the element
      */
-    private static void checkNotNull(final Object v)
-    {
-        if (v == null)
-        {
+    private static void checkNotNull(final Object v) {
+        if (v == null) {
             throw new NullPointerException();
         }
     }
 
     @SuppressWarnings("ClassHasNoToStringMethod")
-    static final class PipelineSpliterator<E> implements Spliterator<E>
-    {
+    static final class PipelineSpliterator<E> implements Spliterator<E> {
         static final int MAX_BATCH = 1 << 25;
         final BasePipeline<E> pipeline;
         Node<E> current;
-        int     batch;
+        int batch;
         boolean exhausted;
 
-        PipelineSpliterator(final BasePipeline<E> pipeline)
-        {
+        PipelineSpliterator(final BasePipeline<E> pipeline) {
             this.pipeline = pipeline;
         }
 
         @Override
-        public boolean tryAdvance(final Consumer<? super E> action)
-        {
+        public boolean tryAdvance(final Consumer<? super E> action) {
             Node<E> p;
-            if (action == null)
-            {
+            if (action == null) {
                 throw new NullPointerException();
             }
             final BasePipeline<E> q = this.pipeline;
-            if (! this.exhausted && ((((p = this.current)) != null) || (((p = q.first())) != null)))
-            {
+            if (!this.exhausted && ((((p = this.current)) != null) || (((p = q.first())) != null))) {
                 E e;
-                do
-                {
+                do {
                     e = p.item;
-                    if (p == (p = p.next))
-                    {
+                    if (p == (p = p.next)) {
                         p = q.first();
                     }
                 } while ((e == null) && (p != null));
-                if ((this.current = p) == null)
-                {
+                if ((this.current = p) == null) {
                     this.exhausted = true;
                 }
-                if (e != null)
-                {
+                if (e != null) {
                     action.accept(e);
                     return true;
                 }
@@ -1859,26 +1468,20 @@ public class BasePipeline<E> implements Pipeline<E>
         }
 
         @Override
-        public void forEachRemaining(final Consumer<? super E> action)
-        {
+        public void forEachRemaining(final Consumer<? super E> action) {
             Node<E> p;
-            if (action == null)
-            {
+            if (action == null) {
                 throw new NullPointerException();
             }
             final BasePipeline<E> q = this.pipeline;
-            if (! this.exhausted && ((((p = this.current)) != null) || (((p = q.first())) != null)))
-            {
+            if (!this.exhausted && ((((p = this.current)) != null) || (((p = q.first())) != null))) {
                 this.exhausted = true;
-                do
-                {
+                do {
                     final E e = p.item;
-                    if (p == (p = p.next))
-                    {
+                    if (p == (p = p.next)) {
                         p = q.first();
                     }
-                    if (e != null)
-                    {
+                    if (e != null) {
                         action.accept(e);
                     }
                 } while (p != null);
@@ -1886,39 +1489,30 @@ public class BasePipeline<E> implements Pipeline<E>
         }
 
         @Override
-        public Spliterator<E> trySplit()
-        {
+        public Spliterator<E> trySplit() {
             Node<E> p;
             final BasePipeline<E> q = this.pipeline;
             final int b = this.batch;
             final int n = (b <= 0) ? 1 : ((b >= MAX_BATCH) ? MAX_BATCH : (b + 1));
-            if (! this.exhausted && ((((p = this.current)) != null) || (((p = q.first())) != null)))
-            {
-                if ((p.item == null) && (p == ((p = p.next))))
-                {
+            if (!this.exhausted && ((((p = this.current)) != null) || (((p = q.first())) != null))) {
+                if ((p.item == null) && (p == ((p = p.next)))) {
                     this.current = p = q.first();
                 }
-                if ((p != null) && (p.next != null))
-                {
+                if ((p != null) && (p.next != null)) {
                     final Object[] a = new Object[n];
                     int i = 0;
-                    do
-                    {
-                        if ((a[i] = p.item) != null)
-                        {
-                            ++ i;
+                    do {
+                        if ((a[i] = p.item) != null) {
+                            ++i;
                         }
-                        if (p == (p = p.next))
-                        {
+                        if (p == (p = p.next)) {
                             p = q.first();
                         }
                     } while ((p != null) && (i < n));
-                    if ((this.current = p) == null)
-                    {
+                    if ((this.current = p) == null) {
                         this.exhausted = true;
                     }
-                    if (i > 0)
-                    {
+                    if (i > 0) {
                         this.batch = i;
                         return Spliterators.spliterator(a, 0, i, Spliterator.ORDERED | Spliterator.NONNULL | Spliterator.CONCURRENT);
                     }
@@ -1928,14 +1522,12 @@ public class BasePipeline<E> implements Pipeline<E>
         }
 
         @Override
-        public long estimateSize()
-        {
+        public long estimateSize() {
             return Long.MAX_VALUE;
         }
 
         @Override
-        public int characteristics()
-        {
+        public int characteristics() {
             return Spliterator.ORDERED | Spliterator.NONNULL | Spliterator.CONCURRENT;
         }
     }
@@ -1943,93 +1535,79 @@ public class BasePipeline<E> implements Pipeline<E>
     /**
      * Based on {@link java.util.concurrent.ConcurrentLinkedDeque.Node}
      */
-    static class Node<E>
-    {
+    static class Node<E> {
         private static final AtomicInteger counter = new AtomicInteger(Integer.MIN_VALUE);
         private static final sun.misc.Unsafe UNSAFE;
-        private static final long            prevOffset;
-        private static final long            itemOffset;
-        private static final long            nextOffset;
+        private static final long prevOffset;
+        private static final long itemOffset;
+        private static final long nextOffset;
         String name;
         volatile Node<E> prev;
-        volatile E       item;
+        volatile E item;
         volatile Node<E> next;
 
         /**
          * Constructs a new node.  Uses relaxed write because item can
          * only be seen after publication via casNext or casPrev.
          */
-        Node(final String name, final E item)
-        {
+        Node(final String name, final E item) {
             this.name = name;
             UNSAFE.putObject(this, itemOffset, item);
         }
 
-        boolean casItem(final E cmp, final E val)
-        {
+        boolean casItem(final E cmp, final E val) {
             return UNSAFE.compareAndSwapObject(this, itemOffset, cmp, val);
         }
 
         // Unsafe mechanics
 
-        void lazySetNext(final Node<E> val)
-        {
+        void lazySetNext(final Node<E> val) {
             UNSAFE.putOrderedObject(this, nextOffset, val);
         }
 
-        boolean casNext(final Node<E> cmp, final Node<E> val)
-        {
+        boolean casNext(final Node<E> cmp, final Node<E> val) {
             return UNSAFE.compareAndSwapObject(this, nextOffset, cmp, val);
         }
 
-        void lazySetPrev(final Node<E> val)
-        {
+        void lazySetPrev(final Node<E> val) {
             UNSAFE.putOrderedObject(this, prevOffset, val);
         }
 
-        boolean casPrev(final Node<E> cmp, final Node<E> val)
-        {
+        boolean casPrev(final Node<E> cmp, final Node<E> val) {
             return UNSAFE.compareAndSwapObject(this, prevOffset, cmp, val);
         }
 
-        static
-        {
-            try
-            {
+        static {
+            try {
                 UNSAFE = DioriteUtils.getUnsafe();
                 final Class<?> k = Node.class;
                 prevOffset = UNSAFE.objectFieldOffset(k.getDeclaredField("prev"));
                 itemOffset = UNSAFE.objectFieldOffset(k.getDeclaredField("item"));
                 nextOffset = UNSAFE.objectFieldOffset(k.getDeclaredField("next"));
-            } catch (final Exception e)
-            {
+            } catch (final Exception e) {
                 throw new Error(e);
             }
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("item", this.item).append("prev", (this.prev == null) ? null : this.prev.name).append("next", (this.next == null) ? null : this.next.name).toString();
         }
 
 
     }
 
-    static
-    {
+    static {
         PREV_TERMINATOR = new Node<>("", null);
         PREV_TERMINATOR.next = PREV_TERMINATOR;
         NEXT_TERMINATOR = new Node<>("", null);
         NEXT_TERMINATOR.prev = NEXT_TERMINATOR;
-        try
-        {
+        try {
             UNSAFE = DioriteUtils.getUnsafe();
             final Class<?> k = BasePipeline.class;
             headOffset = UNSAFE.objectFieldOffset(k.getDeclaredField("head"));
             tailOffset = UNSAFE.objectFieldOffset(k.getDeclaredField("tail"));
-        } catch (final Exception e)
-        {
+        } catch (final Exception e) {
             throw new Error(e);
         }
     }

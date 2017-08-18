@@ -29,21 +29,17 @@ import org.diorite.utils.pipeline.BasePipeline;
 import org.diorite.utils.pipeline.Pipeline;
 import org.diorite.utils.reflections.DioriteReflectionUtils;
 
-public final class TemplateDeserializers
-{
+public final class TemplateDeserializers {
     private static final Pipeline<TemplateDeserializer<?>> elements = new BasePipeline<>();
 
-    private TemplateDeserializers()
-    {
+    private TemplateDeserializers() {
     }
 
     /**
      * @return editable pipeline with template elements.
-     *
      * @see TemplateDeserializer
      */
-    public static Pipeline<TemplateDeserializer<?>> getElements()
-    {
+    public static Pipeline<TemplateDeserializer<?>> getElements() {
         return elements;
     }
 
@@ -55,26 +51,20 @@ public final class TemplateDeserializers
      * 3. By type: template which {@link TemplateDeserializer#isValidType(Class)} method will return true.
      *
      * @param clazz class to find template deserializer for it.
-     *
      * @return template element deserializer.
      */
-    public static TemplateDeserializer<?> getElement(Class<?> clazz)
-    {
+    public static TemplateDeserializer<?> getElement(Class<?> clazz) {
         clazz = DioriteReflectionUtils.getPrimitive(clazz);
         TemplateDeserializer<?> element = elements.get(clazz.getName());
-        if (element != null)
-        {
+        if (element != null) {
             return element;
         }
         element = elements.get(clazz.getSimpleName());
-        if (element != null)
-        {
+        if (element != null) {
             return element;
         }
-        for (final TemplateDeserializer<?> e : elements)
-        {
-            if (e.isValidType(clazz))
-            {
+        for (final TemplateDeserializer<?> e : elements) {
+            if (e.isValidType(clazz)) {
                 return e;
             }
         }
@@ -89,16 +79,13 @@ public final class TemplateDeserializers
      * 3. By type: template which {@link TemplateDeserializer#isValidType(Class)} method will return true.
      *
      * @param field field to find template deserializer for it.
-     *
      * @return template element deserializer.
      */
-    public static TemplateDeserializer<?> getElement(final ConfigField field)
-    {
+    public static TemplateDeserializer<?> getElement(final ConfigField field) {
         return getElement(field.getField().getType());
     }
 
-    static
-    {
+    static {
         // TODO?
     }
 }

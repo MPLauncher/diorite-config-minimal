@@ -26,7 +26,6 @@ package org.diorite.utils.lazy;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
 import org.diorite.utils.others.Resetable;
 
 /**
@@ -35,12 +34,11 @@ import org.diorite.utils.others.Resetable;
  *
  * @param <T> type of lazy init object.
  */
-public abstract class LazyValueAbstract<T> implements Resetable
-{
+public abstract class LazyValueAbstract<T> implements Resetable {
     /**
      * Used to store cached value.
      */
-    protected T       cached;
+    protected T cached;
     /**
      * Determine if value was already initialized.
      */
@@ -49,8 +47,7 @@ public abstract class LazyValueAbstract<T> implements Resetable
     /**
      * Construct new LazyValueAbstract object.
      */
-    protected LazyValueAbstract()
-    {
+    protected LazyValueAbstract() {
     }
 
     /**
@@ -58,14 +55,10 @@ public abstract class LazyValueAbstract<T> implements Resetable
      *
      * @return value of this lazy value.
      */
-    public T get()
-    {
-        if (this.isCached)
-        {
+    public T get() {
+        if (this.isCached) {
             return this.cached;
-        }
-        else
-        {
+        } else {
             this.cached = this.init();
             this.isCached = true;
             return this.cached;
@@ -85,20 +78,17 @@ public abstract class LazyValueAbstract<T> implements Resetable
      *
      * @return true if value was already initialized.
      */
-    public boolean isCached()
-    {
+    public boolean isCached() {
         return this.isCached;
     }
 
     @Override
-    public void reset()
-    {
+    public void reset() {
         this.isCached = false;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("isCached", this.isCached).append("cached", this.cached).toString();
     }
 }

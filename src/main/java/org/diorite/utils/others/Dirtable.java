@@ -27,8 +27,7 @@ package org.diorite.utils.others;
 /**
  * Represent object that can be "dirty" - so it need some kind of update.
  */
-public interface Dirtable
-{
+public interface Dirtable {
     /**
      * Check if item is dirty.
      *
@@ -40,7 +39,6 @@ public interface Dirtable
      * Change dirty state, and return previous one.
      *
      * @param dirty new dirty state
-     *
      * @return old dirty state.
      */
     boolean setDirty(final boolean dirty);
@@ -50,8 +48,7 @@ public interface Dirtable
      *
      * @return old dirty state.
      */
-    default boolean setDirty()
-    {
+    default boolean setDirty() {
         return this.setDirty(true);
     }
 
@@ -60,8 +57,7 @@ public interface Dirtable
      *
      * @return old dirty state.
      */
-    default boolean setClean()
-    {
+    default boolean setClean() {
         return this.setDirty(false);
     }
 }

@@ -37,8 +37,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CfgStringDefault
-{
+public @interface CfgStringDefault {
     /**
      * @return default value of configuration field.
      */

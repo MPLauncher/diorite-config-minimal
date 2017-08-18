@@ -30,6 +30,5 @@ import org.yaml.snakeyaml.resolver.Resolver;
  * Diorite extension of {@link Resolver} with more public methods.
  */
 @SuppressWarnings("EmptyClass")
-public class DioriteYamlResolver extends Resolver
-{
+public class DioriteYamlResolver extends Resolver {
 }

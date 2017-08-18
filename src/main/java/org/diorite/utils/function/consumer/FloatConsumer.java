@@ -35,8 +35,7 @@ import java.util.Objects;
  * @see java.util.function.Consumer
  */
 @FunctionalInterface
-public interface FloatConsumer
-{
+public interface FloatConsumer {
 
     /**
      * Performs this operation on the given argument.
@@ -53,14 +52,11 @@ public interface FloatConsumer
      * the {@code after} operation will not be performed.
      *
      * @param after the operation to perform after this operation
-     *
      * @return a composed {@code FloatConsumer} that performs in sequence this
      * operation followed by the {@code after} operation
-     *
      * @throws NullPointerException if {@code after} is null
      */
-    default FloatConsumer andThen(final FloatConsumer after)
-    {
+    default FloatConsumer andThen(final FloatConsumer after) {
         Objects.requireNonNull(after);
         return (float t) -> {
             this.accept(t);

@@ -40,8 +40,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CfgStringArrayMultilineThreshold
-{
+public @interface CfgStringArrayMultilineThreshold {
     /**
      * @return Threshold to use new-line style.
      */

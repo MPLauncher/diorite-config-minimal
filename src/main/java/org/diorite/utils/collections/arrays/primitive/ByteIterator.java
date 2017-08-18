@@ -29,41 +29,34 @@ import java.util.NoSuchElementException;
 /**
  * Represent Byte iterator for byte array.
  */
-public class ByteIterator extends PrimitiveIterator<Byte, byte[]>
-{
+public class ByteIterator extends PrimitiveIterator<Byte, byte[]> {
     /**
      * Construct new ByteIterator for given primitive array.
      *
      * @param primitiveArray array to be iterated.
      */
-    public ByteIterator(final byte[] primitiveArray)
-    {
+    public ByteIterator(final byte[] primitiveArray) {
         super(primitiveArray);
     }
 
     @Override
-    public void setValue(final Byte number)
-    {
+    public void setValue(final Byte number) {
         this.primitiveArray[this.index - 1] = number;
     }
 
     @Override
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.primitiveArray[this.index - 1] = number.byteValue();
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.index < this.primitiveArray.length;
     }
 
     @Override
-    public Byte next()
-    {
-        if (! this.hasNext())
-        {
+    public Byte next() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("Index >= Length, Index: " + this.index + ", Length: " + this.primitiveArray.length);
         }
         return this.primitiveArray[this.index++];

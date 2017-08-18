@@ -27,8 +27,7 @@ package org.diorite.cfg.system.elements.primitives;
 /**
  * Template used by shorts.
  */
-public class ShortTemplateElement extends PrimitiveTemplateElement<Short>
-{
+public class ShortTemplateElement extends PrimitiveTemplateElement<Short> {
     /**
      * Instance of template to direct-use.
      */
@@ -37,32 +36,26 @@ public class ShortTemplateElement extends PrimitiveTemplateElement<Short>
     /**
      * Construct new short template
      */
-    public ShortTemplateElement()
-    {
+    public ShortTemplateElement() {
         super(short.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return Number.class.isAssignableFrom(c);
     }
 
     @Override
-    protected Short convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof Number)
-        {
+    protected Short convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof Number) {
             return ((Number) obj).shortValue();
         }
         throw this.getException(obj);
     }
 
     @Override
-    protected Short convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof Number)
-        {
+    protected Short convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof Number) {
             return ((Number) obj).shortValue();
         }
         throw this.getException(obj);

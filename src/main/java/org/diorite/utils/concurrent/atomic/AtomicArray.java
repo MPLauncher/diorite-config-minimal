@@ -33,8 +33,7 @@ import java.util.function.UnaryOperator;
  *
  * @param <E> type of array.
  */
-public interface AtomicArray<E> extends Iterable<E>
-{
+public interface AtomicArray<E> extends Iterable<E> {
     int SHIFT_BASE = 31;
 
     /**
@@ -56,7 +55,6 @@ public interface AtomicArray<E> extends Iterable<E>
      * Gets the current value at position {@code i}.
      *
      * @param i the index
-     *
      * @return the current value
      */
     E get(int i);
@@ -83,7 +81,6 @@ public interface AtomicArray<E> extends Iterable<E>
      *
      * @param i        the index
      * @param newValue the new value
-     *
      * @return the previous value
      */
     E getAndSet(int i, E newValue);
@@ -95,7 +92,6 @@ public interface AtomicArray<E> extends Iterable<E>
      * @param i      the index
      * @param expect the expected value
      * @param update the new value
-     *
      * @return {@code true} if successful. False return indicates that
      * the actual value was not equal to the expected value.
      */
@@ -112,7 +108,6 @@ public interface AtomicArray<E> extends Iterable<E>
      * @param i      the index
      * @param expect the expected value
      * @param update the new value
-     *
      * @return {@code true} if successful
      */
     boolean weakCompareAndSet(int i, E expect, E update);
@@ -125,7 +120,6 @@ public interface AtomicArray<E> extends Iterable<E>
      *
      * @param i              the index
      * @param updateFunction a side-effect-free function
-     *
      * @return the previous value
      */
     E getAndUpdate(int i, UnaryOperator<E> updateFunction);
@@ -138,7 +132,6 @@ public interface AtomicArray<E> extends Iterable<E>
      *
      * @param i              the index
      * @param updateFunction a side-effect-free function
-     *
      * @return the updated value
      */
     E updateAndGet(int i, UnaryOperator<E> updateFunction);
@@ -155,7 +148,6 @@ public interface AtomicArray<E> extends Iterable<E>
      * @param i                   the index
      * @param x                   the update value
      * @param accumulatorFunction a side-effect-free function of two arguments
-     *
      * @return the previous value
      */
     E getAndAccumulate(int i, E x, BinaryOperator<E> accumulatorFunction);
@@ -172,7 +164,6 @@ public interface AtomicArray<E> extends Iterable<E>
      * @param i                   the index
      * @param x                   the update value
      * @param accumulatorFunction a side-effect-free function of two arguments
-     *
      * @return the updated value
      */
     E accumulateAndGet(int i, E x, BinaryOperator<E> accumulatorFunction);
@@ -186,7 +177,6 @@ public interface AtomicArray<E> extends Iterable<E>
      *
      * @param offset offset of sub-array.
      * @param length size of sub-array.
-     *
      * @return sub-array of this array.
      */
     AtomicArray<E> getSubArray(int offset, int length);
@@ -199,11 +189,9 @@ public interface AtomicArray<E> extends Iterable<E>
      * in this object, but offset is added to every index used in sub array.
      *
      * @param offset offset of sub-array.
-     *
      * @return sub-array of this array.
      */
-    default AtomicArray<E> getSubArray(final int offset)
-    {
+    default AtomicArray<E> getSubArray(final int offset) {
         return this.getSubArray(offset, this.length() - offset);
     }
 
@@ -212,7 +200,6 @@ public interface AtomicArray<E> extends Iterable<E>
      *
      * @param a   array to use.
      * @param <T> type of array.
-     *
      * @return array with all elements.
      */
     <T> T[] toArray(T[] a);
@@ -232,28 +219,23 @@ public interface AtomicArray<E> extends Iterable<E>
     String toString();
 
     @Override
-    default Iterator<E> iterator()
-    {
-        return new Iterator<E>()
-        {
+    default Iterator<E> iterator() {
+        return new Iterator<E>() {
             private int currentIndex = 0;
 
             @Override
-            public boolean hasNext()
-            {
+            public boolean hasNext() {
                 return (this.currentIndex < AtomicArray.this.length());
             }
 
             @SuppressWarnings("IteratorNextCanNotThrowNoSuchElementException") // it will be thrown by array itself.
             @Override
-            public E next()
-            {
+            public E next() {
                 return AtomicArray.this.get(this.currentIndex++);
             }
 
             @Override
-            public void remove()
-            {
+            public void remove() {
                 throw new UnsupportedOperationException();
             }
         };

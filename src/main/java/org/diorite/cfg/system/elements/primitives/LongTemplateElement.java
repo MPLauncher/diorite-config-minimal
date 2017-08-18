@@ -27,8 +27,7 @@ package org.diorite.cfg.system.elements.primitives;
 /**
  * Template used by longs.
  */
-public class LongTemplateElement extends PrimitiveTemplateElement<Long>
-{
+public class LongTemplateElement extends PrimitiveTemplateElement<Long> {
     /**
      * Instance of template to direct-use.
      */
@@ -37,32 +36,26 @@ public class LongTemplateElement extends PrimitiveTemplateElement<Long>
     /**
      * Construct new long template
      */
-    public LongTemplateElement()
-    {
+    public LongTemplateElement() {
         super(long.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return Number.class.isAssignableFrom(c);
     }
 
     @Override
-    protected Long convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof Number)
-        {
+    protected Long convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof Number) {
             return ((Number) obj).longValue();
         }
         throw this.getException(obj);
     }
 
     @Override
-    protected Long convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof Number)
-        {
+    protected Long convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof Number) {
             return ((Number) obj).longValue();
         }
         throw this.getException(obj);

@@ -41,8 +41,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CfgCollectionType
-{
+public @interface CfgCollectionType {
     /**
      * @return {@link org.diorite.cfg.annotations.CfgCollectionType.CollectionType} for this field.
      */
@@ -51,8 +50,7 @@ public @interface CfgCollectionType
     /**
      * enum with all possible types.
      */
-    enum CollectionType
-    {
+    enum CollectionType {
         /**
          * Default value, unknown type.
          */

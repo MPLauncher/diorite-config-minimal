@@ -24,7 +24,6 @@
 
 package org.diorite.utils.math;
 
-public interface IWeightedRandomChoice
-{
+public interface IWeightedRandomChoice {
     int getWeight();
 }

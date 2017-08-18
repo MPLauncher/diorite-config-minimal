@@ -24,20 +24,18 @@
 
 package org.diorite.utils.collections.sets;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import org.diorite.utils.collections.hash.CaseInsensitiveHashingStrategy;
-
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
+import org.diorite.utils.collections.hash.CaseInsensitiveHashingStrategy;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Case insensitive Hash set for strings.
  */
-public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
-{
+public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String> {
     private static final long serialVersionUID = 0;
 
     /**
@@ -48,8 +46,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      * @param expected the expected number of elements in the hash set.
      * @param f        the load factor.
      */
-    public CaseInsensitiveHashSet(final int expected, final float f)
-    {
+    public CaseInsensitiveHashSet(final int expected, final float f) {
         super(expected, f, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -58,16 +55,14 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      *
      * @param expected the expected number of elements in the hash set.
      */
-    public CaseInsensitiveHashSet(final int expected)
-    {
+    public CaseInsensitiveHashSet(final int expected) {
         super(expected, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
     /**
      * Creates a new hash set with initial expected {@link Hash#DEFAULT_INITIAL_SIZE} elements and {@link Hash#DEFAULT_LOAD_FACTOR} as load factor.
      */
-    public CaseInsensitiveHashSet()
-    {
+    public CaseInsensitiveHashSet() {
         super(CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -77,8 +72,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      * @param c a {@link Collection} to be copied into the new hash set.
      * @param f the load factor.
      */
-    public CaseInsensitiveHashSet(final Collection<? extends String> c, final float f)
-    {
+    public CaseInsensitiveHashSet(final Collection<? extends String> c, final float f) {
         super(c, f, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -87,8 +81,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      *
      * @param c a {@link Collection} to be copied into the new hash set.
      */
-    public CaseInsensitiveHashSet(final Collection<? extends String> c)
-    {
+    public CaseInsensitiveHashSet(final Collection<? extends String> c) {
         super(c, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -98,8 +91,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      * @param c a type-specific collection to be copied into the new hash set.
      * @param f the load factor.
      */
-    public CaseInsensitiveHashSet(final ObjectCollection<? extends String> c, final float f)
-    {
+    public CaseInsensitiveHashSet(final ObjectCollection<? extends String> c, final float f) {
         super(c, f, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -108,8 +100,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      *
      * @param c a type-specific collection to be copied into the new hash set.
      */
-    public CaseInsensitiveHashSet(final ObjectCollection<? extends String> c)
-    {
+    public CaseInsensitiveHashSet(final ObjectCollection<? extends String> c) {
         super(c, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -119,8 +110,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      * @param i a type-specific iterator whose elements will fill the set.
      * @param f the load factor.
      */
-    public CaseInsensitiveHashSet(final Iterator<? extends String> i, final float f)
-    {
+    public CaseInsensitiveHashSet(final Iterator<? extends String> i, final float f) {
         super(i, f, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -129,8 +119,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      *
      * @param i a type-specific iterator whose elements will fill the set.
      */
-    public CaseInsensitiveHashSet(final Iterator<? extends String> i)
-    {
+    public CaseInsensitiveHashSet(final Iterator<? extends String> i) {
         super(i, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -142,8 +131,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      * @param length the number of elements to use.
      * @param f      the load factor.
      */
-    public CaseInsensitiveHashSet(final String[] a, final int offset, final int length, final float f)
-    {
+    public CaseInsensitiveHashSet(final String[] a, final int offset, final int length, final float f) {
         super(a, offset, length, f, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -154,8 +142,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      * @param offset the first element to use.
      * @param length the number of elements to use.
      */
-    public CaseInsensitiveHashSet(final String[] a, final int offset, final int length)
-    {
+    public CaseInsensitiveHashSet(final String[] a, final int offset, final int length) {
         super(a, offset, length, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -165,8 +152,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      * @param a an array to be copied into the new hash set.
      * @param f the load factor.
      */
-    public CaseInsensitiveHashSet(final String[] a, final float f)
-    {
+    public CaseInsensitiveHashSet(final String[] a, final float f) {
         super(a, f, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 
@@ -175,8 +161,7 @@ public class CaseInsensitiveHashSet extends ObjectOpenCustomHashSet<String>
      *
      * @param a an array to be copied into the new hash set.
      */
-    public CaseInsensitiveHashSet(final String[] a)
-    {
+    public CaseInsensitiveHashSet(final String[] a) {
         super(a, CaseInsensitiveHashingStrategy.INSTANCE);
     }
 }

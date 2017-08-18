@@ -49,8 +49,7 @@ import java.util.stream.StreamSupport;
  *
  * @param <E> type of elements stored in pipeline.
  */
-public interface Pipeline<E> extends Iterable<E>
-{
+public interface Pipeline<E> extends Iterable<E> {
     /**
      * @return collection with all values
      */
@@ -103,7 +102,6 @@ public interface Pipeline<E> extends Iterable<E>
      * inverted iterator.
      *
      * @return iterator of pipeline, from tail to head.
-     *
      * @see Iterable#iterator()
      */
     Iterator<E> descendingIterator();
@@ -127,9 +125,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name    name to set.
      * @param value   value to set.
      * @param index   index of element.
-     *
      * @return true if any element was changed.
-     *
      * @see #setFromTail(String, Object)
      * @see #setFromTail(String, Object, int)
      * @see #setIfContainsFromTail(String, Object)
@@ -160,9 +156,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name    name to set.
      * @param value   value to set.
      * @param index   index of element.
-     *
      * @return true if any element was changed.
-     *
      * @see #set(String, Object)
      * @see #set(String, Object, int)
      * @see #setFromHead(String, Object)
@@ -196,9 +190,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name  name of new element.
      * @param value value of new element.
      * @param index index of relative element.
-     *
      * @return true if any element was added.
-     *
      * @see #addAfter(String, String, Object)
      * @see #addAfter(String, String, Object, int)
      * @see #addAfterFromHead(String, String, Object)
@@ -226,9 +218,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name  name of new element.
      * @param value value of new element.
      * @param index index of relative element.
-     *
      * @return true if any element was added.
-     *
      * @see #addAfterFromTail(String, String, Object)
      * @see #addAfterFromTail(String, String, Object, int)
      * @see #addAfterIfContainsFromTail(String, String, Object)
@@ -252,9 +242,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name   name of new element.
      * @param value  value of new element.
      * @param index  index of relative element.
-     *
      * @return true if any element was added.
-     *
      * @see #addBefore(String, String, Object)
      * @see #addBefore(String, String, Object, int)
      * @see #addBeforeFromHead(String, String, Object)
@@ -282,9 +270,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name   name of new element.
      * @param value  value of new element.
      * @param index  index of relative element.
-     *
      * @return true if any element was added.
-     *
      * @see #addBeforeFromTail(String, String, Object)
      * @see #addBeforeFromTail(String, String, Object, int)
      * @see #addBeforeIfContainsFromTail(String, String, Object)
@@ -306,9 +292,7 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param o     element to remove from pipeline.
      * @param index index of element to remove.
-     *
      * @return name of removed element.
-     *
      * @see #removeLastOccurrence(Object)
      */
     String removeSingleOccurrenceFromTail(Object o, int index);
@@ -323,9 +307,7 @@ public interface Pipeline<E> extends Iterable<E>
      * and no changes will be made.
      *
      * @param o element to remove from pipeline.
-     *
      * @return name of removed element.
-     *
      * @see #removeSingleOccurrenceFromTail(Object, int)
      */
     String removeLastOccurrence(Object o);
@@ -344,9 +326,7 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param o     element to remove from pipeline.
      * @param index index of element to remove.
-     *
      * @return name of removed element.
-     *
      * @see #removeFirstOccurrence(Object)
      */
     String removeSingleOccurrenceFromHead(Object o, int index);
@@ -361,9 +341,7 @@ public interface Pipeline<E> extends Iterable<E>
      * and no changes will be made.
      *
      * @param o element to remove from pipeline.
-     *
      * @return name of removed element.
-     *
      * @see #removeSingleOccurrenceFromHead(Object, int)
      */
     String removeFirstOccurrence(Object o);
@@ -380,7 +358,6 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param o     element to remove from pipeline.
      * @param limit limit of removed elements.
-     *
      * @return collection of removed element names, never null.
      */
     Collection<String> removeAllFromTail(Object o, int limit);
@@ -397,7 +374,6 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param name  name of elements to remove from pipeline.
      * @param limit limit of removed elements.
-     *
      * @return collection of removed elements, never null.
      */
     Collection<E> removeAllFromTail(String name, int limit);
@@ -414,7 +390,6 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param o     element to remove from pipeline.
      * @param limit limit of removed elements.
-     *
      * @return collection of removed element names, never null.
      */
     Collection<String> removeAllFromHead(Object o, int limit);
@@ -431,7 +406,6 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param name  name of elements to remove from pipeline.
      * @param limit limit of removed elements.
-     *
      * @return collection of removed elements, never null.
      */
     Collection<E> removeAllFromHead(String name, int limit);
@@ -450,9 +424,7 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param name  name of element to remove from pipeline.
      * @param index index of element to remove.
-     *
      * @return removed element.
-     *
      * @see #remove(String)
      * @see #removeLastOccurrence(String)
      */
@@ -468,9 +440,7 @@ public interface Pipeline<E> extends Iterable<E>
      * and no changes will be made.
      *
      * @param name name of element to remove from pipeline.
-     *
      * @return removed element.
-     *
      * @see #remove(String)
      * @see #removeSingleOccurrenceFromTail(String, int)
      */
@@ -490,7 +460,6 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param name  name of element to remove from pipeline.
      * @param index index of element to remove.
-     *
      * @return removed element.
      */
     E removeSingleOccurrenceFromHead(String name, int index);
@@ -505,7 +474,6 @@ public interface Pipeline<E> extends Iterable<E>
      * and no changes will be made.
      *
      * @param name name of element to remove from pipeline.
-     *
      * @return removed element.
      */
     E removeFirstOccurrence(String name);
@@ -516,9 +484,7 @@ public interface Pipeline<E> extends Iterable<E>
      * Method is iterating from tail to head of pipeline.
      *
      * @param name name of elements to remove from pipeline.
-     *
      * @return collection of removed elements, never null.
-     *
      * @see #removeAllFromTail(String, int)
      */
     Collection<E> removeAll(String name);
@@ -529,9 +495,7 @@ public interface Pipeline<E> extends Iterable<E>
      * Method is iterating from tail to head of pipeline.
      *
      * @param o element to remove from pipeline.
-     *
      * @return collection of removed element names, never null.
-     *
      * @see #removeAllFromTail(String, int)
      */
     Collection<String> removeAll(Object o);
@@ -546,9 +510,7 @@ public interface Pipeline<E> extends Iterable<E>
      * and no changes will be made.
      *
      * @param name name of element to remove from pipeline.
-     *
      * @return removed element.
-     *
      * @see #removeLastOccurrence(String)
      * @see #removeSingleOccurrenceFromTail(String, int)
      */
@@ -559,7 +521,6 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param name  name of new element.
      * @param value value of new element.
-     *
      * @see #addLast(String, Object)
      */
     void add(String name, E value);
@@ -577,7 +538,6 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param name  name of new element.
      * @param value value of new element.
-     *
      * @see #addLast(String, Object)
      */
     void addLast(String name, E value);
@@ -614,9 +574,7 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param element element name to find.
      * @param value   new element value
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object, int)
@@ -646,9 +604,7 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param element element name to find.
      * @param value   new element value
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
@@ -678,9 +634,7 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param element element name to find.
      * @param value   new element value
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromTail(String, String, Object, int)
      * @see #setFromTail(String, Object, int)
@@ -709,9 +663,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element element name to find.
      * @param value   new element value
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
@@ -746,9 +698,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element element name to find.
      * @param value   new element value
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
@@ -783,9 +733,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element element name to find.
      * @param value   new element value
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromTail(String, String, Object, int)
      * @see #setFromTail(String, Object)
@@ -813,9 +761,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element name of element to find.
      * @param name    name to set.
      * @param value   value to set.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
@@ -849,9 +795,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element name of element to find.
      * @param name    name to set.
      * @param value   value to set.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
@@ -885,9 +829,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element name of element to find.
      * @param name    name to set.
      * @param value   value to set.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromTail(String, String, Object, int)
      * @see #setFromTail(String, Object)
@@ -920,9 +862,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name    name to set.
      * @param value   value to set.
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
@@ -961,9 +901,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name    name to set.
      * @param value   value to set.
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
@@ -1002,9 +940,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name    name to set.
      * @param value   value to set.
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkInsteadFromTail(String, String, Object, int)
      * @see #setFromTail(String, Object)
@@ -1029,9 +965,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param before name of relative element.
      * @param name   name of new element.
      * @param value  value of new element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkBeforeFromHead(String, String, Object, int)
      * @see #addBefore(String, String, Object, int)
@@ -1056,9 +990,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param before name of relative element.
      * @param name   name of new element.
      * @param value  value of new element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkBeforeFromHead(String, String, Object, int)
      * @see #addBefore(String, String, Object)
@@ -1083,9 +1015,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param before name of relative element.
      * @param name   name of new element.
      * @param value  value of new element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkBeforeFromTail(String, String, Object, int)
      * @see #addBeforeFromTail(String, String, Object, int)
@@ -1110,9 +1040,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name   name of new element.
      * @param value  value of new element.
      * @param index  index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkBeforeFromHead(String, String, Object, int)
      * @see #addBefore(String, String, Object)
@@ -1141,9 +1069,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name   name of new element.
      * @param value  value of new element.
      * @param index  index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkBeforeFromHead(String, String, Object, int)
      * @see #addBefore(String, String, Object)
@@ -1172,9 +1098,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name   name of new element.
      * @param value  value of new element.
      * @param index  index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkBeforeFromTail(String, String, Object, int)
      * @see #addBeforeFromTail(String, String, Object)
@@ -1198,9 +1122,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param after name of relative element.
      * @param name  name of new element.
      * @param value value of new element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkAfterFromHead(String, String, Object, int)
      * @see #addAfter(String, String, Object, int)
@@ -1228,9 +1150,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param after name of relative element.
      * @param name  name of new element.
      * @param value value of new element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkAfterFromHead(String, String, Object, int)
      * @see #addAfter(String, String, Object)
@@ -1258,9 +1178,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param after name of relative element.
      * @param name  name of new element.
      * @param value value of new element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkAfterFromTail(String, String, Object, int)
      * @see #addAfterFromTail(String, String, Object, int)
@@ -1285,9 +1203,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name  name of new element.
      * @param value value of new element.
      * @param index index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkAfterFromHead(String, String, Object, int)
      * @see #addAfter(String, String, Object)
@@ -1316,9 +1232,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name  name of new element.
      * @param value value of new element.
      * @param index index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkAfterFromHead(String, String, Object, int)
      * @see #addAfter(String, String, Object)
@@ -1347,9 +1261,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name  name of new element.
      * @param value value of new element.
      * @param index index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @throws NoSuchElementException if there is no element to change
      * @see #linkAfterFromTail(String, String, Object, int)
      * @see #addAfterFromTail(String, String, Object)
@@ -1369,9 +1281,7 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param element element name to find.
      * @param value   new element value
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
      * @see #set(String, Object, int)
@@ -1402,9 +1312,7 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param element element name to find.
      * @param value   new element value
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
      * @see #set(String, Object, int)
@@ -1435,9 +1343,7 @@ public interface Pipeline<E> extends Iterable<E>
      *
      * @param element element name to find.
      * @param value   new element value
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromTail(String, String, Object, int)
      * @see #setFromTail(String, Object)
      * @see #setFromTail(String, Object, int)
@@ -1465,9 +1371,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element element name to find.
      * @param value   new element value
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
      * @see #set(String, Object, int)
@@ -1503,9 +1407,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element element name to find.
      * @param value   new element value
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
      * @see #set(String, Object, int)
@@ -1541,9 +1443,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element element name to find.
      * @param value   new element value
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromTail(String, String, Object, int)
      * @see #setFromTail(String, Object)
      * @see #setFromTail(String, Object, int)
@@ -1570,9 +1470,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element name of element to find.
      * @param name    name to set.
      * @param value   value to set.
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
      * @see #set(String, Object, int)
@@ -1607,9 +1505,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element name of element to find.
      * @param name    name to set.
      * @param value   value to set.
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
      * @see #set(String, Object, int)
@@ -1644,9 +1540,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param element name of element to find.
      * @param name    name to set.
      * @param value   value to set.
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromTail(String, String, Object, int)
      * @see #setFromTail(String, Object)
      * @see #setFromTail(String, Object, int)
@@ -1678,9 +1572,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name    name to set.
      * @param value   value to set.
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
      * @see #set(String, Object, int)
@@ -1720,9 +1612,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name    name to set.
      * @param value   value to set.
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromHead(String, String, Object, int)
      * @see #set(String, Object)
      * @see #set(String, Object, int)
@@ -1762,9 +1652,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name    name to set.
      * @param value   value to set.
      * @param index   index of element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkInsteadFromTail(String, String, Object, int)
      * @see #setFromTail(String, Object)
      * @see #setFromTail(String, Object, int)
@@ -1788,9 +1676,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param before name of relative element.
      * @param name   name of new element.
      * @param value  value of new element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkBeforeFromHead(String, String, Object, int)
      * @see #addBefore(String, String, Object)
      * @see #addBefore(String, String, Object, int)
@@ -1814,9 +1700,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param before name of relative element.
      * @param name   name of new element.
      * @param value  value of new element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkBeforeFromHead(String, String, Object, int)
      * @see #addBefore(String, String, Object)
      * @see #addBefore(String, String, Object, int)
@@ -1840,9 +1724,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param before name of relative element.
      * @param name   name of new element.
      * @param value  value of new element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkBeforeFromTail(String, String, Object, int)
      * @see #addBeforeFromTail(String, String, Object)
      * @see #addBeforeFromTail(String, String, Object, int)
@@ -1866,9 +1748,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name   name of new element.
      * @param value  value of new element.
      * @param index  index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkBeforeFromHead(String, String, Object, int)
      * @see #addBefore(String, String, Object)
      * @see #addBefore(String, String, Object, int)
@@ -1896,9 +1776,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name   name of new element.
      * @param value  value of new element.
      * @param index  index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkBeforeFromHead(String, String, Object, int)
      * @see #addBefore(String, String, Object)
      * @see #addBefore(String, String, Object, int)
@@ -1926,9 +1804,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name   name of new element.
      * @param value  value of new element.
      * @param index  index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkBeforeFromTail(String, String, Object, int)
      * @see #addBeforeFromTail(String, String, Object)
      * @see #addBeforeFromTail(String, String, Object, int)
@@ -1951,9 +1827,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param after name of relative element.
      * @param name  name of new element.
      * @param value value of new element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkAfterFromHead(String, String, Object, int)
      * @see #addAfter(String, String, Object)
      * @see #addAfter(String, String, Object, int)
@@ -1980,9 +1854,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param after name of relative element.
      * @param name  name of new element.
      * @param value value of new element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkAfterFromHead(String, String, Object, int)
      * @see #addAfter(String, String, Object)
      * @see #addAfter(String, String, Object, int)
@@ -2009,9 +1881,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param after name of relative element.
      * @param name  name of new element.
      * @param value value of new element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkAfterFromTail(String, String, Object, int)
      * @see #addAfterFromTail(String, String, Object)
      * @see #addAfterFromTail(String, String, Object, int)
@@ -2035,9 +1905,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name  name of new element.
      * @param value value of new element.
      * @param index index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkAfterFromHead(String, String, Object, int)
      * @see #addAfter(String, String, Object)
      * @see #addAfter(String, String, Object, int)
@@ -2065,9 +1933,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name  name of new element.
      * @param value value of new element.
      * @param index index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkAfterFromHead(String, String, Object, int)
      * @see #addAfter(String, String, Object)
      * @see #addAfter(String, String, Object, int)
@@ -2095,9 +1961,7 @@ public interface Pipeline<E> extends Iterable<E>
      * @param name  name of new element.
      * @param value value of new element.
      * @param index index of relative element.
-     *
      * @return pipeline itself.
-     *
      * @see #linkAfterFromTail(String, String, Object, int)
      * @see #addAfterFromTail(String, String, Object)
      * @see #addAfterFromTail(String, String, Object, int)
@@ -2119,7 +1983,6 @@ public interface Pipeline<E> extends Iterable<E>
      * Check if pipeline contains element with this name.
      *
      * @param name name of element.
-     *
      * @return true if pipeline contains at least one element with this name.
      */
     boolean containsKey(String name);
@@ -2128,7 +1991,6 @@ public interface Pipeline<E> extends Iterable<E>
      * Check if pipeline contains element with this value.
      *
      * @param value value of element.
-     *
      * @return true if pipeline contains at least one element with this value.
      */
     boolean containsValue(Object value);
@@ -2137,21 +1999,18 @@ public interface Pipeline<E> extends Iterable<E>
      * Returns pipeline element value for given name.
      *
      * @param name name of element.
-     *
      * @return element value or null if not present.
      */
     E get(String name);
 
     /**
      * @return array with all elements.
-     *
      * @see Collection#toArray()
      */
     Object[] toArray();
 
     /**
      * @return array with all elements names.
-     *
      * @see Collection#toArray()
      */
     String[] toNamesArray();
@@ -2159,30 +2018,24 @@ public interface Pipeline<E> extends Iterable<E>
     /**
      * @param a   array to add values into it.
      * @param <T> type of array
-     *
      * @return add all values to given array.
-     *
      * @see Collection#toArray(Object[])
      */
     <T> T[] toArray(T[] a);
 
     /**
      * @return a stream.
-     *
      * @see Collection#stream()
      */
-    default Stream<E> stream()
-    {
+    default Stream<E> stream() {
         return StreamSupport.stream(this.spliterator(), false);
     }
 
     /**
      * @return a stream.
-     *
      * @see Collection#parallelStream()
      */
-    default Stream<E> parallelStream()
-    {
+    default Stream<E> parallelStream() {
         return StreamSupport.stream(this.spliterator(), true);
     }
 }

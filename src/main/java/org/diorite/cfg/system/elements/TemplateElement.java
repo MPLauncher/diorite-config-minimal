@@ -24,11 +24,8 @@
 
 package org.diorite.cfg.system.elements;
 
-import java.io.IOException;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.cfg.system.ConfigField;
 import org.diorite.cfg.system.FieldOptions;
@@ -36,13 +33,14 @@ import org.diorite.cfg.system.Template;
 import org.diorite.utils.reflections.DioriteReflectionUtils;
 import org.diorite.utils.reflections.ReflectGetter;
 
+import java.io.IOException;
+
 /**
  * Base class for all template elements handlers.
  *
  * @param <T> type of supported/handled element.
  */
-public abstract class TemplateElement<T>
-{
+public abstract class TemplateElement<T> {
     /**
      * type of supported/handled element.
      */
@@ -53,16 +51,14 @@ public abstract class TemplateElement<T>
      *
      * @param fieldType type of supported template element.
      */
-    public TemplateElement(final Class<T> fieldType)
-    {
+    public TemplateElement(final Class<T> fieldType) {
         this.fieldType = fieldType;
     }
 
     /**
      * @return tyle of template element
      */
-    public Class<T> getFieldType()
-    {
+    public Class<T> getFieldType() {
         return this.fieldType;
     }
 
@@ -70,11 +66,9 @@ public abstract class TemplateElement<T>
      * Check if given class is compatible with this template.
      *
      * @param clazz class to check.
-     *
      * @return true if class can be used in this template.
      */
-    public boolean isValidType(final Class<?> clazz)
-    {
+    public boolean isValidType(final Class<?> clazz) {
         return DioriteReflectionUtils.getPrimitive(this.fieldType).isAssignableFrom(clazz) || DioriteReflectionUtils.getWrapperClass(this.fieldType).isAssignableFrom(clazz);
     }
 
@@ -82,18 +76,14 @@ public abstract class TemplateElement<T>
      * Check if given class can be compatible with this template after using convert function..
      *
      * @param clazz class to check.
-     *
      * @return true if class can be used in this template.
      */
-    public boolean canBeConverted(final Class<?> clazz)
-    {
+    public boolean canBeConverted(final Class<?> clazz) {
         return this.isValidType(clazz) || this.canBeConverted0(clazz);
     }
 
-    private String getExceptionMessage(final Object obj, final String s)
-    {
-        if (s == null)
-        {
+    private String getExceptionMessage(final Object obj, final String s) {
+        if (s == null) {
             return "Can't convert object (" + obj.getClass().getName() + ") to " + this.fieldType.getName() + ": " + ToStringBuilder.reflectionToString(obj);
         }
         return "Can't convert object (" + obj.getClass().getName() + ") to " + this.fieldType.getName() + ", caused by: '" + s + "', object: " + ToStringBuilder.reflectionToString(obj);
@@ -104,11 +94,9 @@ public abstract class TemplateElement<T>
      *
      * @param obj   object that fail to convert.
      * @param cause cause message.
-     *
      * @return created exception.
      */
-    protected UnsupportedOperationException getException(final Object obj, final String cause)
-    {
+    protected UnsupportedOperationException getException(final Object obj, final String cause) {
         return new UnsupportedOperationException(this.getExceptionMessage(obj, cause));
     }
 
@@ -116,11 +104,9 @@ public abstract class TemplateElement<T>
      * Create UnsupportedOperationException "Can't convert object" for given object.
      *
      * @param obj object that fail to convert.
-     *
      * @return created exception.
      */
-    protected UnsupportedOperationException getException(final Object obj)
-    {
+    protected UnsupportedOperationException getException(final Object obj) {
         return this.getException(obj, (String) null);
     }
 
@@ -129,11 +115,9 @@ public abstract class TemplateElement<T>
      *
      * @param obj   object that fail to convert.
      * @param cause cause of exception.
-     *
      * @return created exception.
      */
-    protected UnsupportedOperationException getException(final Object obj, final Throwable cause)
-    {
+    protected UnsupportedOperationException getException(final Object obj, final Throwable cause) {
         return new UnsupportedOperationException(this.getExceptionMessage(obj, null), cause);
     }
 
@@ -141,7 +125,6 @@ public abstract class TemplateElement<T>
      * Check if given class can be compatible with this template after using convert function..
      *
      * @param c class to check.
-     *
      * @return true if class can be used in this template.
      */
     protected abstract boolean canBeConverted0(final Class<?> c);
@@ -153,9 +136,7 @@ public abstract class TemplateElement<T>
      * Function used to convert other types to this type (may throw errors).
      *
      * @param obj object to convert.
-     *
      * @return converted object.
-     *
      * @throws UnsupportedOperationException when method can't convert object.
      */
     protected abstract T convertObject0(Object obj) throws UnsupportedOperationException;
@@ -167,9 +148,7 @@ public abstract class TemplateElement<T>
      *
      * @param obj       object to convert.
      * @param fieldType expected type of returned object.
-     *
      * @return converted object.
-     *
      * @throws UnsupportedOperationException when method can't convert object.
      */
     protected abstract T convertDefault0(Object obj, Class<?> fieldType) throws UnsupportedOperationException;
@@ -180,18 +159,14 @@ public abstract class TemplateElement<T>
      *
      * @param def       object to convert.
      * @param fieldType expected type of returned object.
-     *
      * @return converted object.
      */
     @SuppressWarnings("unchecked")
-    public T convertDefault(final Object def, final Class<?> fieldType)
-    {
-        if (def == null)
-        {
+    public T convertDefault(final Object def, final Class<?> fieldType) {
+        if (def == null) {
             return null;
         }
-        if (DioriteReflectionUtils.getWrapperClass(fieldType).isAssignableFrom(def.getClass()))
-        {
+        if (DioriteReflectionUtils.getWrapperClass(fieldType).isAssignableFrom(def.getClass())) {
             return (T) def;
         }
         return this.convertDefault0(def, fieldType);
@@ -208,25 +183,19 @@ public abstract class TemplateElement<T>
      * @param addComments        if comments should be added to node.
      * @param elementPlace       element place, used in many templates to check current style and choose valid format.
      * @param forceDefaultValues if true, all values will be set to default ones.
-     *
      * @throws IOException from {@link Appendable}
      */
-    public void write(final Appendable writer, final ConfigField field, final Object object, final ReflectGetter<?> invoker, final int level, final boolean addComments, final ElementPlace elementPlace, final boolean forceDefaultValues) throws IOException
-    {
+    public void write(final Appendable writer, final ConfigField field, final Object object, final ReflectGetter<?> invoker, final int level, final boolean addComments, final ElementPlace elementPlace, final boolean forceDefaultValues) throws IOException {
         Object element = invoker.get(object);
-        if ((forceDefaultValues || (element == null)) && field.hasDefaultValue())
-        {
+        if ((forceDefaultValues || (element == null)) && field.hasDefaultValue()) {
             final Object def = field.getDefaultValue();
-            if (def != null)
-            {
+            if (def != null) {
                 element = def;
             }
         }
-        if (element != null)
-        {
+        if (element != null) {
 //            writer.append('\n');
-            if (addComments && (field.getHeader() != null))
-            {
+            if (addComments && (field.getHeader() != null)) {
                 Template.appendComment(writer, field.getHeader(), level, false);
                 writer.append('\n');
             }
@@ -235,14 +204,10 @@ public abstract class TemplateElement<T>
             writer.append(": ");
             this.appendValue(writer, field, object, this.validateType(element), level, elementPlace);
 
-            if (addComments && (field.getFooter() != null))
-            {
-                if (field.getOption(FieldOptions.OTHERS_FOOTER_NO_NEW_LINE, false))
-                {
+            if (addComments && (field.getFooter() != null)) {
+                if (field.getOption(FieldOptions.OTHERS_FOOTER_NO_NEW_LINE, false)) {
                     Template.appendComment(writer, field.getFooter(), level, true);
-                }
-                else
-                {
+                } else {
 //                    writer.append('\n');
                     Template.appendComment(writer, field.getFooter(), level, false);
                 }
@@ -261,15 +226,11 @@ public abstract class TemplateElement<T>
      * @param level        current indent level.
      * @param addComments  if comments should be added to node.
      * @param elementPlace element place, used in many templates to check current style and choose valid format.
-     *
      * @throws IOException from {@link Appendable}
      */
-    public void writeValue(final Appendable writer, final CfgEntryData field, final Object object, final Object element, final int level, final boolean addComments, final ElementPlace elementPlace) throws IOException
-    {
-        if (element != null)
-        {
-            if (addComments && (field.getHeader() != null) && (elementPlace == ElementPlace.NORMAL))
-            {
+    public void writeValue(final Appendable writer, final CfgEntryData field, final Object object, final Object element, final int level, final boolean addComments, final ElementPlace elementPlace) throws IOException {
+        if (element != null) {
+            if (addComments && (field.getHeader() != null) && (elementPlace == ElementPlace.NORMAL)) {
                 Template.appendComment(writer, field.getHeader(), level, false);
 //                writer.append('\n');
             }
@@ -280,8 +241,7 @@ public abstract class TemplateElement<T>
 //            {
 //               writer.append('\n');
 //            }
-            if (addComments && (field.getFooter() != null))
-            {
+            if (addComments && (field.getFooter() != null)) {
                 Template.appendComment(writer, field.getFooter(), level, false);
 //                writer.append('\n');
             }
@@ -297,15 +257,12 @@ public abstract class TemplateElement<T>
      * @param element      element to write/represent.
      * @param level        current indent level.
      * @param elementPlace element place, used in many templates to check current style and choose valid format.
-     *
      * @throws IOException from {@link Appendable}
      */
     public abstract void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object element, final int level, final ElementPlace elementPlace) throws IOException;
 
-    public T validateType(final Object obj)
-    {
-        if (this.fieldType.isAssignableFrom(obj.getClass()))
-        {
+    public T validateType(final Object obj) {
+        if (this.fieldType.isAssignableFrom(obj.getClass())) {
             //noinspection unchecked
             return (T) obj;
         }
@@ -318,11 +275,9 @@ public abstract class TemplateElement<T>
      * @param writer  {@link Appendable} to use, all data will be added here.
      * @param level   current indent level.
      * @param element text to append.
-     *
      * @throws IOException from {@link Appendable}
      */
-    protected static void appendElement(final Appendable writer, final int level, final CharSequence element) throws IOException
-    {
+    protected static void appendElement(final Appendable writer, final int level, final CharSequence element) throws IOException {
         spaces(writer, level);
         writer.append(element);
     }
@@ -332,17 +287,13 @@ public abstract class TemplateElement<T>
      *
      * @param writer {@link Appendable} to use, all data will be added here.
      * @param level  current indent level.
-     *
      * @throws IOException from {@link Appendable}
      */
-    protected static void spaces(final Appendable writer, final int level) throws IOException
-    {
-        if (level <= 0)
-        {
+    protected static void spaces(final Appendable writer, final int level) throws IOException {
+        if (level <= 0) {
             return;
         }
-        for (int i = 0; i < level; i++)
-        {
+        for (int i = 0; i < level; i++) {
             writer.append("  ");
         }
     }
@@ -350,8 +301,7 @@ public abstract class TemplateElement<T>
     /**
      * Enum with possible element places.
      */
-    public enum ElementPlace
-    {
+    public enum ElementPlace {
         /**
          * Normal key: value part of yaml.
          * <br>
@@ -379,8 +329,7 @@ public abstract class TemplateElement<T>
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("fieldType", this.fieldType).toString();
     }
 }

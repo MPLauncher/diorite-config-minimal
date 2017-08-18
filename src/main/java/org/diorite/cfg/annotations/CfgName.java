@@ -36,8 +36,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CfgName
-{
+public @interface CfgName {
     /**
      * @return new name of field used in yaml file.
      */

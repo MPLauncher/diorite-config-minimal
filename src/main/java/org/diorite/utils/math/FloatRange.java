@@ -24,17 +24,16 @@
 
 package org.diorite.utils.math;
 
-import java.util.Random;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Random;
+
 /**
  * Class defining range in floats, may be used to validate numbers.
  */
-public class FloatRange
-{
+public class FloatRange {
     /**
      * Range from 0 to 0.
      */
@@ -49,8 +48,7 @@ public class FloatRange
      * @param min min value of range.
      * @param max max value of range.
      */
-    public FloatRange(final float min, final float max)
-    {
+    public FloatRange(final float min, final float max) {
         this.min = min;
         this.max = max;
     }
@@ -61,32 +59,28 @@ public class FloatRange
      * @param min min value of range.
      * @param max max value of range.
      */
-    public FloatRange(final double min, final double max)
-    {
+    public FloatRange(final double min, final double max) {
         this((float) min, (float) max);
     }
 
     /**
      * @return min value in range.
      */
-    public float getMin()
-    {
+    public float getMin() {
         return this.min;
     }
 
     /**
      * @return max value in range.
      */
-    public float getMax()
-    {
+    public float getMax() {
         return this.max;
     }
 
     /**
      * @return random value in range.
      */
-    public float getRandom()
-    {
+    public float getRandom() {
         return DioriteRandomUtils.getRandomFloat(this.min, this.max);
     }
 
@@ -94,19 +88,16 @@ public class FloatRange
      * Returns random value in range.
      *
      * @param random random instance to use.
-     *
      * @return random value in range.
      */
-    public float getRandom(final Random random)
-    {
+    public float getRandom(final Random random) {
         return DioriteRandomUtils.getRandomFloat(random, this.min, this.max);
     }
 
     /**
      * @return size of range. (max - min)
      */
-    public double size()
-    {
+    public double size() {
         return ((double) this.max - (double) this.min);
     }
 
@@ -114,11 +105,9 @@ public class FloatRange
      * Check if given number is in range.
      *
      * @param i number to check.
-     *
      * @return true if it is in range
      */
-    public boolean isIn(final float i)
-    {
+    public boolean isIn(final float i) {
         return (i >= this.min) && (i <= this.max);
     }
 
@@ -126,11 +115,9 @@ public class FloatRange
      * Check if given number is in range.
      *
      * @param i number to check.
-     *
      * @return true if it is in range
      */
-    public boolean isIn(final double i)
-    {
+    public boolean isIn(final double i) {
         return (i >= this.min) && (i <= this.max);
     }
 
@@ -141,17 +128,13 @@ public class FloatRange
      * {@code else -> i}
      *
      * @param i number to validate.
-     *
      * @return closest number in range.
      */
-    public double getIn(final float i)
-    {
-        if (i > this.max)
-        {
+    public double getIn(final float i) {
+        if (i > this.max) {
             return this.max;
         }
-        if (i < this.min)
-        {
+        if (i < this.min) {
             return this.min;
         }
         return i;
@@ -165,13 +148,10 @@ public class FloatRange
      *
      * @param i   number to validate.
      * @param def default value.
-     *
      * @return given number or default value.
      */
-    public double getIn(final float i, final float def)
-    {
-        if (! this.isIn(i))
-        {
+    public double getIn(final float i, final float def) {
+        if (!this.isIn(i)) {
             return def;
         }
         return i;
@@ -185,13 +165,10 @@ public class FloatRange
      *
      * @param i   number to validate.
      * @param def default value.
-     *
      * @return given number or default value.
      */
-    public double getIn(final float i, final double def)
-    {
-        if (! this.isIn(i))
-        {
+    public double getIn(final float i, final double def) {
+        if (!this.isIn(i)) {
             return def;
         }
         return i;
@@ -204,17 +181,13 @@ public class FloatRange
      * {@code else -> i}
      *
      * @param i number to validate.
-     *
      * @return closest number in range.
      */
-    public float getIn(final double i)
-    {
-        if (i > this.max)
-        {
+    public float getIn(final double i) {
+        if (i > this.max) {
             return this.max;
         }
-        if (i < this.min)
-        {
+        if (i < this.min) {
             return this.min;
         }
         return (float) i;
@@ -228,35 +201,28 @@ public class FloatRange
      *
      * @param i   number to validate.
      * @param def default value.
-     *
      * @return closest number in range.
      */
-    public float getIn(final double i, final double def)
-    {
-        if (! this.isIn(i))
-        {
+    public float getIn(final double i, final double def) {
+        if (!this.isIn(i)) {
             return (float) def;
         }
         return (float) i;
     }
 
     @Override
-    public int hashCode()
-    {
-        int result = ((this.min != + 0.0f) ? Float.floatToIntBits(this.min) : 0);
-        result = (31 * result) + ((this.max != + 0.0f) ? Float.floatToIntBits(this.max) : 0);
+    public int hashCode() {
+        int result = ((this.min != +0.0f) ? Float.floatToIntBits(this.min) : 0);
+        result = (31 * result) + ((this.max != +0.0f) ? Float.floatToIntBits(this.max) : 0);
         return result;
     }
 
     @Override
-    public boolean equals(final Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (! (o instanceof FloatRange))
-        {
+        if (!(o instanceof FloatRange)) {
             return false;
         }
 
@@ -267,8 +233,7 @@ public class FloatRange
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("min", this.min).append("max", this.max).toString();
     }
 
@@ -276,11 +241,9 @@ public class FloatRange
      * Create range with only gived value in range.
      *
      * @param num min and max of range.
-     *
      * @return range with only one value in range.
      */
-    public static FloatRange fixed(final float num)
-    {
+    public static FloatRange fixed(final float num) {
         return new FloatRange(num, num);
     }
 
@@ -288,11 +251,9 @@ public class FloatRange
      * Create range with only gived value in range.
      *
      * @param num min and max of range.
-     *
      * @return range with only one value in range.
      */
-    public static FloatRange fixed(final double num)
-    {
+    public static FloatRange fixed(final double num) {
         return new FloatRange(num, num);
     }
 
@@ -301,38 +262,30 @@ public class FloatRange
      * " - ", " : ", " ; ", ", ", " ", ",", ";", ":", "-"
      *
      * @param string string to parse.
-     *
      * @return parsed range or null.
      */
-    public static FloatRange valueOf(String string)
-    {
-        if (string.isEmpty())
-        {
+    public static FloatRange valueOf(String string) {
+        if (string.isEmpty()) {
             return null;
         }
         String[] nums = null;
         int i = 0;
         final boolean firstMinus = string.charAt(0) == '-';
-        if (firstMinus)
-        {
+        if (firstMinus) {
             string = string.substring(1);
         }
-        while ((i < ByteRange.SPLITS.length) && ((nums == null) || (nums.length != 2)))
-        {
+        while ((i < ByteRange.SPLITS.length) && ((nums == null) || (nums.length != 2))) {
             nums = StringUtils.splitByWholeSeparator(string, ByteRange.SPLITS[i++], 2);
         }
-        if ((nums == null) || (nums.length != 2))
-        {
+        if ((nums == null) || (nums.length != 2)) {
             return null;
         }
         final Float min = DioriteMathUtils.asFloat(firstMinus ? ("-" + nums[0]) : nums[0]);
-        if (min == null)
-        {
+        if (min == null) {
             return null;
         }
         final Float max = DioriteMathUtils.asFloat(nums[1]);
-        if ((max == null) || (min > max))
-        {
+        if ((max == null) || (min > max)) {
             return null;
         }
         return new FloatRange(min, max);

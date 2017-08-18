@@ -24,11 +24,10 @@
 
 package org.diorite.utils.lazy;
 
-import java.util.Collection;
-
 import org.apache.commons.lang3.Validate;
-
 import org.diorite.utils.function.supplier.ByteSupplier;
+
+import java.util.Collection;
 
 /**
  * Class to represent lazy init byte values that use {@link ByteSupplier} passed in constructor to initialize value in {@link #init()} method. <br>
@@ -37,8 +36,7 @@ import org.diorite.utils.function.supplier.ByteSupplier;
  * @see ByteLazyValueAbstract
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class ByteLazyValue extends ByteLazyValueAbstract
-{
+public class ByteLazyValue extends ByteLazyValueAbstract {
     /**
      * supplier used by {@link #init()} method.
      */
@@ -49,8 +47,7 @@ public class ByteLazyValue extends ByteLazyValueAbstract
      *
      * @param supplier supplier used to initialize value in {@link #init()} method.
      */
-    public ByteLazyValue(final ByteSupplier supplier)
-    {
+    public ByteLazyValue(final ByteSupplier supplier) {
         Validate.notNull(supplier, "supplier can't be null!");
         this.supplier = supplier;
     }
@@ -61,15 +58,13 @@ public class ByteLazyValue extends ByteLazyValueAbstract
      * @param collection created instance will be added to this list.
      * @param supplier   supplier used to initialize value in {@link #init()} method.
      */
-    public ByteLazyValue(final Collection<? super ByteLazyValue> collection, final ByteSupplier supplier)
-    {
+    public ByteLazyValue(final Collection<? super ByteLazyValue> collection, final ByteSupplier supplier) {
         this.supplier = supplier;
         collection.add(this);
     }
 
     @Override
-    protected byte init()
-    {
+    protected byte init() {
         return this.supplier.getAsByte();
     }
 }

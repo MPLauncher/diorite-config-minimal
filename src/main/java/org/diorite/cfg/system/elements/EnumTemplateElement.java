@@ -24,9 +24,9 @@
 
 package org.diorite.cfg.system.elements;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
+
+import java.io.IOException;
 
 /**
  * Template handler for all enum based objects.
@@ -34,8 +34,7 @@ import org.diorite.cfg.system.CfgEntryData;
  * @see Enum
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class EnumTemplateElement extends TemplateElement<Enum>
-{
+public class EnumTemplateElement extends TemplateElement<Enum> {
     /**
      * Instance of template to direct-use.
      */
@@ -44,36 +43,30 @@ public class EnumTemplateElement extends TemplateElement<Enum>
     /**
      * Construct new default template handler.
      */
-    public EnumTemplateElement()
-    {
+    public EnumTemplateElement() {
         super(Enum.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return false;
     }
 
     @Override
-    protected Enum convertObject0(final Object obj) throws UnsupportedOperationException
-    {
+    protected Enum convertObject0(final Object obj) throws UnsupportedOperationException {
         throw this.getException(obj);
     }
 
     @Override
-    protected Enum convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof String)
-        {
+    protected Enum convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof String) {
             return Enum.valueOf((Class<Enum>) fieldType, obj.toString());
         }
         throw this.getException(obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final Enum element = (elementRaw instanceof Enum) ? ((Enum) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.name()), level, elementPlace);
     }

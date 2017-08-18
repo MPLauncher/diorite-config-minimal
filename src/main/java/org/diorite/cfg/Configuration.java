@@ -24,17 +24,15 @@
 
 package org.diorite.cfg;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.diorite.cfg.system.Template;
 import org.diorite.cfg.system.TemplateCreator;
 import org.diorite.utils.DioriteUtils;
 
-public final class Configuration
-{
-    private Configuration()
-    {
+import java.io.File;
+import java.io.IOException;
+
+public final class Configuration {
+    private Configuration() {
     }
 
     /**
@@ -44,25 +42,18 @@ public final class Configuration
      * @param clazz    class of config.
      * @param defaults default values.
      * @param <T>      type of config class.
-     *
      * @return loaded config class.
-     *
      * @throws IOException if any file operation throw it.
      */
-    public static <T> T loadConfigFile(final File f, final Class<T> clazz, final T defaults) throws IOException
-    {
+    public static <T> T loadConfigFile(final File f, final Class<T> clazz, final T defaults) throws IOException {
         T result;
         final Template<T> cfgTemp = TemplateCreator.getTemplate(clazz);
-        if (f.exists())
-        {
+        if (f.exists()) {
             result = cfgTemp.load(f);
-            if ((result == null) && (defaults != null))
-            {
+            if ((result == null) && (defaults != null)) {
                 result = cfgTemp.fillDefaults(defaults);
             }
-        }
-        else
-        {
+        } else {
             result = cfgTemp.fillDefaults(defaults);
 
             DioriteUtils.createFile(f);
@@ -77,25 +68,18 @@ public final class Configuration
      * @param f     file to use.
      * @param clazz class of config.
      * @param <T>   type of config class.
-     *
      * @return loaded config class.
-     *
      * @throws IOException if any file operation throw it.
      */
-    public static <T> T loadConfigFile(final File f, final Class<T> clazz) throws IOException
-    {
+    public static <T> T loadConfigFile(final File f, final Class<T> clazz) throws IOException {
         T result;
         final Template<T> cfgTemp = TemplateCreator.getTemplate(clazz);
-        if (f.exists())
-        {
+        if (f.exists()) {
             result = cfgTemp.load(f);
-            if (result == null)
-            {
+            if (result == null) {
                 result = cfgTemp.fillDefaults(null);
             }
-        }
-        else
-        {
+        } else {
             result = cfgTemp.fillDefaults(null);
 
             DioriteUtils.createFile(f);
@@ -111,14 +95,11 @@ public final class Configuration
      * @param clazz  class of config.
      * @param object config object to save.
      * @param <T>    type of config class.
-     *
      * @throws IOException if any file operation throw it.
      */
-    public static <T> void saveConfigFile(final File f, final Class<T> clazz, final T object) throws IOException
-    {
+    public static <T> void saveConfigFile(final File f, final Class<T> clazz, final T object) throws IOException {
         final Template<T> cfgTemp = TemplateCreator.getTemplate(clazz);
-        if (! f.exists())
-        {
+        if (!f.exists()) {
             DioriteUtils.createFile(f);
         }
         cfgTemp.dump(f, object, false);

@@ -32,8 +32,7 @@ import java.util.function.Predicate;
  * @param <T> type of validator.
  */
 @FunctionalInterface
-public interface Validator<T> extends Predicate<T>
-{
+public interface Validator<T> extends Predicate<T> {
     /**
      * Validate given object using this validator, method may throw exception on retun false if validation will fail.
      * <br>
@@ -41,21 +40,16 @@ public interface Validator<T> extends Predicate<T>
      * it may affect performace.
      *
      * @param object object to validate.
-     *
      * @return true if object is valid for this validator.
-     *
      * @throws RuntimeException if object isn't valid and validator is set to throw error on invalid objects.
      */
     boolean validate(T object) throws RuntimeException;
 
     @Override
-    default boolean test(final T t)
-    {
-        try
-        {
+    default boolean test(final T t) {
+        try {
             return this.validate(t);
-        } catch (final RuntimeException exception)
-        {
+        } catch (final RuntimeException exception) {
             return false;
         }
     }
@@ -65,12 +59,10 @@ public interface Validator<T> extends Predicate<T>
      *
      * @param validators validators to be used.
      * @param <T>        type of validator.
-     *
      * @return created validator.
      */
     @SafeVarargs
-    static <T> Validator<T> create(final Validator<T>... validators)
-    {
+    static <T> Validator<T> create(final Validator<T>... validators) {
         return new SimpleValidator<>(validators);
     }
 }

@@ -24,70 +24,16 @@
 
 package org.diorite.cfg.system;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.LinkedTransferQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.function.Supplier;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
 import org.diorite.cfg.ConfigTranslation;
 import org.diorite.cfg.annotations.CfgName;
 import org.diorite.cfg.annotations.CfgPriority;
-import org.diorite.cfg.annotations.defaults.CfgBooleanArrayDefault;
-import org.diorite.cfg.annotations.defaults.CfgBooleanDefault;
-import org.diorite.cfg.annotations.defaults.CfgByteArrayDefault;
-import org.diorite.cfg.annotations.defaults.CfgByteDefault;
-import org.diorite.cfg.annotations.defaults.CfgCharArrayDefault;
-import org.diorite.cfg.annotations.defaults.CfgCharDefault;
-import org.diorite.cfg.annotations.defaults.CfgCustomDefault;
-import org.diorite.cfg.annotations.defaults.CfgDelegateDefault;
-import org.diorite.cfg.annotations.defaults.CfgDoubleArrayDefault;
-import org.diorite.cfg.annotations.defaults.CfgDoubleDefault;
-import org.diorite.cfg.annotations.defaults.CfgFloatArrayDefault;
-import org.diorite.cfg.annotations.defaults.CfgFloatDefault;
-import org.diorite.cfg.annotations.defaults.CfgIntArrayDefault;
-import org.diorite.cfg.annotations.defaults.CfgIntDefault;
-import org.diorite.cfg.annotations.defaults.CfgLongArrayDefault;
-import org.diorite.cfg.annotations.defaults.CfgLongDefault;
-import org.diorite.cfg.annotations.defaults.CfgShortArrayDefault;
-import org.diorite.cfg.annotations.defaults.CfgShortDefault;
-import org.diorite.cfg.annotations.defaults.CfgStringArrayDefault;
-import org.diorite.cfg.annotations.defaults.CfgStringDefault;
+import org.diorite.cfg.annotations.defaults.*;
 import org.diorite.cfg.system.elements.TemplateElement;
 import org.diorite.cfg.system.elements.TemplateElements;
 import org.diorite.utils.collections.comparators.AlphanumComparator;
-import org.diorite.utils.collections.maps.ByValueSortingConcurrentSkipListMap;
-import org.diorite.utils.collections.maps.ByValueSortingTreeMap;
-import org.diorite.utils.collections.maps.CaseInsensitiveMap;
-import org.diorite.utils.collections.maps.ConcurrentIdentityHashMap;
-import org.diorite.utils.collections.maps.SimpleEnumMap;
+import org.diorite.utils.collections.maps.*;
 import org.diorite.utils.collections.sets.CaseInsensitiveHashSet;
 import org.diorite.utils.collections.sets.ConcurrentSet;
 import org.diorite.utils.math.DioriteRandomUtils;
@@ -96,13 +42,19 @@ import org.diorite.utils.reflections.DioriteReflectionUtils;
 import org.diorite.utils.reflections.MethodInvoker;
 import org.diorite.utils.reflections.ReflectGetter;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
+
 /**
  * Main implementation of {@link CfgEntryData} contains all information
  * about config field.
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class ConfigField implements Comparable<ConfigField>, CfgEntryData
-{
+public class ConfigField implements Comparable<ConfigField>, CfgEntryData {
     private static final Map<String, Supplier<Object>> basicDelegates = new CaseInsensitiveMap<>(20);
 
     /**
@@ -112,8 +64,7 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
      * @param key      supplier name/key.
      * @param supplier supplier of value.
      */
-    public static void registerBasicDelegate(final String key, final Supplier<Object> supplier)
-    {
+    public static void registerBasicDelegate(final String key, final Supplier<Object> supplier) {
         basicDelegates.put(key, supplier);
     }
 
@@ -121,16 +72,13 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
      * Get supplier of default value by key/name. (used by {@link CfgDelegateDefault})
      *
      * @param key key/name of default value supplier.
-     *
      * @return supplier of default value or null.
      */
-    public static Supplier<Object> getBasicDelegate(final String key)
-    {
+    public static Supplier<Object> getBasicDelegate(final String key) {
         return basicDelegates.get(key);
     }
 
-    static
-    {
+    static {
         registerBasicDelegate("{ByValueSortingConcurrentSkipListMap}", ByValueSortingConcurrentSkipListMap::new);
         registerBasicDelegate("{ConcurrentIdentityHashMap}", () -> new ConcurrentIdentityHashMap<>(16));
         registerBasicDelegate("{CaseInsensitiveHashSet}", () -> new CaseInsensitiveHashSet(16));
@@ -167,12 +115,12 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
 
     private static final Pattern VALID_JAVA_NAME = Pattern.compile("[^a-zA-Z0-9_]");
 
-    private final Field            field;
-    private final int              index;
-    private final String           name;
-    private final String           header;
-    private final String           footer;
-    private final int              priority;
+    private final Field field;
+    private final int index;
+    private final String name;
+    private final String header;
+    private final String footer;
+    private final int priority;
     private final Supplier<Object> def;
     private final Map<FieldOptions, Object> options = new HashMap<>(3);
     private MethodInvoker invoker;
@@ -183,8 +131,7 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
      * @param field source field.
      * @param index index of field in class. Used to set priority of field.
      */
-    public ConfigField(final Field field, final int index, final ConfigTranslation translation)
-    {
+    public ConfigField(final Field field, final int index, final ConfigTranslation translation) {
         this.field = field;
         {
             getAllPossibleTypes(field).forEach(TemplateCreator::checkTemplate);
@@ -200,13 +147,11 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
         }
         {
             final CfgPriority annotation = field.getAnnotation(CfgPriority.class);
-            this.priority = (annotation != null) ? (annotation.value() * - 1) : index;
+            this.priority = (annotation != null) ? (annotation.value() * -1) : index;
         }
 
-        for (final FieldOptions option : FieldOptions.values())
-        {
-            if (! option.contains(field))
-            {
+        for (final FieldOptions option : FieldOptions.values()) {
+            if (!option.contains(field)) {
                 continue;
             }
             this.options.put(option, option.get(this, field));
@@ -218,64 +163,56 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
         {
             {
                 final CfgBooleanDefault annotation = field.getAnnotation(CfgBooleanDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgBooleanArrayDefault annotation = field.getAnnotation(CfgBooleanArrayDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgByteDefault annotation = field.getAnnotation(CfgByteDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgShortDefault annotation = field.getAnnotation(CfgShortDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgIntDefault annotation = field.getAnnotation(CfgIntDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgLongDefault annotation = field.getAnnotation(CfgLongDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgFloatDefault annotation = field.getAnnotation(CfgFloatDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgDoubleDefault annotation = field.getAnnotation(CfgDoubleDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
@@ -283,91 +220,78 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
 
             {
                 final CfgByteArrayDefault annotation = field.getAnnotation(CfgByteArrayDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgCharDefault annotation = field.getAnnotation(CfgCharDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgCharArrayDefault annotation = field.getAnnotation(CfgCharArrayDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgShortArrayDefault annotation = field.getAnnotation(CfgShortArrayDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgIntArrayDefault annotation = field.getAnnotation(CfgIntArrayDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgLongArrayDefault annotation = field.getAnnotation(CfgLongArrayDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgFloatArrayDefault annotation = field.getAnnotation(CfgFloatArrayDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgDoubleArrayDefault annotation = field.getAnnotation(CfgDoubleArrayDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgStringDefault annotation = field.getAnnotation(CfgStringDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
             {
                 final CfgStringArrayDefault annotation = field.getAnnotation(CfgStringArrayDefault.class);
-                if (annotation != null)
-                {
+                if (annotation != null) {
                     def = annotation::value;
                     break annotation;
                 }
             }
 
-            if (type.isEnum())
-            {
-                for (final Annotation a : field.getAnnotations())
-                {
-                    if (a.annotationType().isAnnotationPresent(CfgCustomDefault.class))
-                    {
+            if (type.isEnum()) {
+                for (final Annotation a : field.getAnnotations()) {
+                    if (a.annotationType().isAnnotationPresent(CfgCustomDefault.class)) {
                         final Annotation annotation = field.getAnnotation(a.annotationType());
                         this.invoker = DioriteReflectionUtils.getMethod(annotation.getClass(), "value");
                         def = () -> this.invoker.invoke(annotation);
@@ -377,61 +301,44 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
             }
         }
         final CfgDelegateDefault annotation = field.getAnnotation(CfgDelegateDefault.class);
-        if (annotation != null)
-        {
+        if (annotation != null) {
             final String path = annotation.value();
             final Supplier<Object> basicDelegate = getBasicDelegate(path);
-            if (basicDelegate != null)
-            {
+            if (basicDelegate != null) {
                 def = basicDelegate;
-            }
-            else if (path.equalsIgnoreCase("{new}"))
-            {
+            } else if (path.equalsIgnoreCase("{new}")) {
                 final ConstructorInvoker constructor = DioriteReflectionUtils.getConstructor(field.getType());
                 def = constructor::invoke;
-            }
-            else
-            {
+            } else {
                 final int sepIndex = path.indexOf("::");
                 final Class<?> clazz;
                 final String methodName;
-                if (sepIndex == - 1)
-                {
+                if (sepIndex == -1) {
                     clazz = field.getDeclaringClass();
                     methodName = path;
-                }
-                else
-                {
-                    try
-                    {
+                } else {
+                    try {
                         Class<?> tmpClass = DioriteReflectionUtils.tryGetCanonicalClass(path.substring(0, sepIndex));
-                        if (tmpClass == null)
-                        {
+                        if (tmpClass == null) {
                             tmpClass = DioriteReflectionUtils.tryGetCanonicalClass(field.getDeclaringClass().getPackage().getName() + "." + path.substring(0, sepIndex));
-                            if (tmpClass == null)
-                            {
+                            if (tmpClass == null) {
                                 tmpClass = DioriteReflectionUtils.getNestedClass(field.getDeclaringClass(), path.substring(0, sepIndex));
                             }
                         }
                         clazz = tmpClass;
-                    } catch (final Exception e)
-                    {
+                    } catch (final Exception e) {
                         throw new RuntimeException("Can't find class for: " + path, e);
                     }
                     methodName = path.substring(sepIndex + 2);
                 }
-                if (clazz == null)
-                {
+                if (clazz == null) {
                     throw new RuntimeException("Can't find class for delegate: " + path);
                 }
                 final MethodInvoker methodInvoker = DioriteReflectionUtils.getMethod(clazz, methodName, false);
-                if (methodInvoker == null)
-                {
+                if (methodInvoker == null) {
                     final ReflectGetter<Object> reflectGetter = DioriteReflectionUtils.getReflectGetter(methodName, clazz);
                     def = () -> reflectGetter.get(null);
-                }
-                else
-                {
+                } else {
                     def = () -> methodInvoker.invoke(null);
                 }
             }
@@ -439,54 +346,42 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
         this.def = def;
     }
 
-    public static void getAllPossibleTypes(final Set<Class<?>> classes, final Set<Type> checkedTypes, final Type rawType)
-    {
-        if (! checkedTypes.add(rawType))
-        {
+    public static void getAllPossibleTypes(final Set<Class<?>> classes, final Set<Type> checkedTypes, final Type rawType) {
+        if (!checkedTypes.add(rawType)) {
             return;
         }
-        if (rawType instanceof Class)
-        {
+        if (rawType instanceof Class) {
             classes.add((Class<?>) rawType);
         }
-        if (rawType instanceof WildcardType)
-        {
+        if (rawType instanceof WildcardType) {
             final WildcardType type = (WildcardType) rawType;
-            for (final Type t : type.getLowerBounds())
-            {
+            for (final Type t : type.getLowerBounds()) {
                 getAllPossibleTypes(classes, checkedTypes, t);
             }
-            for (final Type t : type.getUpperBounds())
-            {
+            for (final Type t : type.getUpperBounds()) {
                 getAllPossibleTypes(classes, checkedTypes, t);
             }
         }
-        if (rawType instanceof GenericArrayType)
-        {
+        if (rawType instanceof GenericArrayType) {
             getAllPossibleTypes(classes, checkedTypes, ((GenericArrayType) rawType).getGenericComponentType());
         }
-        if (rawType instanceof TypeVariable)
-        {
+        if (rawType instanceof TypeVariable) {
             final TypeVariable<?> type = (TypeVariable<?>) rawType;
-            for (final Type t : type.getBounds())
-            {
+            for (final Type t : type.getBounds()) {
                 getAllPossibleTypes(classes, checkedTypes, t);
             }
         }
-        if (rawType instanceof ParameterizedType)
-        {
+        if (rawType instanceof ParameterizedType) {
             final ParameterizedType type = (ParameterizedType) rawType;
             getAllPossibleTypes(classes, checkedTypes, type.getRawType());
             getAllPossibleTypes(classes, checkedTypes, type.getOwnerType());
-            for (final Type t : type.getActualTypeArguments())
-            {
+            for (final Type t : type.getActualTypeArguments()) {
                 getAllPossibleTypes(classes, checkedTypes, t);
             }
         }
     }
 
-    public static Set<Class<?>> getAllPossibleTypes(final Field field)
-    {
+    public static Set<Class<?>> getAllPossibleTypes(final Field field) {
         final Set<Class<?>> classes = new HashSet<>(1);
         classes.add(field.getType());
         getAllPossibleTypes(classes, new HashSet<>(5), field.getGenericType());
@@ -495,15 +390,13 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
 
 
     @Override
-    public <T> T getOption(final FieldOptions option)
-    {
+    public <T> T getOption(final FieldOptions option) {
         //noinspection unchecked
         return (T) this.options.get(option);
     }
 
     @Override
-    public <T> T getOption(final FieldOptions option, final T def)
-    {
+    public <T> T getOption(final FieldOptions option, final T def) {
         //noinspection unchecked
         return (T) this.options.getOrDefault(option, def);
     }
@@ -511,36 +404,31 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
     /**
      * @return java source field of this config field.
      */
-    public Field getField()
-    {
+    public Field getField() {
         return this.field;
     }
 
     /**
      * @return name of config field.
      */
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
     @Override
-    public String getHeader()
-    {
+    public String getHeader() {
         return this.header;
     }
 
     @Override
-    public String getFooter()
-    {
+    public String getFooter() {
         return this.footer;
     }
 
     /**
      * @return index of field from class file.
      */
-    public int getIndex()
-    {
+    public int getIndex() {
         return this.index;
     }
 
@@ -549,26 +437,22 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
      *
      * @return priority of config field.
      */
-    public int getPriority()
-    {
+    public int getPriority() {
         return this.priority;
     }
 
     /**
      * @return true if field have default value.
      */
-    public boolean hasDefaultValue()
-    {
+    public boolean hasDefaultValue() {
         return this.def != null;
     }
 
     /**
      * @return default value of field or null.
      */
-    public Object getDefaultValue()
-    {
-        if (this.def == null)
-        {
+    public Object getDefaultValue() {
+        if (this.def == null) {
             return null;
         }
         final TemplateElement<?> templateElement = TemplateElements.getElement(this);
@@ -576,23 +460,19 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
     }
 
     @Override
-    public boolean equals(final Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (! (o instanceof ConfigField))
-        {
+        if (!(o instanceof ConfigField)) {
             return false;
         }
         final ConfigField that = (ConfigField) o;
-        return (this.priority == that.priority) && this.field.equals(that.field) && this.name.equals(that.name) && ! ((this.header != null) ? ! this.header.equals(that.header) : (that.header != null)) && ! ((this.footer != null) ? ! this.footer.equals(that.footer) : (that.footer != null));
+        return (this.priority == that.priority) && this.field.equals(that.field) && this.name.equals(that.name) && !((this.header != null) ? !this.header.equals(that.header) : (that.header != null)) && !((this.footer != null) ? !this.footer.equals(that.footer) : (that.footer != null));
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = this.field.hashCode();
         result = (31 * result) + this.name.hashCode();
         result = (31 * result) + ((this.header != null) ? this.header.hashCode() : 0);
@@ -602,19 +482,16 @@ public class ConfigField implements Comparable<ConfigField>, CfgEntryData
     }
 
     @Override
-    public int compareTo(final ConfigField o)
-    {
+    public int compareTo(final ConfigField o) {
         final int weight = Integer.compare(this.priority, o.priority);
-        if (weight != 0)
-        {
+        if (weight != 0) {
             return weight;
         }
         return AlphanumComparator.compareStatic(this.name, o.name);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("field", this.field).append("name", this.name).append("header", this.header).append("footer", this.footer).append("priority", this.priority).toString();
     }
 

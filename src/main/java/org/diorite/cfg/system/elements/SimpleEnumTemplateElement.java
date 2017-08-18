@@ -24,11 +24,11 @@
 
 package org.diorite.cfg.system.elements;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.utils.SimpleEnum;
 import org.diorite.utils.math.DioriteMathUtils;
+
+import java.io.IOException;
 
 /**
  * Template handler for all sime enum based objects.
@@ -36,8 +36,7 @@ import org.diorite.utils.math.DioriteMathUtils;
  * @see SimpleEnum
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class SimpleEnumTemplateElement extends TemplateElement<SimpleEnum>
-{
+public class SimpleEnumTemplateElement extends TemplateElement<SimpleEnum> {
     /**
      * Instance of template to direct-use.
      */
@@ -46,36 +45,30 @@ public class SimpleEnumTemplateElement extends TemplateElement<SimpleEnum>
     /**
      * Construct new default template handler.
      */
-    public SimpleEnumTemplateElement()
-    {
+    public SimpleEnumTemplateElement() {
         super(SimpleEnum.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return false;
     }
 
     @Override
-    protected SimpleEnum convertObject0(final Object obj) throws UnsupportedOperationException
-    {
+    protected SimpleEnum convertObject0(final Object obj) throws UnsupportedOperationException {
         throw this.getException(obj);
     }
 
     @Override
-    protected SimpleEnum convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof String)
-        {
-            return SimpleEnum.getSimpleEnumValueSafe(obj.toString(), DioriteMathUtils.asInt(obj.toString(), - 1), (Class<SimpleEnum>) fieldType);
+    protected SimpleEnum convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof String) {
+            return SimpleEnum.getSimpleEnumValueSafe(obj.toString(), DioriteMathUtils.asInt(obj.toString(), -1), (Class<SimpleEnum>) fieldType);
         }
         throw this.getException(obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final SimpleEnum element = (elementRaw instanceof SimpleEnum) ? ((SimpleEnum) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.name()), level, elementPlace);
 

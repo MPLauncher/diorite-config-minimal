@@ -24,18 +24,17 @@
 
 package org.diorite.utils.others;
 
-import java.util.UUID;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.UUID;
 
 /**
  * Represent UUID with name.
  */
-public class NamedUUID
-{
+public class NamedUUID {
     private final String name;
-    private final UUID   uuid;
+    private final UUID uuid;
 
     /**
      * Construct new named UUID with given name and uuid.
@@ -43,8 +42,7 @@ public class NamedUUID
      * @param name name of uuid.
      * @param uuid named uuid.
      */
-    public NamedUUID(final String name, final UUID uuid)
-    {
+    public NamedUUID(final String name, final UUID uuid) {
         this.name = name;
         this.uuid = uuid;
     }
@@ -54,8 +52,7 @@ public class NamedUUID
      *
      * @return name of this uuid.
      */
-    public String getName()
-    {
+    public String getName() {
         return this.name;
     }
 
@@ -64,20 +61,16 @@ public class NamedUUID
      *
      * @return uuid of this named uuid.
      */
-    public UUID getUuid()
-    {
+    public UUID getUuid() {
         return this.uuid;
     }
 
     @Override
-    public boolean equals(final Object o)
-    {
-        if (this == o)
-        {
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (! (o instanceof NamedUUID))
-        {
+        if (!(o instanceof NamedUUID)) {
             return false;
         }
 
@@ -87,16 +80,14 @@ public class NamedUUID
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result = (this.name != null) ? this.name.hashCode() : 0;
         result = (31 * result) + ((this.uuid != null) ? this.uuid.hashCode() : 0);
         return result;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("name", this.name).append("uuid", this.uuid).toString();
     }
 }

@@ -24,20 +24,19 @@
 
 package org.diorite.cfg.system.elements.math;
 
-import java.io.IOException;
-
 import org.diorite.cfg.system.CfgEntryData;
 import org.diorite.cfg.system.elements.StringTemplateElement;
 import org.diorite.cfg.system.elements.TemplateElement;
 import org.diorite.utils.math.ByteRange;
+
+import java.io.IOException;
 
 /**
  * Template handler for all byte range objects.
  *
  * @see ByteRange
  */
-public class ByteRangeTemplateElement extends TemplateElement<ByteRange>
-{
+public class ByteRangeTemplateElement extends TemplateElement<ByteRange> {
     /**
      * Instance of template to direct-use.
      */
@@ -46,62 +45,49 @@ public class ByteRangeTemplateElement extends TemplateElement<ByteRange>
     /**
      * Construct new default template handler.
      */
-    public ByteRangeTemplateElement()
-    {
+    public ByteRangeTemplateElement() {
         super(ByteRange.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return ByteRange.class.isAssignableFrom(c) || String.class.isAssignableFrom(c);
     }
 
     @Override
-    protected ByteRange convertObject0(final Object obj) throws UnsupportedOperationException
-    {
+    protected ByteRange convertObject0(final Object obj) throws UnsupportedOperationException {
         final ByteRange convert = this.convert(obj);
-        if (convert != null)
-        {
+        if (convert != null) {
             return convert;
         }
         throw this.getException(obj);
     }
 
-    private ByteRange convert(final Object obj)
-    {
-        if (obj instanceof String)
-        {
+    private ByteRange convert(final Object obj) {
+        if (obj instanceof String) {
             final ByteRange byteRange = ByteRange.valueOf((String) obj);
-            if (byteRange == null)
-            {
+            if (byteRange == null) {
                 throw this.getException(obj);
             }
             return byteRange;
         }
-        if (obj instanceof byte[])
-        {
+        if (obj instanceof byte[]) {
             final byte[] array = (byte[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new ByteRange(array[0], array[1]);
         }
-        if (obj instanceof short[])
-        {
+        if (obj instanceof short[]) {
             final short[] array = (short[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new ByteRange(array[0], array[1]);
         }
-        if (obj instanceof int[])
-        {
+        if (obj instanceof int[]) {
             final int[] array = (int[]) obj;
-            if ((array.length != 2) || (array[0] > array[1]))
-            {
+            if ((array.length != 2) || (array[0] > array[1])) {
                 throw this.getException(obj);
             }
             return new ByteRange(array[0], array[1]);
@@ -110,23 +96,19 @@ public class ByteRangeTemplateElement extends TemplateElement<ByteRange>
     }
 
     @Override
-    protected ByteRange convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof ByteRange)
-        {
+    protected ByteRange convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof ByteRange) {
             return (ByteRange) obj;
         }
         final ByteRange convert = this.convert(obj);
-        if (convert != null)
-        {
+        if (convert != null) {
             return convert;
         }
         throw this.getException(obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final ByteRange element = (elementRaw instanceof ByteRange) ? ((ByteRange) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.getMin() + ", " + element.getMax()), level, elementPlace);
     }

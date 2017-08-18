@@ -34,8 +34,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
-public @interface CfgFooterCommentsArray
-{
+public @interface CfgFooterCommentsArray {
     /**
      * @return all single comments annotations.
      */

@@ -24,11 +24,10 @@
 
 package org.diorite.utils.lazy;
 
-import java.util.Collection;
-
 import org.apache.commons.lang3.Validate;
-
 import org.diorite.utils.function.supplier.ShortSupplier;
+
+import java.util.Collection;
 
 /**
  * Class to represent lazy init byte values that use {@link ShortSupplier} passed in constructor to initialize value in {@link #init()} method. <br>
@@ -37,8 +36,7 @@ import org.diorite.utils.function.supplier.ShortSupplier;
  * @see ShortLazyValueAbstract
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class ShortLazyValue extends ShortLazyValueAbstract
-{
+public class ShortLazyValue extends ShortLazyValueAbstract {
     /**
      * supplier used by {@link #init()} method.
      */
@@ -49,8 +47,7 @@ public class ShortLazyValue extends ShortLazyValueAbstract
      *
      * @param supplier supplier used to initialize value in {@link #init()} method.
      */
-    public ShortLazyValue(final ShortSupplier supplier)
-    {
+    public ShortLazyValue(final ShortSupplier supplier) {
         Validate.notNull(supplier, "supplier can't be null!");
         this.supplier = supplier;
     }
@@ -61,15 +58,13 @@ public class ShortLazyValue extends ShortLazyValueAbstract
      * @param collection created instance will be added to this list.
      * @param supplier   supplier used to initialize value in {@link #init()} method.
      */
-    public ShortLazyValue(final Collection<? super ShortLazyValue> collection, final ShortSupplier supplier)
-    {
+    public ShortLazyValue(final Collection<? super ShortLazyValue> collection, final ShortSupplier supplier) {
         this.supplier = supplier;
         collection.add(this);
     }
 
     @Override
-    protected short init()
-    {
+    protected short init() {
         return this.supplier.getAsShort();
     }
 }

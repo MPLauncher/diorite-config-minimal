@@ -24,10 +24,10 @@
 
 package org.diorite.utils.lazy;
 
+import org.apache.commons.lang3.Validate;
+
 import java.util.Collection;
 import java.util.function.IntSupplier;
-
-import org.apache.commons.lang3.Validate;
 
 /**
  * Class to represent lazy init int values that use {@link IntSupplier} passed in constructor to initialize value in {@link #init()} method. <br>
@@ -36,8 +36,7 @@ import org.apache.commons.lang3.Validate;
  * @see IntLazyValueAbstract
  */
 @SuppressWarnings("ClassHasNoToStringMethod")
-public class IntLazyValue extends IntLazyValueAbstract
-{
+public class IntLazyValue extends IntLazyValueAbstract {
     /**
      * supplier used by {@link #init()} method.
      */
@@ -48,8 +47,7 @@ public class IntLazyValue extends IntLazyValueAbstract
      *
      * @param supplier supplier used to initialize value in {@link #init()} method.
      */
-    public IntLazyValue(final IntSupplier supplier)
-    {
+    public IntLazyValue(final IntSupplier supplier) {
         Validate.notNull(supplier, "supplier can't be null!");
         this.supplier = supplier;
     }
@@ -60,15 +58,13 @@ public class IntLazyValue extends IntLazyValueAbstract
      * @param collection created instance will be added to this list.
      * @param supplier   supplier used to initialize value in {@link #init()} method.
      */
-    public IntLazyValue(final Collection<? super IntLazyValue> collection, final IntSupplier supplier)
-    {
+    public IntLazyValue(final Collection<? super IntLazyValue> collection, final IntSupplier supplier) {
         this.supplier = supplier;
         collection.add(this);
     }
 
     @Override
-    protected int init()
-    {
+    protected int init() {
         return this.supplier.getAsInt();
     }
 }

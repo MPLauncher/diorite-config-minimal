@@ -35,8 +35,7 @@ import java.util.Objects;
  * @see java.util.function.Consumer
  */
 @FunctionalInterface
-public interface ByteConsumer
-{
+public interface ByteConsumer {
 
     /**
      * Performs this operation on the given argument.
@@ -53,14 +52,11 @@ public interface ByteConsumer
      * the {@code after} operation will not be performed.
      *
      * @param after the operation to perform after this operation
-     *
      * @return a composed {@code ByteConsumer} that performs in sequence this
      * operation followed by the {@code after} operation
-     *
      * @throws NullPointerException if {@code after} is null
      */
-    default ByteConsumer andThen(final ByteConsumer after)
-    {
+    default ByteConsumer andThen(final ByteConsumer after) {
         Objects.requireNonNull(after);
         return (byte t) -> {
             this.accept(t);

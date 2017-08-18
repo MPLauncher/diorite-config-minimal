@@ -30,8 +30,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * Represent weighted random choice option, class to extend, see {@link WeightedRandomChoiceWrapper}
  */
-public class WeightedRandomChoice implements IWeightedRandomChoice
-{
+public class WeightedRandomChoice implements IWeightedRandomChoice {
     /**
      * weight of this choice.
      */
@@ -42,8 +41,7 @@ public class WeightedRandomChoice implements IWeightedRandomChoice
      *
      * @param weight weight of this choice.
      */
-    public WeightedRandomChoice(final int weight)
-    {
+    public WeightedRandomChoice(final int weight) {
         this.weight = weight;
     }
 
@@ -53,14 +51,12 @@ public class WeightedRandomChoice implements IWeightedRandomChoice
      * @return weight of this choice.
      */
     @Override
-    public int getWeight()
-    {
+    public int getWeight() {
         return this.weight;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("weight", this.weight).toString();
     }
 }

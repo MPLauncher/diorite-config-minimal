@@ -24,6 +24,8 @@
 
 package org.diorite.cfg.system.elements;
 
+import org.diorite.cfg.system.CfgEntryData;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -31,16 +33,13 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 
-import org.diorite.cfg.system.CfgEntryData;
-
 /**
  * Template handler for all path/file objects.
  *
  * @see Path
  * @see File
  */
-public class PathTemplateElement extends TemplateElement<Path>
-{
+public class PathTemplateElement extends TemplateElement<Path> {
     /**
      * Instance of template to direct-use.
      */
@@ -49,62 +48,49 @@ public class PathTemplateElement extends TemplateElement<Path>
     /**
      * Construct new default template handler.
      */
-    public PathTemplateElement()
-    {
+    public PathTemplateElement() {
         super(Path.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return Path.class.isAssignableFrom(c) || File.class.isAssignableFrom(c);
     }
 
     @Override
-    protected Path convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof File)
-        {
+    protected Path convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof File) {
             return ((File) obj).toPath();
         }
         throw new UnsupportedOperationException("Can't convert object (" + obj.getClass().getName() + ") to Path: " + obj);
     }
 
     @Override
-    protected Path convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        try
-        {
-            if (obj instanceof Path)
-            {
+    protected Path convertDefault0(final Object obj, final Class<?> fieldType) {
+        try {
+            if (obj instanceof Path) {
                 return (Path) obj;
             }
-            if (obj instanceof File)
-            {
+            if (obj instanceof File) {
                 return ((File) obj).toPath();
             }
-            if (obj instanceof String)
-            {
+            if (obj instanceof String) {
                 return new File(obj.toString()).toPath();
             }
-            if (obj instanceof URI)
-            {
+            if (obj instanceof URI) {
                 return new File(((URI) obj).toURL().getFile()).toPath();
             }
-            if (obj instanceof URL)
-            {
+            if (obj instanceof URL) {
                 return new File(((URL) obj).getFile()).toPath();
             }
-        } catch (final MalformedURLException e)
-        {
+        } catch (final MalformedURLException e) {
             throw new RuntimeException("Can't convert default value (" + obj.getClass().getName() + "): " + obj, e);
         }
         throw new UnsupportedOperationException("Can't convert default value (" + obj.getClass().getName() + "): " + obj);
     }
 
     @Override
-    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException
-    {
+    public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final Path element = (elementRaw instanceof Path) ? ((Path) elementRaw) : this.validateType(elementRaw);
         StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.toString()), level, elementPlace);
     }

@@ -24,6 +24,8 @@
 
 package org.diorite.utils;
 
+import sun.misc.Unsafe;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -32,25 +34,18 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.UUID;
 
-import sun.misc.Unsafe;
-
-public final class DioriteUtils
-{
+public final class DioriteUtils {
     private static final Unsafe unsafeInstance;
 
-    private DioriteUtils()
-    {
+    private DioriteUtils() {
     }
 
-    static
-    {
-        try
-        {
+    static {
+        try {
             final Field field = Unsafe.class.getDeclaredField("theUnsafe");
             field.setAccessible(true);
             unsafeInstance = (Unsafe) field.get(null);
-        } catch (final Throwable e)
-        {
+        } catch (final Throwable e) {
             throw new Error("Can't find unsafe instance.", e);
         }
     }
@@ -59,14 +54,11 @@ public final class DioriteUtils
      * Returns size of iterator, method will use iterator.
      *
      * @param iterator iterator to be used.
-     *
      * @return size of iterator, method will use iterator.
      */
-    public static int size(final Iterator<?> iterator)
-    {
+    public static int size(final Iterator<?> iterator) {
         int count;
-        for (count = 0; iterator.hasNext(); ++ count)
-        {
+        for (count = 0; iterator.hasNext(); ++count) {
             iterator.next();
         }
 
@@ -77,11 +69,9 @@ public final class DioriteUtils
      * Returns size of iterable.
      *
      * @param iterable iterable to get size of.
-     *
      * @return size of iterable.
      */
-    public static int size(final Iterable<?> iterable)
-    {
+    public static int size(final Iterable<?> iterable) {
         return (iterable instanceof Collection) ? ((Collection<?>) iterable).size() : size(iterable.iterator());
     }
 
@@ -90,8 +80,7 @@ public final class DioriteUtils
      *
      * @return unsafe instance.
      */
-    public static Unsafe getUnsafe()
-    {
+    public static Unsafe getUnsafe() {
         return unsafeInstance;
     }
 
@@ -99,21 +88,17 @@ public final class DioriteUtils
      * Create file directory, and then create file.
      *
      * @param file file to create.
-     *
      * @throws IOException from {@link File#createNewFile()}
      */
-    public static void createFile(final File file) throws IOException
-    {
-        if (file.exists())
-        {
+    public static void createFile(final File file) throws IOException {
+        if (file.exists()) {
             return;
         }
         file.getAbsoluteFile().getParentFile().mkdirs();
         file.createNewFile();
     }
 
-    public static UUID getCrackedUuid(final String nick)
-    {
+    public static UUID getCrackedUuid(final String nick) {
         return UUID.nameUUIDFromBytes(("OfflinePlayer:" + nick).getBytes(StandardCharsets.UTF_8));
     }
 

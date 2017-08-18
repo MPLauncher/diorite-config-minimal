@@ -42,8 +42,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface CfgPriority
-{
+public @interface CfgPriority {
     /**
      * @return priority of field order, larger values to move up.
      */

@@ -32,70 +32,58 @@ import java.util.Collection;
  * Class with some simple math utils/methods.
  */
 @SuppressWarnings("MagicNumber")
-public final class DioriteMathUtils
-{
-    public static final float  F_PI                = (float) Math.PI;
-    public static final int    CIRCLE_DEGREES      = 360;
-    public static final int    HALF_CIRCLE_DEGREES = CIRCLE_DEGREES / 2;
-    public static final double ONE_OF_10           = 1D / 10D;
-    public static final double ONE_OF_100          = 1D / 100D;
-    public static final float  F_ONE_OF_10         = 1F / 10F;
-    public static final float  F_ONE_OF_100        = 1F / 100F;
+public final class DioriteMathUtils {
+    public static final float F_PI = (float) Math.PI;
+    public static final int CIRCLE_DEGREES = 360;
+    public static final int HALF_CIRCLE_DEGREES = CIRCLE_DEGREES / 2;
+    public static final double ONE_OF_10 = 1D / 10D;
+    public static final double ONE_OF_100 = 1D / 100D;
+    public static final float F_ONE_OF_10 = 1F / 10F;
+    public static final float F_ONE_OF_100 = 1F / 100F;
 
-    private static final int     SIN_CACHE_SIZE = 0xFFFF;
-    private static final float   UNKNOWN_CONST  = 10430.378F;
-    private static final float[] sinCache       = new float[SIN_CACHE_SIZE];
+    private static final int SIN_CACHE_SIZE = 0xFFFF;
+    private static final float UNKNOWN_CONST = 10430.378F;
+    private static final float[] sinCache = new float[SIN_CACHE_SIZE];
 
     @SuppressWarnings("MagicNumber")
-    public static int varintSize(final int i)
-    {
-        if ((i < 0) || (i >= 268435456))
-        {
+    public static int varintSize(final int i) {
+        if ((i < 0) || (i >= 268435456)) {
             return 5;
         }
-        if (i < 128)
-        {
+        if (i < 128) {
             return 1;
         }
-        if (i < 16384)
-        {
+        if (i < 16384) {
             return 2;
         }
-        if (i < 2097152)
-        {
+        if (i < 2097152) {
             return 3;
         }
-        if (i < 268435456)
-        {
+        if (i < 268435456) {
             return 4;
         }
         throw new AssertionError();
     }
 
-    static
-    {
-        for (int i = 0; i < SIN_CACHE_SIZE; i++)
-        {
+    static {
+        for (int i = 0; i < SIN_CACHE_SIZE; i++) {
             sinCache[i] = ((float) Math.sin((i * Math.PI * 2.0D) / ((double) (SIN_CACHE_SIZE + 1))));
         }
     }
 
-    private DioriteMathUtils()
-    {
+    private DioriteMathUtils() {
     }
 
-    private static final NumberFormat simpleFormat          = new DecimalFormat("##0.##");
+    private static final NumberFormat simpleFormat = new DecimalFormat("##0.##");
     private static final NumberFormat simpleFormatForceZero = new DecimalFormat("##0.00");
 
     /**
      * Faster sin method using special cache, based on Mojang code.
      *
      * @param angle angle.
-     *
      * @return sin of given angle.
      */
-    public static float sin(final float angle)
-    {
+    public static float sin(final float angle) {
         return sinCache[((int) (angle * UNKNOWN_CONST) & SIN_CACHE_SIZE)];
     }
 
@@ -103,11 +91,9 @@ public final class DioriteMathUtils
      * Faster cos method using special cache, based on Mojang code.
      *
      * @param angle angle.
-     *
      * @return cos of given angle.
      */
-    public static float cos(final float angle)
-    {
+    public static float cos(final float angle) {
         return sinCache[((int) ((angle * UNKNOWN_CONST) + ((SIN_CACHE_SIZE + 1) / 4)) & SIN_CACHE_SIZE)];
     }
 
@@ -115,11 +101,9 @@ public final class DioriteMathUtils
      * Change tps to number of milliseconds per tick, 1000/tps.
      *
      * @param tps tick per second.
-     *
      * @return number of milliseconds per tick.
      */
-    public static int millisecondsPerTick(final int tps)
-    {
+    public static int millisecondsPerTick(final int tps) {
         return 1000 / tps;
     }
 
@@ -127,11 +111,9 @@ public final class DioriteMathUtils
      * Change tps to number of centiseconds per tick, 100/tps.
      *
      * @param tps tick per second.
-     *
      * @return number of centiseconds per tick.
      */
-    public static int centisecondsPerTick(final int tps)
-    {
+    public static int centisecondsPerTick(final int tps) {
         return 100 / tps;
     }
 
@@ -139,11 +121,9 @@ public final class DioriteMathUtils
      * returns string from double formatted to DecimalFormat("###.##")
      *
      * @param d value to format.
-     *
      * @return formatted string.
      */
-    public static String formatSimpleDecimal(final double d)
-    {
+    public static String formatSimpleDecimal(final double d) {
         return simpleFormat.format(d);
     }
 
@@ -151,11 +131,9 @@ public final class DioriteMathUtils
      * returns string from double formatted to DecimalFormat("###.00")
      *
      * @param d value to format.
-     *
      * @return formatted string.
      */
-    public static String formatSimpleDecimalWithZeros(final double d)
-    {
+    public static String formatSimpleDecimalWithZeros(final double d) {
         return simpleFormatForceZero.format(d);
     }
 
@@ -170,11 +148,9 @@ public final class DioriteMathUtils
      * {@code 1903 -> MCMIII}<br>
      *
      * @param i int to convert.
-     *
      * @return roman number in string
      */
-    public static String toRoman(final int i)
-    {
+    public static String toRoman(final int i) {
         return RomanNumeral.toString(i);
     }
 
@@ -194,14 +170,11 @@ public final class DioriteMathUtils
      * {@code MDCDIII -> 1903}<br>
      *
      * @param roman roman numver
-     *
      * @return int value of roman number.
-     *
      * @throws NumberFormatException if string isn't valid roman number.
      * @see DioriteMathUtils#toRoman(int)
      */
-    public static int fromRoman(final String roman) throws NumberFormatException
-    {
+    public static int fromRoman(final String roman) throws NumberFormatException {
         return RomanNumeral.toInt(roman);
     }
 
@@ -214,17 +187,13 @@ public final class DioriteMathUtils
      * @param value number to validate.
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
-     *
      * @return closest number in range.
      */
-    public static byte getInRange(final byte value, final byte min, final byte max)
-    {
-        if (value > max)
-        {
+    public static byte getInRange(final byte value, final byte min, final byte max) {
+        if (value > max) {
             return max;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return min;
         }
         return value;
@@ -239,17 +208,13 @@ public final class DioriteMathUtils
      * @param value number to validate.
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
-     *
      * @return closest number in range.
      */
-    public static short getInRange(final short value, final short min, final short max)
-    {
-        if (value > max)
-        {
+    public static short getInRange(final short value, final short min, final short max) {
+        if (value > max) {
             return max;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return min;
         }
         return value;
@@ -264,17 +229,13 @@ public final class DioriteMathUtils
      * @param value number to validate.
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
-     *
      * @return closest number in range.
      */
-    public static int getInRange(final int value, final int min, final int max)
-    {
-        if (value > max)
-        {
+    public static int getInRange(final int value, final int min, final int max) {
+        if (value > max) {
             return max;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return min;
         }
         return value;
@@ -289,17 +250,13 @@ public final class DioriteMathUtils
      * @param value number to validate.
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
-     *
      * @return closest number in range.
      */
-    public static long getInRange(final long value, final long min, final long max)
-    {
-        if (value > max)
-        {
+    public static long getInRange(final long value, final long min, final long max) {
+        if (value > max) {
             return max;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return min;
         }
         return value;
@@ -314,17 +271,13 @@ public final class DioriteMathUtils
      * @param value number to validate.
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
-     *
      * @return closest number in range.
      */
-    public static float getInRange(final float value, final float min, final float max)
-    {
-        if (value > max)
-        {
+    public static float getInRange(final float value, final float min, final float max) {
+        if (value > max) {
             return max;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return min;
         }
         return value;
@@ -339,17 +292,13 @@ public final class DioriteMathUtils
      * @param value number to validate.
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
-     *
      * @return closest number in range.
      */
-    public static double getInRange(final double value, final double min, final double max)
-    {
-        if (value > max)
-        {
+    public static double getInRange(final double value, final double min, final double max) {
+        if (value > max) {
             return max;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return min;
         }
         return value;
@@ -365,17 +314,13 @@ public final class DioriteMathUtils
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
      * @param def   default value.
-     *
      * @return given number or default value.
      */
-    public static byte getInRangeOrDefault(final byte value, final byte min, final byte max, final byte def)
-    {
-        if (value > max)
-        {
+    public static byte getInRangeOrDefault(final byte value, final byte min, final byte max, final byte def) {
+        if (value > max) {
             return def;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return def;
         }
         return value;
@@ -391,17 +336,13 @@ public final class DioriteMathUtils
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
      * @param def   default value.
-     *
      * @return given number or default value.
      */
-    public static short getInRangeOrDefault(final short value, final short min, final short max, final short def)
-    {
-        if (value > max)
-        {
+    public static short getInRangeOrDefault(final short value, final short min, final short max, final short def) {
+        if (value > max) {
             return def;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return def;
         }
         return value;
@@ -417,17 +358,13 @@ public final class DioriteMathUtils
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
      * @param def   default value.
-     *
      * @return given number or default value.
      */
-    public static int getInRangeOrDefault(final int value, final int min, final int max, final int def)
-    {
-        if (value > max)
-        {
+    public static int getInRangeOrDefault(final int value, final int min, final int max, final int def) {
+        if (value > max) {
             return def;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return def;
         }
         return value;
@@ -443,17 +380,13 @@ public final class DioriteMathUtils
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
      * @param def   default value.
-     *
      * @return given number or default value.
      */
-    public static long getInRangeOrDefault(final long value, final long min, final long max, final long def)
-    {
-        if (value > max)
-        {
+    public static long getInRangeOrDefault(final long value, final long min, final long max, final long def) {
+        if (value > max) {
             return def;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return def;
         }
         return value;
@@ -469,17 +402,13 @@ public final class DioriteMathUtils
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
      * @param def   default value.
-     *
      * @return given number or default value.
      */
-    public static float getInRangeOrDefault(final float value, final float min, final float max, final float def)
-    {
-        if (value > max)
-        {
+    public static float getInRangeOrDefault(final float value, final float min, final float max, final float def) {
+        if (value > max) {
             return def;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return def;
         }
         return value;
@@ -495,17 +424,13 @@ public final class DioriteMathUtils
      * @param min   min value in range. (inclusive)
      * @param max   max value in range. (inclusive)
      * @param def   default value.
-     *
      * @return given number or default value.
      */
-    public static double getInRangeOrDefault(final double value, final double min, final double max, final double def)
-    {
-        if (value > max)
-        {
+    public static double getInRangeOrDefault(final double value, final double min, final double max, final double def) {
+        if (value > max) {
             return def;
         }
-        if (value < min)
-        {
+        if (value < min) {
             return def;
         }
         return value;
@@ -515,11 +440,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Byte#MIN_VALUE} and {@link Byte#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeByte(final int i)
-    {
+    public static boolean canBeByte(final int i) {
         return (i >= Byte.MIN_VALUE) && (i <= Byte.MAX_VALUE);
     }
 
@@ -527,11 +450,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Short#MIN_VALUE} and {@link Short#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeShort(final int i)
-    {
+    public static boolean canBeShort(final int i) {
         return (i >= Short.MIN_VALUE) && (i <= Short.MAX_VALUE);
     }
 
@@ -539,11 +460,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Byte#MIN_VALUE} and {@link Byte#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeByte(final long i)
-    {
+    public static boolean canBeByte(final long i) {
         return (i >= Byte.MIN_VALUE) && (i <= Byte.MAX_VALUE);
     }
 
@@ -551,11 +470,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Short#MIN_VALUE} and {@link Short#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeShort(final long i)
-    {
+    public static boolean canBeShort(final long i) {
         return (i >= Short.MIN_VALUE) && (i <= Short.MAX_VALUE);
     }
 
@@ -563,11 +480,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Byte#MIN_VALUE} and {@link Byte#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeByte(final short i)
-    {
+    public static boolean canBeByte(final short i) {
         return (i >= Byte.MIN_VALUE) && (i <= Byte.MAX_VALUE);
     }
 
@@ -575,11 +490,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Integer#MIN_VALUE} and {@link Integer#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeInt(final long i)
-    {
+    public static boolean canBeInt(final long i) {
         return (i >= Integer.MIN_VALUE) && (i <= Integer.MAX_VALUE);
     }
 
@@ -587,11 +500,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Long#MIN_VALUE} and {@link Long#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeLong(final float i)
-    {
+    public static boolean canBeLong(final float i) {
         return (i >= Long.MIN_VALUE) && (i <= Long.MAX_VALUE);
     }
 
@@ -599,11 +510,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Integer#MIN_VALUE} and {@link Integer#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeInt(final float i)
-    {
+    public static boolean canBeInt(final float i) {
         return (i >= Integer.MIN_VALUE) && (i <= Integer.MAX_VALUE);
     }
 
@@ -611,11 +520,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Short#MIN_VALUE} and {@link Short#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeShort(final float i)
-    {
+    public static boolean canBeShort(final float i) {
         return (i >= Short.MIN_VALUE) && (i <= Short.MAX_VALUE);
     }
 
@@ -623,11 +530,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Byte#MIN_VALUE} and {@link Byte#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeByte(final float i)
-    {
+    public static boolean canBeByte(final float i) {
         return (i >= Byte.MIN_VALUE) && (i <= Byte.MAX_VALUE);
     }
 
@@ -635,11 +540,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Long#MIN_VALUE} and {@link Long#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeLong(final double i)
-    {
+    public static boolean canBeLong(final double i) {
         return (i >= Long.MIN_VALUE) && (i <= Long.MAX_VALUE);
     }
 
@@ -647,11 +550,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Integer#MIN_VALUE} and {@link Integer#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeInt(final double i)
-    {
+    public static boolean canBeInt(final double i) {
         return (i >= Integer.MIN_VALUE) && (i <= Integer.MAX_VALUE);
     }
 
@@ -659,11 +560,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Short#MIN_VALUE} and {@link Short#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeShort(final double i)
-    {
+    public static boolean canBeShort(final double i) {
         return (i >= Short.MIN_VALUE) && (i <= Short.MAX_VALUE);
     }
 
@@ -671,11 +570,9 @@ public final class DioriteMathUtils
      * Check in number is in between {@link Byte#MIN_VALUE} and {@link Byte#MAX_VALUE}
      *
      * @param i number to validate.
-     *
      * @return true if it is in range.
      */
-    public static boolean canBeByte(final double i)
-    {
+    public static boolean canBeByte(final double i) {
         return (i >= Byte.MIN_VALUE) && (i <= Byte.MAX_VALUE);
     }
 
@@ -683,13 +580,10 @@ public final class DioriteMathUtils
      * Round down given number.
      *
      * @param num number to round down.
-     *
      * @return rounded number.
-     *
      * @see Math#round(double)
      */
-    public static int floor(final double num)
-    {
+    public static int floor(final double num) {
         final int floor = (int) num;
         return (floor == num) ? floor : ((num > 0) ? floor : (floor - 1));
     }
@@ -698,13 +592,10 @@ public final class DioriteMathUtils
      * Round up given number.
      *
      * @param num number to round up.
-     *
      * @return rounded number.
-     *
      * @see Math#round(double)
      */
-    public static int ceil(final double num)
-    {
+    public static int ceil(final double num) {
         final int ceil = (int) num;
         return (ceil == num) ? ceil : ((num > 0) ? (ceil + 1) : ceil);
     }
@@ -713,13 +604,10 @@ public final class DioriteMathUtils
      * Round down given number.
      *
      * @param num number to round down.
-     *
      * @return rounded number.
-     *
      * @see Math#round(double)
      */
-    public static int floor(final float num)
-    {
+    public static int floor(final float num) {
         final int floor = (int) num;
         return (floor == num) ? floor : ((num > 0) ? floor : (floor - 1));
     }
@@ -728,13 +616,10 @@ public final class DioriteMathUtils
      * Round up given number.
      *
      * @param num number to round up.
-     *
      * @return rounded number.
-     *
      * @see Math#round(double)
      */
-    public static int ceil(final float num)
-    {
+    public static int ceil(final float num) {
         final int ceil = (int) num;
         return (ceil == num) ? ceil : ((num > 0) ? (ceil + 1) : ceil);
     }
@@ -743,13 +628,10 @@ public final class DioriteMathUtils
      * Round given number.
      *
      * @param num number to round.
-     *
      * @return rounded number.
-     *
      * @see Math#round(double)
      */
-    public static int round(final double num)
-    {
+    public static int round(final double num) {
         return floor(num + 0.5d);
     }
 
@@ -757,11 +639,9 @@ public final class DioriteMathUtils
      * Simple square number, just num * num.
      *
      * @param num number to square
-     *
      * @return num * num
      */
-    public static double square(final double num)
-    {
+    public static double square(final double num) {
         return num * num;
     }
 
@@ -769,11 +649,9 @@ public final class DioriteMathUtils
      * Simple square number, just num * num.
      *
      * @param num number to square
-     *
      * @return num * num
      */
-    public static float square(final float num)
-    {
+    public static float square(final float num) {
         return num * num;
     }
 
@@ -781,11 +659,9 @@ public final class DioriteMathUtils
      * Simple square number, just num * num.
      *
      * @param num number to square
-     *
      * @return num * num
      */
-    public static int square(final int num)
-    {
+    public static int square(final int num) {
         return num * num;
     }
 
@@ -793,11 +669,9 @@ public final class DioriteMathUtils
      * Simple square number, just num * num.
      *
      * @param num number to square
-     *
      * @return num * num
      */
-    public static long square(final long num)
-    {
+    public static long square(final long num) {
         return num * num;
     }
 
@@ -813,14 +687,11 @@ public final class DioriteMathUtils
      * {@literal 256: 100000000 -> 1}<br>
      *
      * @param num number to count bits in it.
-     *
      * @return number of 1 bits.
      */
-    public static byte countBits(long num)
-    {
+    public static byte countBits(long num) {
         byte result;
-        for (result = 0; Math.abs(num) > 0; result++)
-        {
+        for (result = 0; Math.abs(num) > 0; result++) {
             num &= num - 1;
         }
         return result;
@@ -837,14 +708,11 @@ public final class DioriteMathUtils
      * {@literal 256: 100000000 -> 1}<br>
      *
      * @param num number to count bits in it.
-     *
      * @return number of 1 bits.
      */
-    public static byte countBits(int num)
-    {
+    public static byte countBits(int num) {
         byte result;
-        for (result = 0; Math.abs(num) > 0; result++)
-        {
+        for (result = 0; Math.abs(num) > 0; result++) {
             num &= num - 1;
         }
         return result;
@@ -861,14 +729,11 @@ public final class DioriteMathUtils
      * {@literal 256: 100000000 -> 1}<br>
      *
      * @param num number to count bits in it.
-     *
      * @return number of 1 bits.
      */
-    public static byte countBits(short num)
-    {
+    public static byte countBits(short num) {
         byte result;
-        for (result = 0; num > 0; result++)
-        {
+        for (result = 0; num > 0; result++) {
             num &= num - 1;
         }
         return result;
@@ -885,14 +750,11 @@ public final class DioriteMathUtils
      * {@literal 256: 100000000 -> 1}<br>
      *
      * @param num number to count bits in it.
-     *
      * @return number of 1 bits.
      */
-    public static byte countBits(char num)
-    {
+    public static byte countBits(char num) {
         byte result;
-        for (result = 0; num > 0; result++)
-        {
+        for (result = 0; num > 0; result++) {
             num &= num - 1;
         }
         return result;
@@ -909,14 +771,11 @@ public final class DioriteMathUtils
      * {@literal 256: 100000000 -> 1}<br>
      *
      * @param num number to count bits in it.
-     *
      * @return number of 1 bits.
      */
-    public static byte countBits(byte num)
-    {
+    public static byte countBits(byte num) {
         byte result;
-        for (result = 0; num > 0; result++)
-        {
+        for (result = 0; num > 0; result++) {
             num &= num - 1;
         }
         return result;
@@ -928,11 +787,9 @@ public final class DioriteMathUtils
      * @param min min value of range (inclusive).
      * @param i   number to validate.
      * @param max max value of range (inclusive).
-     *
      * @return true if it is in range.
      */
-    public static boolean isBetweenInclusive(final long min, final long i, final long max)
-    {
+    public static boolean isBetweenInclusive(final long min, final long i, final long max) {
         return (i >= min) && (i <= max);
     }
 
@@ -942,11 +799,9 @@ public final class DioriteMathUtils
      * @param min min value of range (exclusive).
      * @param i   number to validate.
      * @param max max value of range (exclusive).
-     *
      * @return true if it is in range.
      */
-    public static boolean isBetweenExclusive(final long min, final long i, final long max)
-    {
+    public static boolean isBetweenExclusive(final long min, final long i, final long max) {
         return (i > min) && (i < max);
     }
 
@@ -956,11 +811,9 @@ public final class DioriteMathUtils
      * @param min min value of range (inclusive).
      * @param i   number to validate.
      * @param max max value of range (inclusive).
-     *
      * @return true if it is in range.
      */
-    public static boolean isBetweenInclusive(final double min, final double i, final double max)
-    {
+    public static boolean isBetweenInclusive(final double min, final double i, final double max) {
         return (i >= min) && (i <= max);
     }
 
@@ -970,11 +823,9 @@ public final class DioriteMathUtils
      * @param min min value of range (exclusive).
      * @param i   number to validate.
      * @param max max value of range (exclusive).
-     *
      * @return true if it is in range.
      */
-    public static boolean isBetweenExclusive(final double min, final double i, final double max)
-    {
+    public static boolean isBetweenExclusive(final double min, final double i, final double max) {
         return (i > min) && (i < max);
     }
 
@@ -983,16 +834,14 @@ public final class DioriteMathUtils
      * Based on {@link Integer#parseInt(String)}
      *
      * @param str string to parse
-     *
      * @return parsed value or null.
      */
-    public static Integer asInt(final String str)
-    {
+    public static Integer asInt(final String str) {
         int result = 0;
         boolean negative = false;
         int i = 0;
         final int len = str.length();
-        int limit = - Integer.MAX_VALUE;
+        int limit = -Integer.MAX_VALUE;
         final int multmin;
         int digit;
 
@@ -1000,18 +849,13 @@ public final class DioriteMathUtils
         {
             return null;
         }
-        if (len > 0)
-        {
+        if (len > 0) {
             final char firstChar = str.charAt(0);
-            if (firstChar < '0')
-            { // Possible leading "+" or "-"
-                if (firstChar == '-')
-                {
+            if (firstChar < '0') { // Possible leading "+" or "-"
+                if (firstChar == '-') {
                     negative = true;
                     limit = Integer.MIN_VALUE;
-                }
-                else if (firstChar != '+')
-                {
+                } else if (firstChar != '+') {
                     return null;
                 }
 
@@ -1022,32 +866,26 @@ public final class DioriteMathUtils
                 i++;
             }
             multmin = limit / 10;
-            while (i < len)
-            {
+            while (i < len) {
                 // Accumulating negatively avoids surprises near MAX_VALUE
                 final char digitChar = str.charAt(i++);
-                if ((digitChar > '9') || (digitChar < '0'))
-                {
+                if ((digitChar > '9') || (digitChar < '0')) {
                     return null;
                 }
                 digit = digitChar - '0';
-                if (result < multmin)
-                {
+                if (result < multmin) {
                     return null;
                 }
                 result *= 10;
-                if (result < (limit + digit))
-                {
+                if (result < (limit + digit)) {
                     return null;
                 }
                 result -= digit;
             }
-        }
-        else
-        {
+        } else {
             return null;
         }
-        return negative ? result : - result;
+        return negative ? result : -result;
     }
 
     /**
@@ -1055,16 +893,14 @@ public final class DioriteMathUtils
      * Based on {@link Long#parseLong(String)}
      *
      * @param str string to parse
-     *
      * @return parsed value or null.
      */
-    public static Long asLong(final String str)
-    {
+    public static Long asLong(final String str) {
         long result = 0;
         boolean negative = false;
         int i = 0;
         final int len = str.length();
-        long limit = - Long.MAX_VALUE;
+        long limit = -Long.MAX_VALUE;
         final long multmin;
         int digit;
 
@@ -1072,18 +908,13 @@ public final class DioriteMathUtils
         {
             return null;
         }
-        if (len > 0)
-        {
+        if (len > 0) {
             final char firstChar = str.charAt(0);
-            if (firstChar < '0')
-            { // Possible leading "+" or "-"
-                if (firstChar == '-')
-                {
+            if (firstChar < '0') { // Possible leading "+" or "-"
+                if (firstChar == '-') {
                     negative = true;
                     limit = Long.MIN_VALUE;
-                }
-                else if (firstChar != '+')
-                {
+                } else if (firstChar != '+') {
                     return null;
                 }
 
@@ -1094,48 +925,38 @@ public final class DioriteMathUtils
                 i++;
             }
             multmin = limit / 10;
-            while (i < len)
-            {
+            while (i < len) {
                 // Accumulating negatively avoids surprises near MAX_VALUE
                 final char digitChar = str.charAt(i++);
-                if ((digitChar > '9') || (digitChar < '0'))
-                {
+                if ((digitChar > '9') || (digitChar < '0')) {
                     return null;
                 }
                 digit = digitChar - '0';
-                if (result < multmin)
-                {
+                if (result < multmin) {
                     return null;
                 }
                 result *= 10;
-                if (result < (limit + digit))
-                {
+                if (result < (limit + digit)) {
                     return null;
                 }
                 result -= digit;
             }
-        }
-        else
-        {
+        } else {
             return null;
         }
-        return negative ? result : - result;
+        return negative ? result : -result;
     }
 
     /**
      * Parse string to double, if string can't be parsed to double, then it will return null.
      *
      * @param str string to parse
-     *
      * @return parsed value or null.
      */
-    public static Double asDouble(final String str)
-    {
-        try
-        {
+    public static Double asDouble(final String str) {
+        try {
             return Double.valueOf(str);
-        } catch (final NumberFormatException e)
-        {
+        } catch (final NumberFormatException e) {
             return null;
         }
     }
@@ -1144,16 +965,12 @@ public final class DioriteMathUtils
      * Parse string to float, if string can't be parsed to float, then it will return null.
      *
      * @param str string to parse
-     *
      * @return parsed value or null.
      */
-    public static Float asFloat(final String str)
-    {
-        try
-        {
+    public static Float asFloat(final String str) {
+        try {
             return Float.valueOf(str);
-        } catch (final NumberFormatException e)
-        {
+        } catch (final NumberFormatException e) {
             return null;
         }
     }
@@ -1163,11 +980,9 @@ public final class DioriteMathUtils
      *
      * @param str string to parse
      * @param def default value.
-     *
      * @return parsed value or default value.
      */
-    public static int asInt(final String str, final int def)
-    {
+    public static int asInt(final String str, final int def) {
         final Integer i = asInt(str);
         return (i == null) ? def : i;
     }
@@ -1177,11 +992,9 @@ public final class DioriteMathUtils
      *
      * @param str string to parse
      * @param def default value.
-     *
      * @return parsed value or default value.
      */
-    public static long asLong(final String str, final long def)
-    {
+    public static long asLong(final String str, final long def) {
         final Long l = asLong(str);
         return (l == null) ? def : l;
     }
@@ -1191,16 +1004,12 @@ public final class DioriteMathUtils
      *
      * @param str string to parse
      * @param def default value.
-     *
      * @return parsed value or default value.
      */
-    public static double asDouble(final String str, final double def)
-    {
-        try
-        {
+    public static double asDouble(final String str, final double def) {
+        try {
             return Double.parseDouble(str);
-        } catch (final NumberFormatException e)
-        {
+        } catch (final NumberFormatException e) {
             return def;
         }
     }
@@ -1210,16 +1019,12 @@ public final class DioriteMathUtils
      *
      * @param str string to parse
      * @param def default value.
-     *
      * @return parsed value or default value.
      */
-    public static float asFloat(final String str, final float def)
-    {
-        try
-        {
+    public static float asFloat(final String str, final float def) {
+        try {
             return Float.parseFloat(str);
-        } catch (final NumberFormatException e)
-        {
+        } catch (final NumberFormatException e) {
             return def;
         }
     }
@@ -1228,13 +1033,10 @@ public final class DioriteMathUtils
      * Simple parse boolean.
      *
      * @param str string to parse
-     *
      * @return parsed value
-     *
      * @see Boolean#parseBoolean(String)
      */
-    public static boolean asBoolean(final String str)
-    {
+    public static boolean asBoolean(final String str) {
         return Boolean.parseBoolean(str);
     }
 
@@ -1248,17 +1050,13 @@ public final class DioriteMathUtils
      * @param str        string to parse.
      * @param trueWords  words that mean "true"
      * @param falseWords words that mean "false"
-     *
      * @return true/false or null.
      */
-    public static Boolean asBoolean(final String str, final Collection<String> trueWords, final Collection<String> falseWords)
-    {
-        if (trueWords.stream().anyMatch(s -> s.equalsIgnoreCase(str)))
-        {
+    public static Boolean asBoolean(final String str, final Collection<String> trueWords, final Collection<String> falseWords) {
+        if (trueWords.stream().anyMatch(s -> s.equalsIgnoreCase(str))) {
             return Boolean.TRUE;
         }
-        if (falseWords.stream().anyMatch(s -> s.equalsIgnoreCase(str)))
-        {
+        if (falseWords.stream().anyMatch(s -> s.equalsIgnoreCase(str))) {
             return Boolean.FALSE;
         }
         return null;

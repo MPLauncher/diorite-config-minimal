@@ -24,28 +24,25 @@
 
 package org.diorite.utils.collections.arrays.fastutil;
 
-import java.util.NoSuchElementException;
-
 import it.unimi.dsi.fastutil.longs.LongIterator;
+
+import java.util.NoSuchElementException;
 
 /**
  * Represent {@link LongIterator} for long array.
  */
-public class FastUtilLongIterator extends FastUtilPrimitiveIterator<long[]> implements LongIterator
-{
+public class FastUtilLongIterator extends FastUtilPrimitiveIterator<long[]> implements LongIterator {
     /**
      * Construct new LongIterator for given primitive array.
      *
      * @param primitiveArray array to be iterated.
      */
-    public FastUtilLongIterator(final long[] primitiveArray)
-    {
+    public FastUtilLongIterator(final long[] primitiveArray) {
         super(primitiveArray);
     }
 
     @Override
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.primitiveArray[this.index - 1] = number.longValue();
     }
 
@@ -54,38 +51,31 @@ public class FastUtilLongIterator extends FastUtilPrimitiveIterator<long[]> impl
      *
      * @param number value to set.
      */
-    public void setValue(final long number)
-    {
+    public void setValue(final long number) {
         this.primitiveArray[this.index - 1] = number;
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.index < this.primitiveArray.length;
     }
 
     @Override
-    public Long next()
-    {
+    public Long next() {
         return this.nextLong();
     }
 
     @Override
-    public long nextLong()
-    {
-        if (! this.hasNext())
-        {
+    public long nextLong() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("Index >= Length, Index: " + this.index + ", Length: " + this.primitiveArray.length);
         }
         return this.primitiveArray[this.index++];
     }
 
     @Override
-    public int skip(final int n)
-    {
-        if ((this.index + n) < this.primitiveArray.length)
-        {
+    public int skip(final int n) {
+        if ((this.index + n) < this.primitiveArray.length) {
             this.index += n;
             return n;
         }

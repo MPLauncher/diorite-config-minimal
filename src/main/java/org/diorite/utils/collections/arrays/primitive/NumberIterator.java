@@ -24,16 +24,15 @@
 
 package org.diorite.utils.collections.arrays.primitive;
 
-import java.util.Iterator;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Iterator;
 
 /**
  * Represent Number iterator, this is wrapper for any {@link PrimitiveIterator}
  */
-public class NumberIterator implements Iterator<Number>
-{
+public class NumberIterator implements Iterator<Number> {
     /**
      * Wrapped primitive iterator.
      */
@@ -44,8 +43,7 @@ public class NumberIterator implements Iterator<Number>
      *
      * @param it iterator to be wrapped/used.
      */
-    public NumberIterator(final PrimitiveIterator<?, ?> it)
-    {
+    public NumberIterator(final PrimitiveIterator<?, ?> it) {
         this.it = it;
     }
 
@@ -54,40 +52,33 @@ public class NumberIterator implements Iterator<Number>
      *
      * @param number value to set.
      */
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.it.setValue(number);
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.it.hasNext();
     }
 
     @Override
-    public Number next()
-    {
+    public Number next() {
         final Object o = this.it.next();
-        if (o instanceof Number)
-        {
+        if (o instanceof Number) {
             return (Number) this.it.next();
         }
-        if (o instanceof Character)
-        {
+        if (o instanceof Character) {
             //noinspection UnnecessaryUnboxing
             return (int) ((Character) o).charValue();
         }
-        if (o instanceof Boolean)
-        {
+        if (o instanceof Boolean) {
             return (Boolean) o ? 1 : 0;
         }
         throw new AssertionError("Unknown primitive type.");
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("it", this.it).toString();
     }
 }

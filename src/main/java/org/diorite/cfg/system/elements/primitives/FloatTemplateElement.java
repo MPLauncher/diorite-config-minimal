@@ -27,8 +27,7 @@ package org.diorite.cfg.system.elements.primitives;
 /**
  * Template used by floats.
  */
-public class FloatTemplateElement extends PrimitiveTemplateElement<Float>
-{
+public class FloatTemplateElement extends PrimitiveTemplateElement<Float> {
     /**
      * Instance of template to direct-use.
      */
@@ -37,32 +36,26 @@ public class FloatTemplateElement extends PrimitiveTemplateElement<Float>
     /**
      * Construct new float template
      */
-    public FloatTemplateElement()
-    {
+    public FloatTemplateElement() {
         super(float.class);
     }
 
     @Override
-    protected boolean canBeConverted0(final Class<?> c)
-    {
+    protected boolean canBeConverted0(final Class<?> c) {
         return Number.class.isAssignableFrom(c);
     }
 
     @Override
-    protected Float convertObject0(final Object obj) throws UnsupportedOperationException
-    {
-        if (obj instanceof Number)
-        {
+    protected Float convertObject0(final Object obj) throws UnsupportedOperationException {
+        if (obj instanceof Number) {
             return ((Number) obj).floatValue();
         }
         throw this.getException(obj);
     }
 
     @Override
-    protected Float convertDefault0(final Object obj, final Class<?> fieldType)
-    {
-        if (obj instanceof Number)
-        {
+    protected Float convertDefault0(final Object obj, final Class<?> fieldType) {
+        if (obj instanceof Number) {
             return ((Number) obj).floatValue();
         }
         throw this.getException(obj);

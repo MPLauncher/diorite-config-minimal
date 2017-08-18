@@ -24,33 +24,26 @@
 
 package org.diorite.cfg.system;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.util.function.BiFunction;
-
-import org.diorite.cfg.annotations.CfgCollectionStyle;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import org.diorite.cfg.annotations.*;
 import org.diorite.cfg.annotations.CfgCollectionStyle.CollectionStyle;
-import org.diorite.cfg.annotations.CfgCollectionType;
 import org.diorite.cfg.annotations.CfgCollectionType.CollectionType;
-import org.diorite.cfg.annotations.CfgCommentOptions;
-import org.diorite.cfg.annotations.CfgFooterNoNewLine;
-import org.diorite.cfg.annotations.CfgStringArrayMultilineThreshold;
-import org.diorite.cfg.annotations.CfgStringStyle;
 import org.diorite.cfg.annotations.CfgStringStyle.StringStyle;
 import org.diorite.utils.SimpleEnum.ASimpleEnum;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.util.function.BiFunction;
 
 /**
  * Simple enum with field annotation-based options.
  */
 @SuppressWarnings({"ClassHasNoToStringMethod"})
-public class FieldOptions extends ASimpleEnum<FieldOptions>
-{
+public class FieldOptions extends ASimpleEnum<FieldOptions> {
     /**
      * @see CfgStringStyle
      */
-    public static final FieldOptions STRING_STYLE                     = new FieldOptions("STRING_STYLE", CfgStringStyle.class, (f, a) -> (a != null) ? a.value() : StringStyle.DEFAULT);
+    public static final FieldOptions STRING_STYLE = new FieldOptions("STRING_STYLE", CfgStringStyle.class, (f, a) -> (a != null) ? a.value() : StringStyle.DEFAULT);
     /**
      * @see CfgStringArrayMultilineThreshold
      */
@@ -58,26 +51,25 @@ public class FieldOptions extends ASimpleEnum<FieldOptions>
     /**
      * @see CfgCollectionStyle
      */
-    public static final FieldOptions COLLECTION_STYLE                 = new FieldOptions("COLLECTION_STYLE", CfgCollectionStyle.class, (f, a) -> (a != null) ? a.value() : CollectionStyle.DEFAULT);
+    public static final FieldOptions COLLECTION_STYLE = new FieldOptions("COLLECTION_STYLE", CfgCollectionStyle.class, (f, a) -> (a != null) ? a.value() : CollectionStyle.DEFAULT);
     /**
      * @see CfgCollectionType
      */
-    public static final FieldOptions COLLECTION_TYPE                  = new FieldOptions("COLLECTION_TYPE", CfgCollectionType.class, (f, a) -> (a != null) ? a.value() : CollectionType.UNKNOWN);
+    public static final FieldOptions COLLECTION_TYPE = new FieldOptions("COLLECTION_TYPE", CfgCollectionType.class, (f, a) -> (a != null) ? a.value() : CollectionType.UNKNOWN);
     /**
      * @see CfgCommentOptions
      */
-    public static final FieldOptions OTHERS_COMMENT_EVERY_ELEMENT     = new FieldOptions("OTHERS_COMMENT_EVERY_ELEMENT", CfgCommentOptions.class, (f, a) -> (a != null) && a.commentEveryElement());
+    public static final FieldOptions OTHERS_COMMENT_EVERY_ELEMENT = new FieldOptions("OTHERS_COMMENT_EVERY_ELEMENT", CfgCommentOptions.class, (f, a) -> (a != null) && a.commentEveryElement());
     /**
      * @see CfgFooterNoNewLine
      */
-    public static final FieldOptions OTHERS_FOOTER_NO_NEW_LINE        = new FieldOptions("OTHERS_FOOTER_NO_NEW_LINE", CfgFooterNoNewLine.class, (f, a) -> (a != null) && a.value());
+    public static final FieldOptions OTHERS_FOOTER_NO_NEW_LINE = new FieldOptions("OTHERS_FOOTER_NO_NEW_LINE", CfgFooterNoNewLine.class, (f, a) -> (a != null) && a.value());
 
-    static
-    {
+    static {
         init(FieldOptions.class, 6);
     }
 
-    private final Class<? extends Annotation>                 clazz;
+    private final Class<? extends Annotation> clazz;
     private final BiFunction<ConfigField, Annotation, Object> func;
 
     /**
@@ -88,8 +80,7 @@ public class FieldOptions extends ASimpleEnum<FieldOptions>
      * @param clazz    used annotation class.
      * @param func     function to get value of option.
      */
-    public FieldOptions(final String enumName, final int enumId, final Class<? extends Annotation> clazz, final BiFunction<ConfigField, Annotation, Object> func)
-    {
+    public FieldOptions(final String enumName, final int enumId, final Class<? extends Annotation> clazz, final BiFunction<ConfigField, Annotation, Object> func) {
         super(enumName, enumId);
         this.clazz = clazz;
         this.func = func;
@@ -103,8 +94,7 @@ public class FieldOptions extends ASimpleEnum<FieldOptions>
      * @param func            function to get value of option.
      * @param <T>             type of annotation.
      */
-    public <T extends Annotation> FieldOptions(final String enumName, final Class<T> annotationClass, final BiFunction<ConfigField, T, Object> func)
-    {
+    public <T extends Annotation> FieldOptions(final String enumName, final Class<T> annotationClass, final BiFunction<ConfigField, T, Object> func) {
         super(enumName);
         this.clazz = annotationClass;
         //noinspection unchecked
@@ -117,11 +107,9 @@ public class FieldOptions extends ASimpleEnum<FieldOptions>
      * @param f   config field instance.
      * @param a   annotation to check.
      * @param <T> type of annotation.
-     *
      * @return value of option.
      */
-    public <T extends Annotation> Object get(final ConfigField f, final T a)
-    {
+    public <T extends Annotation> Object get(final ConfigField f, final T a) {
         return this.func.apply(f, a);
     }
 
@@ -131,11 +119,9 @@ public class FieldOptions extends ASimpleEnum<FieldOptions>
      * @param f       config field instance.
      * @param element element with annotation to check.
      * @param <T>     type of annotation.
-     *
      * @return value of option.
      */
-    public <T extends Annotation> Object get(final ConfigField f, final AnnotatedElement element)
-    {
+    public <T extends Annotation> Object get(final ConfigField f, final AnnotatedElement element) {
         return this.func.apply(f, element.getAnnotation(this.clazz));
     }
 
@@ -143,11 +129,9 @@ public class FieldOptions extends ASimpleEnum<FieldOptions>
      * Check fi given {@link AnnotatedElement} contains annotation used by this option.
      *
      * @param element element to checl
-     *
      * @return true if it contains needed annotation.
      */
-    public boolean contains(final AnnotatedElement element)
-    {
+    public boolean contains(final AnnotatedElement element) {
         return element.isAnnotationPresent(this.clazz);
     }
 
@@ -156,8 +140,7 @@ public class FieldOptions extends ASimpleEnum<FieldOptions>
      *
      * @param element new element to register.
      */
-    public static void register(final FieldOptions element)
-    {
+    public static void register(final FieldOptions element) {
         ASimpleEnum.register(FieldOptions.class, element);
     }
 
@@ -165,11 +148,9 @@ public class FieldOptions extends ASimpleEnum<FieldOptions>
      * Get one of {@link FieldOptions} entry by its ordinal id.
      *
      * @param ordinal ordinal id of entry.
-     *
      * @return one of entry or null.
      */
-    public static FieldOptions getByEnumOrdinal(final int ordinal)
-    {
+    public static FieldOptions getByEnumOrdinal(final int ordinal) {
         return getByEnumOrdinal(FieldOptions.class, ordinal);
     }
 
@@ -177,25 +158,21 @@ public class FieldOptions extends ASimpleEnum<FieldOptions>
      * Get one of {@link FieldOptions} entry by its name.
      *
      * @param name name of entry.
-     *
      * @return one of entry or null.
      */
-    public static FieldOptions getByEnumName(final String name)
-    {
+    public static FieldOptions getByEnumName(final String name) {
         return getByEnumName(FieldOptions.class, name);
     }
 
     /**
      * @return all values in array.
      */
-    public static FieldOptions[] values()
-    {
+    public static FieldOptions[] values() {
         final Int2ObjectMap<FieldOptions> map = getByEnumOrdinal(FieldOptions.class);
         return map.values().toArray(new FieldOptions[map.size()]);
     }
 
-    static
-    {
+    static {
         FieldOptions.register(STRING_STYLE);
         FieldOptions.register(STRING_ARRAY_MULTILINE_THRESHOLD);
         FieldOptions.register(COLLECTION_STYLE);

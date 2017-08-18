@@ -35,8 +35,7 @@ import java.util.Objects;
  * @see java.util.function.Consumer
  */
 @FunctionalInterface
-public interface CharConsumer
-{
+public interface CharConsumer {
 
     /**
      * Performs this operation on the given argument.
@@ -53,14 +52,11 @@ public interface CharConsumer
      * the {@code after} operation will not be performed.
      *
      * @param after the operation to perform after this operation
-     *
      * @return a composed {@code CharConsumer} that performs in sequence this
      * operation followed by the {@code after} operation
-     *
      * @throws NullPointerException if {@code after} is null
      */
-    default CharConsumer andThen(final CharConsumer after)
-    {
+    default CharConsumer andThen(final CharConsumer after) {
         Objects.requireNonNull(after);
         return (char t) -> {
             this.accept(t);

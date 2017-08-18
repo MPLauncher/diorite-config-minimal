@@ -24,17 +24,16 @@
 
 package org.diorite.utils.math.noise;
 
-import java.util.Random;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Random;
 
 /**
  * Creates simplex noise through unbiased octaves
  * From Bukkit project https://github.com/Bukkit/Bukkit
  */
-public class SimplexOctaveGenerator extends OctaveGenerator
-{
+public class SimplexOctaveGenerator extends OctaveGenerator {
     private double wScale = 1;
 
     /**
@@ -43,8 +42,7 @@ public class SimplexOctaveGenerator extends OctaveGenerator
      * @param seed    Seed to construct this generator for
      * @param octaves Amount of octaves to create
      */
-    public SimplexOctaveGenerator(final long seed, final int octaves)
-    {
+    public SimplexOctaveGenerator(final long seed, final int octaves) {
         this(new Random(seed), octaves);
     }
 
@@ -54,21 +52,18 @@ public class SimplexOctaveGenerator extends OctaveGenerator
      * @param rand    Random object to construct this generator for
      * @param octaves Amount of octaves to create
      */
-    public SimplexOctaveGenerator(final Random rand, final int octaves)
-    {
+    public SimplexOctaveGenerator(final Random rand, final int octaves) {
         super(createOctaves(rand, octaves));
     }
 
     @Override
-    public void setScale(final double scale)
-    {
+    public void setScale(final double scale) {
         super.setScale(scale);
         this.wScale = scale;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).appendSuper(super.toString()).append("wScale", this.wScale).toString();
     }
 
@@ -77,8 +72,7 @@ public class SimplexOctaveGenerator extends OctaveGenerator
      *
      * @return W scale
      */
-    public double getWScale()
-    {
+    public double getWScale() {
         return this.wScale;
     }
 
@@ -87,8 +81,7 @@ public class SimplexOctaveGenerator extends OctaveGenerator
      *
      * @param scale New W scale
      */
-    public void setWScale(final double scale)
-    {
+    public void setWScale(final double scale) {
         this.wScale = scale;
     }
 
@@ -102,11 +95,9 @@ public class SimplexOctaveGenerator extends OctaveGenerator
      * @param w         W-coordinate
      * @param frequency How much to alter the frequency by each octave
      * @param amplitude How much to alter the amplitude by each octave
-     *
      * @return Resulting noise
      */
-    public double noise(final double x, final double y, final double z, final double w, final double frequency, final double amplitude)
-    {
+    public double noise(final double x, final double y, final double z, final double w, final double frequency, final double amplitude) {
         return this.noise(x, y, z, w, frequency, amplitude, false);
     }
 
@@ -121,11 +112,9 @@ public class SimplexOctaveGenerator extends OctaveGenerator
      * @param frequency  How much to alter the frequency by each octave
      * @param amplitude  How much to alter the amplitude by each octave
      * @param normalized If true, normalize the value to [-1, 1]
-     *
      * @return Resulting noise
      */
-    public double noise(double x, double y, double z, double w, final double frequency, final double amplitude, final boolean normalized)
-    {
+    public double noise(double x, double y, double z, double w, final double frequency, final double amplitude, final boolean normalized) {
         double result = 0;
         double amp = 1;
         double freq = 1;
@@ -136,28 +125,24 @@ public class SimplexOctaveGenerator extends OctaveGenerator
         z *= this.zScale;
         w *= this.wScale;
 
-        for (final NoiseGenerator octave : this.octaves)
-        {
+        for (final NoiseGenerator octave : this.octaves) {
             result += ((SimplexNoiseGenerator) octave).noise(x * freq, y * freq, z * freq, w * freq) * amp;
             max += amp;
             freq *= frequency;
             amp *= amplitude;
         }
 
-        if (normalized)
-        {
+        if (normalized) {
             result /= max;
         }
 
         return result;
     }
 
-    private static NoiseGenerator[] createOctaves(final Random rand, final int octaves)
-    {
+    private static NoiseGenerator[] createOctaves(final Random rand, final int octaves) {
         final NoiseGenerator[] result = new NoiseGenerator[octaves];
 
-        for (int i = 0; i < octaves; i++)
-        {
+        for (int i = 0; i < octaves; i++) {
             result[i] = new SimplexNoiseGenerator(rand);
         }
 

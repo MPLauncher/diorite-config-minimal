@@ -29,14 +29,12 @@ import org.yaml.snakeyaml.Yaml;
 /**
  * Diorite extension of {@link Yaml} with more public methods.
  */
-public class DioriteYaml extends Yaml
-{
+public class DioriteYaml extends Yaml {
     /**
      * Create Yaml instance. It is safe to create a few instances and use them
      * in different Threads.
      */
-    public DioriteYaml()
-    {
+    public DioriteYaml() {
         this(new DioriteYamlConstructor(), new DioriteYamlRepresenter(), new DioriteYamlDumperOptions(), new DioriteYamlResolver());
     }
 
@@ -45,8 +43,7 @@ public class DioriteYaml extends Yaml
      *
      * @param dumperOptions DioriteYamlDumperOptions to configure outgoing objects
      */
-    public DioriteYaml(final DioriteYamlDumperOptions dumperOptions)
-    {
+    public DioriteYaml(final DioriteYamlDumperOptions dumperOptions) {
         this(new DioriteYamlConstructor(), new DioriteYamlRepresenter(), dumperOptions);
     }
 
@@ -56,8 +53,7 @@ public class DioriteYaml extends Yaml
      *
      * @param representer DioriteYamlRepresenter to emit outgoing objects
      */
-    public DioriteYaml(final DioriteYamlRepresenter representer)
-    {
+    public DioriteYaml(final DioriteYamlRepresenter representer) {
         this(new DioriteYamlConstructor(), representer);
     }
 
@@ -67,8 +63,7 @@ public class DioriteYaml extends Yaml
      *
      * @param constructor BaseDioriteYamlConstructor to construct incoming documents
      */
-    public DioriteYaml(final DioriteYamlConstructor constructor)
-    {
+    public DioriteYaml(final DioriteYamlConstructor constructor) {
         this(constructor, new DioriteYamlRepresenter());
     }
 
@@ -79,8 +74,7 @@ public class DioriteYaml extends Yaml
      * @param constructor BaseDioriteYamlConstructor to construct incoming documents
      * @param representer DioriteYamlRepresenter to emit outgoing objects
      */
-    public DioriteYaml(final DioriteYamlConstructor constructor, final DioriteYamlRepresenter representer)
-    {
+    public DioriteYaml(final DioriteYamlConstructor constructor, final DioriteYamlRepresenter representer) {
         this(constructor, representer, new DioriteYamlDumperOptions());
     }
 
@@ -91,8 +85,7 @@ public class DioriteYaml extends Yaml
      * @param representer   DioriteYamlRepresenter to emit outgoing objects
      * @param dumperOptions DioriteYamlDumperOptions to configure outgoing objects
      */
-    public DioriteYaml(final DioriteYamlRepresenter representer, final DioriteYamlDumperOptions dumperOptions)
-    {
+    public DioriteYaml(final DioriteYamlRepresenter representer, final DioriteYamlDumperOptions dumperOptions) {
         this(new DioriteYamlConstructor(), representer, dumperOptions, new DioriteYamlResolver());
     }
 
@@ -104,8 +97,7 @@ public class DioriteYaml extends Yaml
      * @param representer   DioriteYamlRepresenter to emit outgoing objects
      * @param dumperOptions DioriteYamlDumperOptions to configure outgoing objects
      */
-    public DioriteYaml(final DioriteYamlConstructor constructor, final DioriteYamlRepresenter representer, final DioriteYamlDumperOptions dumperOptions)
-    {
+    public DioriteYaml(final DioriteYamlConstructor constructor, final DioriteYamlRepresenter representer, final DioriteYamlDumperOptions dumperOptions) {
         this(constructor, representer, dumperOptions, new DioriteYamlResolver());
     }
 
@@ -118,8 +110,7 @@ public class DioriteYaml extends Yaml
      * @param dumperOptions DumperOptions to configure outgoing objects
      * @param resolver      Resolver to detect implicit type
      */
-    public DioriteYaml(final DioriteYamlConstructor constructor, final DioriteYamlRepresenter representer, final DioriteYamlDumperOptions dumperOptions, final DioriteYamlResolver resolver)
-    {
+    public DioriteYaml(final DioriteYamlConstructor constructor, final DioriteYamlRepresenter representer, final DioriteYamlDumperOptions dumperOptions, final DioriteYamlResolver resolver) {
         super(constructor, representer, dumperOptions, resolver);
     }
 
@@ -128,8 +119,7 @@ public class DioriteYaml extends Yaml
      *
      * @return dumper options of this yaml instance.
      */
-    public DioriteYamlDumperOptions getDumperOptions()
-    {
+    public DioriteYamlDumperOptions getDumperOptions() {
         return (DioriteYamlDumperOptions) this.dumperOptions;
     }
 
@@ -138,8 +128,7 @@ public class DioriteYaml extends Yaml
      *
      * @param dumperOptions new dumper options.
      */
-    public void setDumperOptions(final DioriteYamlDumperOptions dumperOptions)
-    {
+    public void setDumperOptions(final DioriteYamlDumperOptions dumperOptions) {
         this.dumperOptions = dumperOptions;
     }
 
@@ -148,8 +137,7 @@ public class DioriteYaml extends Yaml
      *
      * @return object representer of this yaml instance.
      */
-    public DioriteYamlRepresenter getRepresenter()
-    {
+    public DioriteYamlRepresenter getRepresenter() {
         return (DioriteYamlRepresenter) this.representer;
     }
 
@@ -158,8 +146,7 @@ public class DioriteYaml extends Yaml
      *
      * @param representer new object representer.
      */
-    public void setRepresenter(final DioriteYamlRepresenter representer)
-    {
+    public void setRepresenter(final DioriteYamlRepresenter representer) {
         this.representer = representer;
     }
 
@@ -168,8 +155,7 @@ public class DioriteYaml extends Yaml
      *
      * @return constructor handler of this yaml instance.
      */
-    public DioriteYamlConstructor getConstructor()
-    {
+    public DioriteYamlConstructor getConstructor() {
         return (DioriteYamlConstructor) this.constructor;
     }
 
@@ -178,8 +164,7 @@ public class DioriteYaml extends Yaml
      *
      * @param constructor new constructor handler.
      */
-    public void setConstructor(final DioriteYamlConstructor constructor)
-    {
+    public void setConstructor(final DioriteYamlConstructor constructor) {
         this.constructor = constructor;
     }
 
@@ -188,8 +173,7 @@ public class DioriteYaml extends Yaml
      *
      * @return object resolver of this yaml instance.
      */
-    public DioriteYamlResolver getResolver()
-    {
+    public DioriteYamlResolver getResolver() {
         return (DioriteYamlResolver) this.resolver;
     }
 }

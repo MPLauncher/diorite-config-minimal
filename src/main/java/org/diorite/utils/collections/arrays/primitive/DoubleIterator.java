@@ -29,41 +29,34 @@ import java.util.NoSuchElementException;
 /**
  * Represent Double iterator for double array.
  */
-public class DoubleIterator extends PrimitiveIterator<Double, double[]>
-{
+public class DoubleIterator extends PrimitiveIterator<Double, double[]> {
     /**
      * Construct new DoubleIterator for given primitive array.
      *
      * @param primitiveArray array to be iterated.
      */
-    public DoubleIterator(final double[] primitiveArray)
-    {
+    public DoubleIterator(final double[] primitiveArray) {
         super(primitiveArray);
     }
 
     @Override
-    public void setValue(final Double number)
-    {
+    public void setValue(final Double number) {
         this.primitiveArray[this.index - 1] = number;
     }
 
     @Override
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.primitiveArray[this.index - 1] = number.doubleValue();
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.index < this.primitiveArray.length;
     }
 
     @Override
-    public Double next()
-    {
-        if (! this.hasNext())
-        {
+    public Double next() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("Index >= Length, Index: " + this.index + ", Length: " + this.primitiveArray.length);
         }
         return this.primitiveArray[this.index++];

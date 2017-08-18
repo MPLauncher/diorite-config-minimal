@@ -32,11 +32,10 @@ import java.util.concurrent.atomic.AtomicIntegerArray;
  * Atomic array with short elements.
  */
 @SuppressWarnings("MagicNumber")
-public class AtomicShortArray implements Serializable
-{
+public class AtomicShortArray implements Serializable {
     private static final long serialVersionUID = 0;
-    private final int                length;
-    private final int                backingArraySize;
+    private final int length;
+    private final int backingArraySize;
     private final AtomicIntegerArray backingArray;
 
     /**
@@ -44,8 +43,7 @@ public class AtomicShortArray implements Serializable
      *
      * @param length the length of the array
      */
-    public AtomicShortArray(final int length)
-    {
+    public AtomicShortArray(final int length) {
         this.length = length;
         this.backingArraySize = (length & 1) + (length >> 1);
         this.backingArray = new AtomicIntegerArray(this.backingArraySize);
@@ -56,8 +54,7 @@ public class AtomicShortArray implements Serializable
      *
      * @param initial the initial array, is allowed to be null
      */
-    public AtomicShortArray(final short[] initial)
-    {
+    public AtomicShortArray(final short[] initial) {
         this(initial.length, initial);
     }
 
@@ -67,27 +64,21 @@ public class AtomicShortArray implements Serializable
      * @param length  the length of the array
      * @param initial the initial array, is allowed to be null
      */
-    public AtomicShortArray(final int length, final short[] initial)
-    {
+    public AtomicShortArray(final int length, final short[] initial) {
         this.length = length;
         this.backingArraySize = (length & 1) + (length >> 1);
-        if (initial == null)
-        {
+        if (initial == null) {
             this.backingArray = new AtomicIntegerArray(this.backingArraySize);
             return;
         }
         // Store the initial data in the backing array
         final int[] data = new int[this.backingArraySize];
         int initIndex = 0;
-        for (int i = 0; i < this.backingArraySize; i++)
-        {
-            if ((initIndex + 1) < initial.length)
-            {
+        for (int i = 0; i < this.backingArraySize; i++) {
+            if ((initIndex + 1) < initial.length) {
                 // both elements available for squashing
                 data[i] = key(initial[initIndex], initial[initIndex + 1]);
-            }
-            else
-            {
+            } else {
                 // first element is last element
                 data[i] = key(initial[initIndex], (short) 0);
             }
@@ -101,8 +92,7 @@ public class AtomicShortArray implements Serializable
      *
      * @return the length
      */
-    public final int length()
-    {
+    public final int length() {
         return this.length;
     }
 
@@ -110,11 +100,9 @@ public class AtomicShortArray implements Serializable
      * Gets an element from the array at a given index
      *
      * @param index the index
-     *
      * @return the element
      */
-    public final short get(final int index)
-    {
+    public final short get(final int index) {
         final int packed = this.getPacked(index);
         return isEven(index) ? key1(packed) : key2(packed);
     }
@@ -124,28 +112,22 @@ public class AtomicShortArray implements Serializable
      *
      * @param index the index
      * @param value the new value
-     *
      * @return the old value
      */
-    public final short getAndSet(final int index, final short value)
-    {
+    public final short getAndSet(final int index, final short value) {
         boolean success = false;
         short odd;
         short even;
         short oldValue = 0;
         final int backingIndex = index >> 1;
         final boolean evenIndex = isEven(index);
-        while (! success)
-        {
+        while (!success) {
             final int oldPacked = this.backingArray.get(backingIndex);
-            if (evenIndex)
-            {
+            if (evenIndex) {
                 oldValue = key1(oldPacked);
                 even = value;
                 odd = key2(oldPacked);
-            }
-            else
-            {
+            } else {
                 oldValue = key2(oldPacked);
                 even = key1(oldPacked);
                 odd = value;
@@ -163,10 +145,8 @@ public class AtomicShortArray implements Serializable
      * @param even  the new value for the element at (index)
      * @param odd   the new value for the element at (index + 1)
      */
-    public final void set(final int index, final short even, final short odd)
-    {
-        if ((index & 1) != 0)
-        {
+    public final void set(final int index, final short even, final short odd) {
+        if ((index & 1) != 0) {
             throw new IllegalArgumentException("When setting 2 elements at once, the index must be even");
         }
         this.backingArray.set(index >> 1, key(even, odd));
@@ -178,34 +158,27 @@ public class AtomicShortArray implements Serializable
      * @param index    the index
      * @param expected the expected value
      * @param newValue the new value
-     *
      * @return true on success
      */
-    public final boolean compareAndSet(final int index, final short expected, final short newValue)
-    {
+    public final boolean compareAndSet(final int index, final short expected, final short newValue) {
         boolean success = false;
         short odd;
         short even;
         short oldValue;
         final int backingIndex = index >> 1;
         final boolean evenIndex = isEven(index);
-        while (! success)
-        {
+        while (!success) {
             final int oldPacked = this.backingArray.get(backingIndex);
-            if (evenIndex)
-            {
+            if (evenIndex) {
                 oldValue = key1(oldPacked);
                 even = newValue;
                 odd = key2(oldPacked);
-            }
-            else
-            {
+            } else {
                 oldValue = key2(oldPacked);
                 even = key1(oldPacked);
                 odd = newValue;
             }
-            if (oldValue != expected)
-            {
+            if (oldValue != expected) {
                 return false;
             }
             final int newPacked = key(even, odd);
@@ -214,13 +187,11 @@ public class AtomicShortArray implements Serializable
         return true;
     }
 
-    private short addAndGet(final int index, final short delta, final boolean old)
-    {
+    private short addAndGet(final int index, final short delta, final boolean old) {
         boolean success = false;
         short newValue = 0;
         short oldValue = 0;
-        while (! success)
-        {
+        while (!success) {
             oldValue = this.get(index);
             newValue = (short) (oldValue + delta);
             success = this.compareAndSet(index, oldValue, newValue);
@@ -234,21 +205,16 @@ public class AtomicShortArray implements Serializable
      * If an array is provided and it is the correct length, then that array will be used as the destination array.
      *
      * @param array the provided array
-     *
      * @return an array containing the values in the array
      */
-    public short[] getArray(short[] array)
-    {
-        if ((array == null) || (array.length != this.length))
-        {
+    public short[] getArray(short[] array) {
+        if ((array == null) || (array.length != this.length)) {
             array = new short[this.length];
         }
-        for (int i = 0; i < this.length; i += 2)
-        {
+        for (int i = 0; i < this.length; i += 2) {
             final int packed = this.getPacked(i);
             array[i] = key1(packed);
-            if ((i + 1) < this.length)
-            {
+            if ((i + 1) < this.length) {
                 array[i + 1] = key2(packed);
             }
         }
@@ -265,8 +231,7 @@ public class AtomicShortArray implements Serializable
      * @param index the index
      * @param value the new value
      */
-    public final void set(final int index, final short value)
-    {
+    public final void set(final int index, final short value) {
         this.getAndSet(index, value);
     }
 
@@ -276,8 +241,7 @@ public class AtomicShortArray implements Serializable
      * @param index the index
      * @param value the new value
      */
-    public final void lazySet(final int index, final short value)
-    {
+    public final void lazySet(final int index, final short value) {
         this.set(index, value);
     }
 
@@ -287,11 +251,9 @@ public class AtomicShortArray implements Serializable
      * @param index    the index
      * @param expected the expected value
      * @param newValue the new value
-     *
      * @return true on success
      */
-    public final boolean weakCompareAndSet(final int index, final short expected, final short newValue)
-    {
+    public final boolean weakCompareAndSet(final int index, final short expected, final short newValue) {
         return this.compareAndSet(index, expected, newValue);
     }
 
@@ -300,11 +262,9 @@ public class AtomicShortArray implements Serializable
      *
      * @param index the index
      * @param delta the delta to add to the element
-     *
      * @return the new value
      */
-    public final short addAndGet(final int index, final short delta)
-    {
+    public final short addAndGet(final int index, final short delta) {
         return this.addAndGet(index, delta, false);
     }
 
@@ -313,11 +273,9 @@ public class AtomicShortArray implements Serializable
      *
      * @param index the index
      * @param delta the delta to add to the element
-     *
      * @return the old value
      */
-    public final short getAndAdd(final int index, final short delta)
-    {
+    public final short getAndAdd(final int index, final short delta) {
         return this.addAndGet(index, delta, true);
     }
 
@@ -325,11 +283,9 @@ public class AtomicShortArray implements Serializable
      * Atomically increments an element and returns the old value.
      *
      * @param index the index
-     *
      * @return the old value
      */
-    public final short getAndIncrement(final int index)
-    {
+    public final short getAndIncrement(final int index) {
         return this.getAndAdd(index, (short) 1);
     }
 
@@ -337,23 +293,19 @@ public class AtomicShortArray implements Serializable
      * Atomically decrements an element and returns the old value.
      *
      * @param index the index
-     *
      * @return the old value
      */
-    public final short getAndDecrement(final int index)
-    {
-        return this.getAndAdd(index, (short) - 1);
+    public final short getAndDecrement(final int index) {
+        return this.getAndAdd(index, (short) -1);
     }
 
     /**
      * Atomically increments an element and returns the new value.
      *
      * @param index the index
-     *
      * @return the new value
      */
-    public final short incrementAndGet(final int index)
-    {
+    public final short incrementAndGet(final int index) {
         return this.addAndGet(index, (short) 1);
     }
 
@@ -361,12 +313,10 @@ public class AtomicShortArray implements Serializable
      * Atomically decrements an element and returns the new value.
      *
      * @param index the index
-     *
      * @return the new value
      */
-    public final short decrementAndGet(final int index)
-    {
-        return this.addAndGet(index, (short) - 1);
+    public final short decrementAndGet(final int index) {
+        return this.addAndGet(index, (short) -1);
     }
 
     /**
@@ -376,8 +326,7 @@ public class AtomicShortArray implements Serializable
      *
      * @return the array
      */
-    public short[] getArray()
-    {
+    public short[] getArray() {
         return this.getArray(null);
     }
 
@@ -389,34 +338,28 @@ public class AtomicShortArray implements Serializable
      * @return the String
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         final short[] array = this.getArray();
         return Arrays.toString(array);
     }
 
-    private int getPacked(final int index)
-    {
+    private int getPacked(final int index) {
         return this.backingArray.get(index >> 1);
     }
 
-    private static boolean isEven(final int index)
-    {
+    private static boolean isEven(final int index) {
         return (index & 1) == 0;
     }
 
-    private static int key(final short key1, final short key2)
-    {
+    private static int key(final short key1, final short key2) {
         return (key1 << 16) | (key2 & 0xFFFF);
     }
 
-    private static short key1(final int composite)
-    {
+    private static short key1(final int composite) {
         return (short) ((composite >> 16) & 0xFFFF);
     }
 
-    private static short key2(final int composite)
-    {
+    private static short key2(final int composite) {
         return (short) (composite & 0xFFFF);
     }
 }

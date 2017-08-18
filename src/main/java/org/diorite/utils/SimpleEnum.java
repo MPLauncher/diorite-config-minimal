@@ -24,17 +24,16 @@
 
 package org.diorite.utils;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import org.diorite.utils.collections.maps.CaseInsensitiveMap;
+import org.diorite.utils.reflections.DioriteReflectionUtils;
+
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.diorite.utils.collections.maps.CaseInsensitiveMap;
-import org.diorite.utils.reflections.DioriteReflectionUtils;
-
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 /**
  * Simple interface-based enum, that can be edited in runtime. <br>
@@ -49,8 +48,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
  *
  * @param <T> type of values.
  */
-public interface SimpleEnum<T extends SimpleEnum<T>>
-{
+public interface SimpleEnum<T extends SimpleEnum<T>> {
     float SMALL_LOAD_FACTOR = .1f;
 
     String name();
@@ -70,11 +68,9 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
      * @param id        ordinal id.
      * @param enumClass class of enum.
      * @param <T>       type of enum.
-     *
      * @return enum element or null.
      */
-    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final int id, final Class<T> enumClass)
-    {
+    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final int id, final Class<T> enumClass) {
         return DioriteReflectionUtils.getSimpleEnumValueSafe(name, id, enumClass);
     }
 
@@ -87,11 +83,9 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
      * @param id   ordinal id.
      * @param def  default value, can't be null.
      * @param <T>  type of enum.
-     *
      * @return enum element or def.
      */
-    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final int id, final T def)
-    {
+    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final int id, final T def) {
         return DioriteReflectionUtils.getSimpleEnumValueSafe(name, id, def);
     }
 
@@ -101,11 +95,9 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
      * @param id        ordinal id.
      * @param enumClass class of enum.
      * @param <T>       type of enum.
-     *
      * @return enum element or null.
      */
-    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final int id, final Class<T> enumClass)
-    {
+    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final int id, final Class<T> enumClass) {
         return DioriteReflectionUtils.getSimpleEnumValueSafe(null, id, enumClass);
     }
 
@@ -115,11 +107,9 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
      * @param id  ordinal id.
      * @param def default value, can't be null.
      * @param <T> type of enum.
-     *
      * @return enum element or def.
      */
-    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final int id, final T def)
-    {
+    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final int id, final T def) {
         return DioriteReflectionUtils.getSimpleEnumValueSafe(null, id, def);
     }
 
@@ -129,12 +119,10 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
      * @param name      name of enum field (ignore-case)
      * @param enumClass class of enum.
      * @param <T>       type of enum.
-     *
      * @return enum element or null.
      */
-    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final Class<T> enumClass)
-    {
-        return DioriteReflectionUtils.getSimpleEnumValueSafe(name, - 1, enumClass);
+    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final Class<T> enumClass) {
+        return DioriteReflectionUtils.getSimpleEnumValueSafe(name, -1, enumClass);
     }
 
     /**
@@ -143,17 +131,14 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
      * @param name name of enum field (ignore-case)
      * @param def  default value, can't be null.
      * @param <T>  type of enum.
-     *
      * @return enum element or def.
      */
-    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final T def)
-    {
-        return DioriteReflectionUtils.getSimpleEnumValueSafe(name, - 1, def);
+    static <T extends SimpleEnum<T>> T getSimpleEnumValueSafe(final String name, final T def) {
+        return DioriteReflectionUtils.getSimpleEnumValueSafe(name, -1, def);
     }
 
     @SuppressWarnings("ObjectEquality")
-    static boolean equals(final SimpleEnum<?> a, final SimpleEnum<?> b)
-    {
+    static boolean equals(final SimpleEnum<?> a, final SimpleEnum<?> b) {
         return (a == b) || (((a != null) && (b != null)) && (a.ordinal() == b.ordinal()));
     }
 
@@ -166,32 +151,27 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
      * @param <T> type of enum.
      */
     @SuppressWarnings("unchecked")
-    abstract class ASimpleEnum<T extends SimpleEnum<T>> implements SimpleEnum<T>
-    {
-        private static final Map<Class<?>, AtomicInteger>                ids       = new HashMap<>(40);
-        private static final Map<Class<?>, Map<String, SimpleEnum<?>>>   byName    = new HashMap<>(40);
+    abstract class ASimpleEnum<T extends SimpleEnum<T>> implements SimpleEnum<T> {
+        private static final Map<Class<?>, AtomicInteger> ids = new HashMap<>(40);
+        private static final Map<Class<?>, Map<String, SimpleEnum<?>>> byName = new HashMap<>(40);
         private static final Map<Class<?>, Int2ObjectMap<SimpleEnum<?>>> byOrdinal = new HashMap<>(40);
 
         protected final String enumName;
-        protected final int    ordinal;
+        protected final int ordinal;
 
-        protected ASimpleEnum(final String enumName, final int ordinal)
-        {
+        protected ASimpleEnum(final String enumName, final int ordinal) {
             this.enumName = enumName;
             this.ordinal = ordinal;
         }
 
-        protected ASimpleEnum(final String enumName)
-        {
+        protected ASimpleEnum(final String enumName) {
             this.enumName = enumName;
             Class<?> clazz = this.getClass();
-            while (clazz.isAnonymousClass())
-            {
+            while (clazz.isAnonymousClass()) {
                 clazz = clazz.getSuperclass();
             }
             AtomicInteger i = ids.get(clazz);
-            if (i == null)
-            {
+            if (i == null) {
                 i = new AtomicInteger();
                 ids.put(clazz, i);
             }
@@ -199,44 +179,36 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
         }
 
         @Override
-        public T byOrdinal(final int ordinal)
-        {
+        public T byOrdinal(final int ordinal) {
             return (T) getByEnumOrdinal(this.getClass(), ordinal);
         }
 
         @Override
-        public T byName(final String name)
-        {
+        public T byName(final String name) {
             return (T) getByEnumName(this.getClass(), name);
         }
 
         @Override
-        public int ordinal()
-        {
+        public int ordinal() {
             return this.ordinal;
         }
 
         @Override
-        public String name()
-        {
+        public String name() {
             return this.enumName;
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return this.enumName;
         }
 
         @Override
-        public boolean equals(final Object o)
-        {
-            if (this == o)
-            {
+        public boolean equals(final Object o) {
+            if (this == o) {
                 return true;
             }
-            if (! (o instanceof SimpleEnum))
-            {
+            if (!(o instanceof SimpleEnum)) {
                 return false;
             }
 
@@ -245,34 +217,28 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
         }
 
         @Override
-        public int hashCode()
-        {
+        public int hashCode() {
             return this.ordinal;
         }
 
-        protected static <T extends SimpleEnum<?>> T getByEnumName(final Class<T> clazz, final String name)
-        {
-            if (name == null)
-            {
+        protected static <T extends SimpleEnum<?>> T getByEnumName(final Class<T> clazz, final String name) {
+            if (name == null) {
                 return null;
             }
             return (T) byName.get(clazz).get(name);
         }
 
-        protected static <T extends SimpleEnum<?>> T getByEnumOrdinal(final Class<T> clazz, final int id)
-        {
+        protected static <T extends SimpleEnum<?>> T getByEnumOrdinal(final Class<T> clazz, final int id) {
             return (T) byOrdinal.get(clazz).get(id);
         }
 
-        protected static void register(final Class<?> clazz, final SimpleEnum<?> e)
-        {
+        protected static void register(final Class<?> clazz, final SimpleEnum<?> e) {
             final Entry<Map<String, SimpleEnum<?>>, Int2ObjectMap<SimpleEnum<?>>> maps = init(clazz, 10);
             maps.getKey().put(e.name(), e);
             maps.getValue().put(e.ordinal(), e);
         }
 
-        protected static Map<String, SimpleEnum<?>> getByEnumName(final Class<?> clazz)
-        {
+        protected static Map<String, SimpleEnum<?>> getByEnumName(final Class<?> clazz) {
             return byName.get(clazz);
         }
 
@@ -281,22 +247,18 @@ public interface SimpleEnum<T extends SimpleEnum<T>>
 //            return byOrdinal.get(clazz);
 //        }
 
-        protected static <K extends SimpleEnum<K>> Int2ObjectMap<K> getByEnumOrdinal(final Class<K> clazz)
-        {
+        protected static <K extends SimpleEnum<K>> Int2ObjectMap<K> getByEnumOrdinal(final Class<K> clazz) {
             return (Int2ObjectMap<K>) byOrdinal.get(clazz);
         }
 
-        protected static Entry<Map<String, SimpleEnum<?>>, Int2ObjectMap<SimpleEnum<?>>> init(final Class<?> clazz, final int size)
-        {
+        protected static Entry<Map<String, SimpleEnum<?>>, Int2ObjectMap<SimpleEnum<?>>> init(final Class<?> clazz, final int size) {
             Map<String, SimpleEnum<?>> byName = ASimpleEnum.byName.get(clazz);
-            if (byName == null)
-            {
+            if (byName == null) {
                 byName = new CaseInsensitiveMap<>(size, SMALL_LOAD_FACTOR);
                 ASimpleEnum.byName.put(clazz, byName);
             }
             Int2ObjectMap<SimpleEnum<?>> byID = ASimpleEnum.byOrdinal.get(clazz);
-            if (byID == null)
-            {
+            if (byID == null) {
                 byID = new Int2ObjectOpenHashMap<>(size, SMALL_LOAD_FACTOR);
                 ASimpleEnum.byOrdinal.put(clazz, byID);
             }

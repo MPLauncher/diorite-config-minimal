@@ -29,41 +29,34 @@ import java.util.NoSuchElementException;
 /**
  * Represent Long iterator for long array.
  */
-public class LongIterator extends PrimitiveIterator<Long, long[]>
-{
+public class LongIterator extends PrimitiveIterator<Long, long[]> {
     /**
      * Construct new LongIterator for given primitive array.
      *
      * @param primitiveArray array to be iterated.
      */
-    public LongIterator(final long[] primitiveArray)
-    {
+    public LongIterator(final long[] primitiveArray) {
         super(primitiveArray);
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.index < this.primitiveArray.length;
     }
 
     @Override
-    public void setValue(final Long number)
-    {
+    public void setValue(final Long number) {
         this.primitiveArray[this.index - 1] = number;
     }
 
     @Override
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.primitiveArray[this.index - 1] = number.longValue();
     }
 
     @Override
-    public Long next()
-    {
-        if (! this.hasNext())
-        {
+    public Long next() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("Index >= Length, Index: " + this.index + ", Length: " + this.primitiveArray.length);
         }
         return this.primitiveArray[this.index++];

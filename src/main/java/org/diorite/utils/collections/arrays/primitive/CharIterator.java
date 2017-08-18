@@ -29,41 +29,34 @@ import java.util.NoSuchElementException;
 /**
  * Represent Character iterator for char array.
  */
-public class CharIterator extends PrimitiveIterator<Character, char[]>
-{
+public class CharIterator extends PrimitiveIterator<Character, char[]> {
     /**
      * Construct new CharIterator for given primitive array.
      *
      * @param primitiveArray array to be iterated.
      */
-    public CharIterator(final char[] primitiveArray)
-    {
+    public CharIterator(final char[] primitiveArray) {
         super(primitiveArray);
     }
 
     @Override
-    public void setValue(final Character number)
-    {
+    public void setValue(final Character number) {
         this.primitiveArray[this.index - 1] = number;
     }
 
     @Override
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.primitiveArray[this.index - 1] = (char) number.intValue();
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.index < this.primitiveArray.length;
     }
 
     @Override
-    public Character next()
-    {
-        if (! this.hasNext())
-        {
+    public Character next() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("Index >= Length, Index: " + this.index + ", Length: " + this.primitiveArray.length);
         }
         return this.primitiveArray[this.index++];

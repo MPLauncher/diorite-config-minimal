@@ -41,8 +41,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface CfgClass
-{
+public @interface CfgClass {
 
     /**
      * Name of configuration unit, should be class name.
@@ -77,7 +76,6 @@ public @interface CfgClass
      * Fields to exclude (type name)
      *
      * @return list of field names to skip.
-     *
      * @see CfgExclude
      */
     String[] excludeFields() default {};

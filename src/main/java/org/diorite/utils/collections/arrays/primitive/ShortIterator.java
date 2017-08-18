@@ -29,41 +29,34 @@ import java.util.NoSuchElementException;
 /**
  * Represent Short iterator for short array.
  */
-public class ShortIterator extends PrimitiveIterator<Short, short[]>
-{
+public class ShortIterator extends PrimitiveIterator<Short, short[]> {
     /**
      * Construct new ShortIterator for given primitive array.
      *
      * @param primitiveArray array to be iterated.
      */
-    public ShortIterator(final short[] primitiveArray)
-    {
+    public ShortIterator(final short[] primitiveArray) {
         super(primitiveArray);
     }
 
     @Override
-    public void setValue(final Short number)
-    {
+    public void setValue(final Short number) {
         this.primitiveArray[this.index - 1] = number;
     }
 
     @Override
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.primitiveArray[this.index - 1] = number.shortValue();
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.index < this.primitiveArray.length;
     }
 
     @Override
-    public Short next()
-    {
-        if (! this.hasNext())
-        {
+    public Short next() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("Index >= Length, Index: " + this.index + ", Length: " + this.primitiveArray.length);
         }
         return this.primitiveArray[this.index++];

@@ -28,8 +28,7 @@ package org.diorite.utils.others;
  * Represent class/object that can be reset.
  */
 @FunctionalInterface
-public interface Resetable
-{
+public interface Resetable {
     /**
      * Reset state of object.
      */

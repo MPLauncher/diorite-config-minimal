@@ -29,41 +29,34 @@ import java.util.NoSuchElementException;
 /**
  * Represent Boolean iterator for boolean array.
  */
-public class BooleanIterator extends PrimitiveIterator<Boolean, boolean[]>
-{
+public class BooleanIterator extends PrimitiveIterator<Boolean, boolean[]> {
     /**
      * Construct new BooleanIterator for given primitive array.
      *
      * @param primitiveArray array to be iterated.
      */
-    public BooleanIterator(final boolean[] primitiveArray)
-    {
+    public BooleanIterator(final boolean[] primitiveArray) {
         super(primitiveArray);
     }
 
     @Override
-    public void setValue(final Boolean number)
-    {
+    public void setValue(final Boolean number) {
         this.primitiveArray[this.index - 1] = number;
     }
 
     @Override
-    public void setValue(final Number number)
-    {
+    public void setValue(final Number number) {
         this.primitiveArray[this.index - 1] = number.intValue() == 1;
     }
 
     @Override
-    public boolean hasNext()
-    {
+    public boolean hasNext() {
         return this.index < this.primitiveArray.length;
     }
 
     @Override
-    public Boolean next()
-    {
-        if (! this.hasNext())
-        {
+    public Boolean next() {
+        if (!this.hasNext()) {
             throw new NoSuchElementException("Index >= Length, Index: " + this.index + ", Length: " + this.primitiveArray.length);
         }
         return this.primitiveArray[this.index++];

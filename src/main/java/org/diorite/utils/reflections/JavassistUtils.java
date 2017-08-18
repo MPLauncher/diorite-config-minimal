@@ -29,8 +29,7 @@ import javassist.CtClass;
 /**
  * Utils for javassist library, in separate class so javassist library is optional
  */
-public class JavassistUtils
-{
+public class JavassistUtils {
     /**
      * Array of empty javassit classes
      */

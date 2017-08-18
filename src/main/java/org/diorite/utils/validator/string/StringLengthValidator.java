@@ -27,8 +27,7 @@ package org.diorite.utils.validator.string;
 /**
  * Validator interface for String length check.
  */
-public interface StringLengthValidator extends StringCustomValidator<StringLengthValidator>
-{
+public interface StringLengthValidator extends StringCustomValidator<StringLengthValidator> {
     /**
      * Returns min length of string, -1 if no limit.
      *
@@ -48,11 +47,9 @@ public interface StringLengthValidator extends StringCustomValidator<StringLengt
      *
      * @param min minimum length of string.
      * @param max maximim length of string.
-     *
      * @return new string length validator.
      */
-    static StringLengthValidator create(final int min, final int max)
-    {
+    static StringLengthValidator create(final int min, final int max) {
         return new StringLengthValidatorImpl(min, max);
     }
 }
