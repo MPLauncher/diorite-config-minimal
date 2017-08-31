@@ -8,9 +8,13 @@
 
     <distributionManagement>
         <repository>
-            <id>funnyguilds-repo</id>
-            <url>https://repo.funnyguilds.net/content/repositories/funnyguilds-repo/</url>
+            <id>kacperduras-repo</id>
+            <url>https://repo.kacperduras.pl/content/repositories/releases/</url>
         </repository>
+        <snapshotRepository>
+            <id>kacperduras-repo</id>
+            <url>https://repo.kacperduras.pl/content/repositories/snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
