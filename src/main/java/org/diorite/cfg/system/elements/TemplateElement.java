@@ -173,7 +173,7 @@ public abstract class TemplateElement<T> {
     }
 
     /**
-     * Wrtie header/footer comments, field name (key) and value to slected writer ({@link Appendable}) using this template.
+     * Wrtie header/footer comments, field name (key) and value to selected writer ({@link Appendable}) using this template.
      *
      * @param writer             {@link Appendable} to use, all data will be added here.
      * @param field              config field with basic field data and options.
@@ -217,7 +217,7 @@ public abstract class TemplateElement<T> {
     }
 
     /**
-     * Wrtie value to slected writer ({@link Appendable}) using this template.
+     * Wrtie value to selected writer ({@link Appendable}) using this template.
      *
      * @param writer       {@link Appendable} to use, all data will be added here.
      * @param field        config field with basic field data and options.
