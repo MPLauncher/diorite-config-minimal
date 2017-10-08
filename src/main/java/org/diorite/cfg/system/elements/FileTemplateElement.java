@@ -92,7 +92,8 @@ public class FileTemplateElement extends TemplateElement<File> {
     @Override
     public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final File element = (elementRaw instanceof File) ? ((File) elementRaw) : this.validateType(elementRaw);
-        StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(element.getPath()), level, elementPlace);
+        final String elementPath = element.getAbsolutePath().replace("\\", "\\\\"); //Replaces \ with \\ because \ is a special character for Java.
+        StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(elementPath), level, elementPlace);
     }
 
 }
