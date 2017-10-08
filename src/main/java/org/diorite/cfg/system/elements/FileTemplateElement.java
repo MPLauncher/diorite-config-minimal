@@ -24,7 +24,7 @@
 
 package org.diorite.cfg.system.elements;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.diorite.cfg.system.CfgEntryData;
 
 import java.io.File;
@@ -93,7 +93,8 @@ public class FileTemplateElement extends TemplateElement<File> {
     @Override
     public void appendValue(final Appendable writer, final CfgEntryData field, final Object source, final Object elementRaw, final int level, final ElementPlace elementPlace) throws IOException {
         final File element = (elementRaw instanceof File) ? ((File) elementRaw) : this.validateType(elementRaw);
-        StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(StringEscapeUtils.escapeJava(element.getPath())), level, elementPlace);
+        String elementPath = StringEscapeUtils.escapeJava(element.getPath());
+        StringTemplateElement.INSTANCE.appendValue(writer, field, source, StringTemplateElement.INSTANCE.validateType(elementPath), level, elementPlace);
     }
 
 }
