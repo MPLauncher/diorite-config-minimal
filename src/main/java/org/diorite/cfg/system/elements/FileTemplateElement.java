@@ -98,13 +98,13 @@ public class FileTemplateElement extends TemplateElement<File> {
 
     private String escapeJavaString(String value) {
         if (value != null) {
-            value.replace("\"", "\\\"");
-            value.replace("\\", "\\\\");
-            value.replace("\b", "\\b");
-            value.replace("\n", "\\n");
-            value.replace("\t", "\\t");
-            value.replace("\f", "\\f");
-            value.replace("\r", "\\r");
+            value = value.replace("\"", "\\\"");
+            value = value.replace("\\", "\\\\");
+            value = value.replace("\b", "\\b");
+            value = value.replace("\n", "\\n");
+            value = value.replace("\t", "\\t");
+            value = value.replace("\f", "\\f");
+            value = value.replace("\r", "\\r");
         }
         return value;
     }
