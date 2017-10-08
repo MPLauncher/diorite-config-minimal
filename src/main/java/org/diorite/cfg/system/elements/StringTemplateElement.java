@@ -163,4 +163,17 @@ public class StringTemplateElement extends TemplateElement<String> {
             }
         }
     }
+
+    public String escapeJavaString(String value) {
+        if (value != null) {
+            value = value.replace("\\", "\\\\");
+            value = value.replace("\"", "\\\"");
+            value = value.replace("\b", "\\b");
+            value = value.replace("\n", "\\n");
+            value = value.replace("\t", "\\t");
+            value = value.replace("\f", "\\f");
+            value = value.replace("\r", "\\r");
+        }
+        return value;
+    }
 }
